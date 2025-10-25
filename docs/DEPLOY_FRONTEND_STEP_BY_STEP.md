@@ -7,7 +7,7 @@ Este guia vai te ajudar a fazer deploy do CMS e Editor no Vercel em aproximadame
 Antes de começar, você precisa:
 
 - ✅ API já deployada no Render (você já tem!)
-- ✅ URL da API do Render (exemplo: `https://lynt-flow-api.onrender.com`)
+- ✅ URL da API do Render (exemplo: `https://api-flow.lynt.io`)
 - ✅ Conta no GitHub com o repositório (você já tem!)
 - 📝 Conta no Vercel (vamos criar se necessário)
 
@@ -19,7 +19,7 @@ Antes de começar, você precisa:
 
 1. Acesse o dashboard do Render: https://dashboard.render.com
 2. Clique no seu serviço **lynt-flow-api**
-3. Na parte superior, você verá a URL (exemplo: `https://lynt-flow-api.onrender.com`)
+3. Na parte superior, você verá a URL (exemplo: `https://api-flow.lynt.io`)
 4. **Copie essa URL completa**
 
 ### 1.2 Atualizar o vercel.json
@@ -27,14 +27,14 @@ Antes de começar, você precisa:
 Você precisa editar o arquivo `vercel.json` e substituir `YOUR-API-NAME` pela URL real da sua API.
 
 **Exemplo:**
-Se sua URL for `https://lynt-flow-api.onrender.com`, o arquivo deve ficar:
+Se sua URL for `https://api-flow.lynt.io`, o arquivo deve ficar:
 
 ```json
 {
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://lynt-flow-api.onrender.com/api/:path*"
+      "destination": "https://api-flow.lynt.io/api/:path*"
     }
   ]
 }
@@ -67,15 +67,16 @@ Na tela de configuração do projeto:
 1. **Project Name**: Deixe como `lynt-flow` (ou escolha outro nome)
 2. **Framework Preset**: Selecione **"Other"** (não é React, Vue, etc - é customizado)
 3. **Root Directory**: Deixe em branco ou **"."** (raiz do projeto)
-4. **Build Command**:
+4. Clique em **"Show more"** ou **"Override"** nas configurações de build
+5. **Build Command** (importante!):
    ```bash
    pnpm build:vercel
    ```
-5. **Output Directory**:
+6. **Output Directory**:
    ```
    dist
    ```
-6. **Install Command**: Deixe em branco (Vercel detecta o pnpm automaticamente)
+7. **Install Command**: Deixe em branco (Vercel detecta o pnpm automaticamente)
 
 ### 2.4 Environment Variables (Opcional)
 
