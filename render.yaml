@@ -1,0 +1,47 @@
+services:
+  # API Backend - Node.js/Express
+  - type: web
+    name: lynt-flow-api
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: pnpm install
+    startCommand: pnpm --filter @flow-forge/api start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+
+      - key: PORT
+        value: 10000
+
+      # MongoDB (configure no dashboard do Render)
+      - key: MONGODB_URI
+        sync: false
+
+      # JWT Secret (configure no dashboard do Render)
+      - key: JWT_SECRET
+        sync: false
+
+      # Frontend URL (será o domínio do Vercel)
+      - key: FRONTEND_URL
+        value: https://YOUR-VERCEL-DOMAIN.vercel.app
+
+      # CORS - Permitir requisições do Vercel
+      - key: ALLOWED_ORIGINS
+        value: https://YOUR-VERCEL-DOMAIN.vercel.app
+
+      # API Config
+      - key: API_URL
+        value: https://lynt-flow-api.onrender.com
+
+      # Rate Limiting
+      - key: RATE_LIMIT_WINDOW_MS
+        value: 900000
+
+      - key: RATE_LIMIT_MAX_REQUESTS
+        value: 1000
+
+      # Trust Proxy (importante para Render)
+      - key: TRUST_PROXY
+        value: 1
