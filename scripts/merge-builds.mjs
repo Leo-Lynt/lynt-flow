@@ -11,7 +11,7 @@
  *       └── assets/
  */
 
-import { cpSync, mkdirSync, existsSync, rmSync } from 'fs';
+import { cpSync, mkdirSync, existsSync, rmSync, readdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -20,6 +20,10 @@ const __dirname = dirname(__filename);
 const rootDir = join(__dirname, '..');
 
 console.log('🔨 Merging CMS and Editor builds for Vercel...\n');
+console.log('📍 Script directory:', __dirname);
+console.log('📍 Root directory:', rootDir);
+console.log('📍 Current working directory:', process.cwd());
+console.log('');
 
 // Limpar dist antiga
 const distDir = join(rootDir, 'dist');
@@ -58,7 +62,21 @@ if (existsSync(editorDistDir)) {
 
 console.log('\n✅ Build merge complete!');
 console.log('📂 Output directory:', distDir);
-console.log('\n📋 Structure:');
+
+// Verificar que a pasta existe
+if (existsSync(distDir)) {
+  console.log('✅ dist/ directory exists');
+  console.log('📂 Absolute path:', distDir);
+
+  // Listar conteúdo
+  const files = readdirSync(distDir);
+  console.log('📋 Contents:', files.join(', '));
+} else {
+  console.error('❌ ERROR: dist/ directory was NOT created!');
+  process.exit(1);
+}
+
+console.log('\n📋 Expected structure:');
 console.log('   dist/');
 console.log('   ├── index.html (CMS)');
 console.log('   ├── assets/ (CMS assets)');
