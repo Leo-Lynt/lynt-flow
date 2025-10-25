@@ -17,12 +17,14 @@ import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const rootDir = join(__dirname, '..');
+
+// Use process.cwd() como rootDir (diretório onde o comando é executado)
+// No Vercel, isso será /vercel/path0 (raiz do projeto)
+const rootDir = process.cwd();
 
 console.log('🔨 Merging CMS and Editor builds for Vercel...\n');
 console.log('📍 Script directory:', __dirname);
-console.log('📍 Root directory:', rootDir);
-console.log('📍 Current working directory:', process.cwd());
+console.log('📍 Root directory (process.cwd):', rootDir);
 console.log('');
 
 // Limpar dist antiga
