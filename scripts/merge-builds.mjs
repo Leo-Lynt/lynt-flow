@@ -65,16 +65,42 @@ if (existsSync(editorDistDir)) {
 console.log('\n✅ Build merge complete!');
 console.log('📂 Output directory:', distDir);
 
+// Listar TUDO no diretório raiz para debug
+console.log('\n🔍 DEBUG: Listing all files/folders in root directory:');
+try {
+  const rootFiles = readdirSync(rootDir);
+  console.log('Root contents:', rootFiles.join(', '));
+  console.log('Total items in root:', rootFiles.length);
+
+  // Verificar se dist está na lista
+  if (rootFiles.includes('dist')) {
+    console.log('✅ "dist" folder IS in root directory!');
+  } else {
+    console.log('❌ "dist" folder is NOT in root directory!');
+  }
+} catch (err) {
+  console.error('Error listing root directory:', err);
+}
+
 // Verificar que a pasta existe
 if (existsSync(distDir)) {
-  console.log('✅ dist/ directory exists');
+  console.log('\n✅ dist/ directory exists');
   console.log('📂 Absolute path:', distDir);
 
   // Listar conteúdo
   const files = readdirSync(distDir);
   console.log('📋 Contents:', files.join(', '));
+
+  // Verificar se index.html existe
+  const hasIndexHtml = files.includes('index.html');
+  console.log(hasIndexHtml ? '✅ index.html found' : '❌ index.html NOT found');
+
+  // Verificar se editor/ existe
+  const hasEditorFolder = files.includes('editor');
+  console.log(hasEditorFolder ? '✅ editor/ folder found' : '❌ editor/ folder NOT found');
 } else {
-  console.error('❌ ERROR: dist/ directory was NOT created!');
+  console.error('\n❌ ERROR: dist/ directory was NOT created!');
+  console.error('Expected path:', distDir);
   process.exit(1);
 }
 
