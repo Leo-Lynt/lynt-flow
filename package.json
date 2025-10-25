@@ -1,0 +1,40 @@
+{
+  "name": "flow-forge-monorepo",
+  "version": "0.1.0",
+  "description": "FlowForge - Visual Flow Programming Platform",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0",
+    "pnpm": ">=8.0.0"
+  },
+  "scripts": {
+    "dev": "concurrently -n \"API,EDITOR\" -c \"blue,green\" \"pnpm dev:api\" \"pnpm dev:editor\"",
+    "dev:api": "pnpm --filter @flow-forge/api dev",
+    "dev:editor": "pnpm --filter @flow-forge/editor dev",
+    "dev:cms": "cd packages/cms && pnpm dev",
+    "build": "pnpm build:core && pnpm build:api && pnpm build:editor && pnpm build:cms",
+    "build:core": "echo 'Core has no build step - pure JS'",
+    "build:api": "echo 'API has no build step - Node.js runtime'",
+    "build:editor": "pnpm --filter @flow-forge/editor build",
+    "build:cms": "cd packages/cms && pnpm build",
+    "preview": "pnpm --filter @flow-forge/editor preview",
+    "clean": "rm -rf node_modules packages/*/node_modules",
+    "install:all": "pnpm install"
+  },
+  "keywords": [
+    "flow",
+    "workflow",
+    "automation",
+    "visual-programming",
+    "monorepo"
+  ],
+  "author": "FlowForge Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

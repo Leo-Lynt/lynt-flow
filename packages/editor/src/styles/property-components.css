@@ -1,0 +1,117 @@
+/* Enhanced property components using refined Tailwind classes */
+
+.property-group {
+  @apply mb-6;
+}
+
+.property-item {
+  @apply mb-4;
+}
+
+.property-label {
+  @apply block text-13 font-semibold text-flow-text-secondary dark:text-flow-text-secondary-dark mb-2;
+}
+
+.property-input,
+.property-select,
+.property-textarea {
+  @apply w-full px-3 py-2.5 border border-flow-border dark:border-flow-border-dark rounded-lg text-sm bg-flow-surface dark:bg-flow-surface-dark text-flow-text dark:text-flow-text-dark transition-all duration-200 focus:outline-none focus:border-primary focus:shadow-focus focus:scale-[1.01];
+}
+
+.property-textarea {
+  @apply resize-y min-h-[60px] font-sans leading-6;
+}
+
+.field-hint {
+  @apply text-11 text-flow-text-muted dark:text-flow-text-muted-dark mt-1.5 leading-relaxed;
+}
+
+.examples-info,
+.operation-info {
+  @apply bg-flow-surface-hover dark:bg-flow-surface-hover-dark border border-flow-border dark:border-flow-border-dark rounded-lg p-3 shadow-sm;
+}
+
+.info-header {
+  @apply flex items-center gap-2 text-xs font-bold text-flow-text-secondary dark:text-flow-text-secondary-dark mb-2;
+}
+
+.info-text {
+  @apply text-11 text-flow-text-muted dark:text-flow-text-muted-dark leading-6;
+}
+
+.example-list {
+  @apply flex flex-col gap-1.5;
+}
+
+.example-item {
+  @apply text-11 text-flow-text-muted dark:text-flow-text-muted-dark leading-6;
+}
+
+.example-item code {
+  @apply bg-flow-surface dark:bg-flow-surface-dark px-1.5 py-1 rounded font-mono border border-flow-border dark:border-flow-border-dark text-[10px] shadow-sm;
+}
+
+.example-item strong {
+  @apply text-flow-text-secondary dark:text-flow-text-secondary-dark font-semibold;
+}
+
+.example-item em {
+  @apply text-flow-text-muted dark:text-flow-text-muted-dark italic;
+}
+
+/* Enhanced button styles */
+.add-field-button,
+.add-rule-btn,
+.add-transform-btn {
+  @apply flex items-center justify-center gap-2 px-4 py-2.5 bg-flow-surface-hover dark:bg-flow-surface-hover-dark border border-dashed border-flow-border dark:border-flow-border-dark rounded-lg text-flow-text-secondary dark:text-flow-text-secondary-dark text-13 font-semibold cursor-pointer transition-all duration-200 hover:bg-flow-surface dark:hover:bg-flow-surface-dark hover:border-primary hover:text-primary hover:scale-105;
+}
+
+.remove-field-button,
+.remove-rule-btn,
+.remove-transform-btn {
+  @apply w-7 h-7 flex items-center justify-center bg-transparent border-none rounded-lg text-flow-text-muted dark:text-flow-text-muted-dark cursor-pointer transition-all duration-200 hover:bg-flow-surface dark:hover:bg-flow-surface-dark hover:text-error hover:scale-110;
+}
+
+/* Enhanced input grid layouts */
+.rule-row,
+.transformation-row {
+  @apply grid gap-2 items-center p-3 bg-flow-surface-hover dark:bg-flow-surface-hover-dark rounded-lg border border-flow-border dark:border-flow-border-dark shadow-sm;
+}
+
+.rule-row {
+  grid-template-columns: 1fr 1fr auto auto;
+}
+
+.transformation-row {
+  grid-template-columns: 1fr 1fr auto auto;
+}
+
+.output-field {
+  @apply grid gap-2 items-center p-3 bg-flow-surface-hover dark:bg-flow-surface-hover-dark rounded-lg border border-flow-border dark:border-flow-border-dark shadow-sm;
+  grid-template-columns: 1fr auto 1fr auto;
+}
+
+/* Enhanced form inputs in rows */
+.rule-field-input,
+.rule-type-select,
+.rule-value-input,
+.transform-field-input,
+.transform-operation-select,
+.transform-value-input,
+.field-key-input,
+.field-source-select,
+.field-value-input {
+  @apply px-3 py-2 border border-flow-border dark:border-flow-border-dark rounded-lg text-xs bg-flow-surface dark:bg-flow-surface-dark text-flow-text dark:text-flow-text-dark focus:outline-none focus:border-primary focus:shadow-focus-2 transition-all duration-200;
+}
+
+.rule-field-input,
+.transform-field-input {
+  @apply font-mono;
+}
+
+/* Enhanced containers */
+.rules-container,
+.transformations-container,
+.output-fields {
+  @apply flex flex-col gap-3;
+}

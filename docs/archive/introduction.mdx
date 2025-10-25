@@ -1,0 +1,110 @@
+---
+title: "Welcome to FlowForge"
+description: "A visual flow-based programming engine for building complex logic workflows"
+icon: "house"
+---
+
+<Card title="What is FlowForge?" icon="lightbulb" iconType="duotone">
+  FlowForge is a powerful visual flow-based programming engine that lets you build complex logic workflows using a node-based interface. Connect nodes together to create powerful data transformations, logic operations, and more.
+</Card>
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card title="37+ Built-in Nodes" icon="cube" iconType="duotone">
+    Extensive library of nodes for data manipulation, logic operations, and transformations
+  </Card>
+
+  <Card title="Visual Flow Editor" icon="diagram-project" iconType="duotone">
+    Intuitive drag-and-drop interface for building complex workflows
+  </Card>
+
+  <Card title="Type-Safe Execution" icon="shield-check" iconType="duotone">
+    Built with TypeScript for reliable and predictable behavior
+  </Card>
+
+  <Card title="Extensible Architecture" icon="puzzle-piece" iconType="duotone">
+    Easy to add custom nodes and extend functionality
+  </Card>
+</CardGroup>
+
+## Quick Start
+
+<Steps>
+  <Step title="Install FlowForge">
+    Get started by installing the package
+    ```bash
+    npm install @flowforge/core
+    ```
+  </Step>
+
+  <Step title="Create Your First Flow">
+    Build a simple flow to add two numbers
+    ```json
+    {
+      "nodes": [
+        { "id": "1", "type": "input", "data": { "value": 5 } },
+        { "id": "2", "type": "input", "data": { "value": 3 } },
+        { "id": "3", "type": "add" }
+      ],
+      "connections": [
+        { "from": "1", "to": "3", "handle": "a" },
+        { "from": "2", "to": "3", "handle": "b" }
+      ]
+    }
+    ```
+  </Step>
+
+  <Step title="Execute & Get Results">
+    Run your flow and see the magic happen
+    ```typescript
+    import { FlowEngine } from '@flowforge/core';
+
+    const engine = new FlowEngine();
+    const result = await engine.execute(flow);
+    console.log(result); // Output: 8
+    ```
+  </Step>
+</Steps>
+
+## Node Categories
+
+Explore our comprehensive node library organized by category:
+
+<CardGroup cols={3}>
+  <Card title="Data & Input" icon="database" href="/nodes/data-input">
+    Input sources, outputs, connectors, and variables
+  </Card>
+
+  <Card title="Logic & Control" icon="route" href="/nodes/logic-control">
+    Conditionals, comparisons, and flow control
+  </Card>
+
+  <Card title="Operations" icon="calculator" href="/nodes/operations">
+    Math operations and string manipulation
+  </Card>
+
+  <Card title="Data Processing" icon="arrow-right-arrow-left" href="/nodes/data-processing">
+    Array and object transformations
+  </Card>
+
+  <Card title="Debug & Utilities" icon="bug" href="/nodes/debug">
+    Debugging tools and visualization helpers
+  </Card>
+
+  <Card title="Organization" icon="layer-group" href="/nodes/organization">
+    Group and frame nodes for better organization
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Quickstart Guide" icon="rocket" href="/quickstart">
+    Learn the basics in 5 minutes
+  </Card>
+
+  <Card title="Browse All Nodes" icon="book" href="/nodes/data-input">
+    Explore the complete node catalog
+  </Card>
+</CardGroup>

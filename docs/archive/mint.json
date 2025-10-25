@@ -1,0 +1,112 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "FlowForge",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "favicon": "/favicon.png",
+  "colors": {
+    "primary": "#6366f1",
+    "light": "#818cf8",
+    "dark": "#4f46e5",
+    "background": {
+      "light": "#ffffff",
+      "dark": "#0f172a"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "GitHub",
+      "url": "https://github.com/yourusername/flow-forge"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Get Started",
+    "url": "https://flowforge.mintlify.app/quickstart"
+  },
+  "navigation": [
+    {
+      "group": "Getting Started",
+      "pages": [
+        "introduction",
+        "quickstart"
+      ]
+    },
+    {
+      "group": "📥 Data & Input",
+      "pages": [
+        "nodes/data-input/connector",
+        "nodes/data-input/constant",
+        "nodes/data-input/variable",
+        "nodes/data-input/input",
+        "nodes/data-input/output"
+      ]
+    },
+    {
+      "group": "🔀 Logic & Control",
+      "pages": [
+        "nodes/logic-control/compare",
+        "nodes/logic-control/conditional-branch",
+        "nodes/logic-control/logic",
+        "nodes/logic-control/for-each",
+        "nodes/logic-control/while-loop"
+      ]
+    },
+    {
+      "group": "🧮 Operations",
+      "pages": [
+        "nodes/operations/type-conversion",
+        "nodes/operations/string-ops",
+        "nodes/operations/add",
+        "nodes/operations/subtract",
+        "nodes/operations/multiply",
+        "nodes/operations/divide",
+        "nodes/operations/round"
+      ]
+    },
+    {
+      "group": "🔄 Data Processing",
+      "pages": [
+        "nodes/data-processing/field-extractor",
+        "nodes/data-processing/array-filter",
+        "nodes/data-processing/array-aggregate",
+        "nodes/data-processing/array-slice",
+        "nodes/data-processing/array-sort",
+        "nodes/data-processing/array-map",
+        "nodes/data-processing/array-groupby",
+        "nodes/data-processing/array-distinct",
+        "nodes/data-processing/array-merge",
+        "nodes/data-processing/object-create",
+        "nodes/data-processing/array-create",
+        "nodes/data-processing/object-merge",
+        "nodes/data-processing/object-pick",
+        "nodes/data-processing/object-keys-values",
+        "nodes/data-processing/object-rename",
+        "nodes/data-processing/object-set-property",
+        "nodes/data-processing/object-to-array",
+        "nodes/data-processing/object-transform"
+      ]
+    },
+    {
+      "group": "🐛 Debug & Utilities",
+      "pages": [
+        "nodes/debug/debug-viewer"
+      ]
+    },
+    {
+      "group": "📦 Organization",
+      "pages": [
+        "nodes/organization/marker"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "github": "https://github.com/yourusername/flow-forge"
+  },
+  "analytics": {
+    "ga4": {
+      "measurementId": "G-XXXXXXXXXX"
+    }
+  }
+}

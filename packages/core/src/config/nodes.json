@@ -1,0 +1,3665 @@
+{
+  "$schema": "./nodes.schema.json",
+  "version": "1.0.0",
+  "metadata": {
+    "name": "FlowForge Node Catalog",
+    "description": "Catálogo de nodes disponíveis para o FlowForge engine",
+    "lastUpdated": "2025-10-02"
+  },
+  "categories": [
+    {
+      "id": "data-input",
+      "label": "Data & Input",
+      "icon": "material-symbols:database",
+      "description": "Data sources, constants, variables, and I/O operations"
+    },
+    {
+      "id": "logic-control",
+      "label": "Logic & Control",
+      "icon": "material-symbols:alt-route",
+      "description": "Comparison, logic operations, conditionals, and loops"
+    },
+    {
+      "id": "operations",
+      "label": "Operations",
+      "icon": "material-symbols:calculate",
+      "description": "Math, string, and type conversion operations"
+    },
+    {
+      "id": "data-processing",
+      "label": "Data Processing",
+      "icon": "material-symbols:transform",
+      "description": "Array and object transformation nodes"
+    },
+    {
+      "id": "debug",
+      "label": "Debug & Utilities",
+      "icon": "material-symbols:bug-report",
+      "description": "Debug tools and visualization"
+    },
+    {
+      "id": "organization",
+      "label": "Organization",
+      "icon": "material-symbols:square",
+      "description": "Tools for organizing and grouping nodes"
+    }
+  ],
+  "nodes": [
+    {
+      "type": "connector",
+      "label": "Data Connector",
+      "category": "data-input",
+      "description": "Conecta a fontes de dados externas (APIs, Analytics, Databases)",
+      "icon": "material-symbols:cable",
+      "color": "#10b981",
+      "method": "lib/methods/connectors/connector.js:execute",
+      "validator": "lib/methods/connectors/connector.js:validate",
+      "component": "ConnectorNode",
+      "executable": true,
+      "handles": {
+        "inputs": {
+          "execution": [
+            {
+              "id": "exec-in",
+              "label": "Execute",
+              "type": "exec",
+              "position": "left",
+              "required": false
+            }
+          ],
+          "data": []
+        },
+        "outputs": {
+          "execution": [
+            {
+              "id": "exec-out",
+              "label": "On Complete",
+              "type": "exec",
+              "position": "right"
+            }
+          ],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Data",
+              "type": "any",
+              "position": "right",
+              "dynamic": {
+                "mode": "runtime-detection",
+                "description": "Tipo detectado automaticamente após execução baseado no retorno da API"
+              }
+            }
+          ]
+        }
+      },
+      "config": {
+        "sourceType": {
+          "type": "select",
+          "label": "Source Type",
+          "required": true,
+          "default": "api",
+          "options": [
+            {
+              "value": "api",
+              "label": "REST API"
+            },
+            {
+              "value": "google_analytics",
+              "label": "Google Analytics"
+            },
+            {
+              "value": "google_sheets",
+              "label": "Google Sheets"
+            },
+            {
+              "value": "mk3d",
+              "label": "MK3D"
+            },
+            {
+              "value": "json",
+              "label": "JSON/CSV"
+            },
+            {
+              "value": "graphql",
+              "label": "GraphQL"
+            },
+            {
+              "value": "database",
+              "label": "Database"
+            }
+          ]
+        },
+        "apiUrl": {
+          "type": "string",
+          "label": "API URL",
+          "required": false,
+          "condition": {
+            "sourceType": "api"
+          },
+          "placeholder": "https://api.example.com/data"
+        },
+        "dataPath": {
+          "type": "string",
+          "label": "Data Path (JSONPath)",
+          "required": false,
+          "condition": {
+            "sourceType": "api"
+          },
+          "placeholder": "data.items"
+        },
+        "gaConnectionId": {
+          "type": "connection-select",
+          "label": "Google Analytics Connection",
+          "required": true,
+          "serviceType": "analytics",
+          "description": "Conecte sua conta Google Analytics",
+          "condition": {
+            "sourceType": "google_analytics"
+          }
+        },
+        "sheetsConnectionId": {
+          "type": "connection-select",
+          "label": "Google Sheets Connection",
+          "required": false,
+          "serviceType": "sheets",
+          "description": "Opcional: conecte para acessar planilhas privadas",
+          "condition": {
+            "sourceType": "google_sheets"
+          }
+        },
+        "sheetsUrl": {
+          "type": "string",
+          "label": "Google Sheets URL",
+          "required": true,
+          "condition": {
+            "sourceType": "google_sheets"
+          }
+        },
+        "mk3dUrl": {
+          "type": "string",
+          "label": "MK3D URL",
+          "required": false,
+          "condition": {
+            "sourceType": "mk3d"
+          }
+        },
+        "mk3dProjectId": {
+          "type": "string",
+          "label": "MK3D Project ID",
+          "required": false,
+          "condition": {
+            "sourceType": "mk3d"
+          }
+        },
+        "mk3dTemporalRangeType": {
+          "type": "select",
+          "label": "Date Range Type",
+          "required": false,
+          "default": "relative",
+          "condition": {
+            "sourceType": "mk3d"
+          },
+          "options": [
+            {
+              "value": "relative",
+              "label": "Relative (Last N days)"
+            },
+            {
+              "value": "absolute",
+              "label": "Absolute (Start/End dates)"
+            }
+          ]
+        },
+        "mk3dTemporalRelativeRange": {
+          "type": "select",
+          "label": "Relative Range",
+          "required": false,
+          "default": "last_30_days",
+          "condition": {
+            "sourceType": "mk3d",
+            "mk3dTemporalRangeType": "relative"
+          },
+          "options": [
+            {
+              "value": "last_7_days",
+              "label": "Last 7 days"
+            },
+            {
+              "value": "last_30_days",
+              "label": "Last 30 days"
+            },
+            {
+              "value": "last_90_days",
+              "label": "Last 90 days"
+            },
+            {
+              "value": "last_365_days",
+              "label": "Last 365 days"
+            }
+          ]
+        },
+        "mk3dTemporalStartDate": {
+          "type": "date",
+          "label": "Start Date",
+          "required": false,
+          "condition": {
+            "sourceType": "mk3d",
+            "mk3dTemporalRangeType": "absolute"
+          },
+          "placeholder": "YYYY-MM-DD"
+        },
+        "mk3dTemporalEndDate": {
+          "type": "date",
+          "label": "End Date",
+          "required": false,
+          "condition": {
+            "sourceType": "mk3d",
+            "mk3dTemporalRangeType": "absolute"
+          },
+          "placeholder": "YYYY-MM-DD"
+        },
+        "jsonCsvUrl": {
+          "type": "string",
+          "label": "JSON/CSV URL",
+          "required": false,
+          "condition": {
+            "sourceType": "json"
+          }
+        },
+        "graphqlUrl": {
+          "type": "string",
+          "label": "GraphQL Endpoint",
+          "required": false,
+          "condition": {
+            "sourceType": "graphql"
+          }
+        },
+        "graphqlQuery": {
+          "type": "textarea",
+          "label": "GraphQL Query",
+          "required": false,
+          "condition": {
+            "sourceType": "graphql"
+          }
+        },
+        "databaseType": {
+          "type": "select",
+          "label": "Database Type",
+          "required": false,
+          "condition": {
+            "sourceType": "database"
+          },
+          "options": [
+            {
+              "value": "mysql",
+              "label": "MySQL"
+            },
+            {
+              "value": "postgresql",
+              "label": "PostgreSQL"
+            },
+            {
+              "value": "mongodb",
+              "label": "MongoDB"
+            }
+          ]
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": true,
+        "timeout": 30000
+      }
+    },
+    {
+      "type": "field-extractor",
+      "label": "Field Extractor",
+      "category": "data-processing",
+      "description": "Extrai campos específicos de objetos ou arrays",
+      "icon": "material-symbols:filter-alt",
+      "color": "#3b82f6",
+      "method": "lib/methods/processors/fieldExtractor.js:execute",
+      "validator": "lib/methods/processors/fieldExtractor.js:validate",
+      "component": "FieldExtractorNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input",
+              "label": "Input Data",
+              "type": "any",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Extracted Data",
+              "type": "any",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "selectedFields": {
+          "type": "fieldSelector",
+          "label": "Selected Fields",
+          "required": false,
+          "default": [],
+          "description": "Click on fields from available data to select them"
+        },
+        "fieldOutputsEnabled": {
+          "type": "object",
+          "label": "Field Outputs Enabled",
+          "required": false,
+          "default": {},
+          "hidden": true,
+          "description": "Tracks which individual field outputs are enabled"
+        },
+        "fieldTypes": {
+          "type": "object",
+          "label": "Field Types",
+          "required": false,
+          "default": {},
+          "hidden": true,
+          "description": "Stores detected data types for each field"
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "array-filter",
+      "label": "Array Filter",
+      "category": "data-processing",
+      "description": "Filtra items de um array baseado em condição",
+      "icon": "material-symbols:filter-list",
+      "color": "#10b981",
+      "method": "lib/methods/processors/arrayFilter.js:execute",
+      "validator": "lib/methods/processors/arrayFilter.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input",
+              "label": "Array",
+              "type": "array",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Filtered Array",
+              "type": "array",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "fieldMode": {
+          "type": "select",
+          "label": "Field Selection",
+          "required": false,
+          "default": "selector",
+          "options": [
+            {
+              "value": "selector",
+              "label": "Select from available fields"
+            },
+            {
+              "value": "custom",
+              "label": "Custom (type manually)"
+            }
+          ]
+        },
+        "selectedField": {
+          "type": "fieldSelector",
+          "label": "Select Field to Filter",
+          "required": false,
+          "condition": {
+            "fieldMode": "selector"
+          },
+          "singleSelect": true,
+          "description": "Click on a field from available data"
+        },
+        "customField": {
+          "type": "string",
+          "label": "Custom Field Path",
+          "required": false,
+          "condition": {
+            "fieldMode": "custom"
+          },
+          "placeholder": "field.name"
+        },
+        "comparisonType": {
+          "type": "select",
+          "label": "Data Type for Comparison",
+          "required": false,
+          "default": "auto",
+          "description": "Choose how to interpret and compare values",
+          "options": [
+            {
+              "value": "auto",
+              "label": "Auto Detect"
+            },
+            {
+              "value": "string",
+              "label": "Text/String"
+            },
+            {
+              "value": "number",
+              "label": "Number"
+            },
+            {
+              "value": "date",
+              "label": "Date"
+            },
+            {
+              "value": "boolean",
+              "label": "Boolean (true/false)"
+            }
+          ]
+        },
+        "dateFormat": {
+          "type": "select",
+          "label": "Date Format",
+          "required": false,
+          "default": "iso",
+          "condition": {
+            "comparisonType": "date"
+          },
+          "description": "Specify the date format for parsing",
+          "options": [
+            {
+              "value": "iso",
+              "label": "ISO (YYYY-MM-DD)"
+            },
+            {
+              "value": "iso-datetime",
+              "label": "ISO DateTime (YYYY-MM-DDTHH:mm:ss)"
+            },
+            {
+              "value": "br",
+              "label": "Brazilian (DD/MM/YYYY)"
+            },
+            {
+              "value": "us",
+              "label": "US (MM/DD/YYYY)"
+            },
+            {
+              "value": "timestamp",
+              "label": "Unix Timestamp (milliseconds)"
+            }
+          ]
+        },
+        "operator": {
+          "type": "select",
+          "label": "Operator",
+          "required": true,
+          "default": "equals",
+          "options": [
+            {
+              "value": "equals",
+              "label": "Equals (=)"
+            },
+            {
+              "value": "notEquals",
+              "label": "Not Equals (≠)"
+            },
+            {
+              "value": "greaterThan",
+              "label": "Greater Than (>)"
+            },
+            {
+              "value": "lessThan",
+              "label": "Less Than (<)"
+            },
+            {
+              "value": "greaterOrEqual",
+              "label": "Greater or Equal (≥)"
+            },
+            {
+              "value": "lessOrEqual",
+              "label": "Less or Equal (≤)"
+            },
+            {
+              "value": "contains",
+              "label": "Contains"
+            },
+            {
+              "value": "startsWith",
+              "label": "Starts With"
+            },
+            {
+              "value": "endsWith",
+              "label": "Ends With"
+            },
+            {
+              "value": "exists",
+              "label": "Field Exists"
+            },
+            {
+              "value": "notExists",
+              "label": "Field Not Exists"
+            }
+          ]
+        },
+        "value": {
+          "type": "string",
+          "label": "Value to Compare",
+          "required": false,
+          "condition": {
+            "operator": [
+              "equals",
+              "notEquals",
+              "greaterThan",
+              "lessThan",
+              "greaterOrEqual",
+              "lessOrEqual",
+              "contains",
+              "startsWith",
+              "endsWith"
+            ]
+          }
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "array-aggregate",
+      "label": "Array Aggregate",
+      "category": "data-processing",
+      "description": "Agrega valores de um array (sum, average, count, min, max)",
+      "icon": "material-symbols:functions",
+      "color": "#8b5cf6",
+      "method": "lib/methods/processors/arrayAggregate.js:execute",
+      "validator": "lib/methods/processors/arrayAggregate.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input",
+              "label": "Array",
+              "type": "array",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Result",
+              "type": "number",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "operation": {
+          "type": "select",
+          "label": "Operation",
+          "required": true,
+          "default": "sum",
+          "options": [
+            {
+              "value": "sum",
+              "label": "Sum"
+            },
+            {
+              "value": "average",
+              "label": "Average"
+            },
+            {
+              "value": "count",
+              "label": "Count"
+            },
+            {
+              "value": "min",
+              "label": "Minimum"
+            },
+            {
+              "value": "max",
+              "label": "Maximum"
+            }
+          ]
+        },
+        "fieldMode": {
+          "type": "select",
+          "label": "Field Selection",
+          "required": false,
+          "default": "selector",
+          "condition": {
+            "operation": [
+              "sum",
+              "average",
+              "min",
+              "max"
+            ]
+          },
+          "options": [
+            {
+              "value": "selector",
+              "label": "Select from available fields"
+            },
+            {
+              "value": "custom",
+              "label": "Custom (type manually)"
+            }
+          ]
+        },
+        "selectedField": {
+          "type": "fieldSelector",
+          "label": "Select Field",
+          "required": false,
+          "condition": {
+            "operation": [
+              "sum",
+              "average",
+              "min",
+              "max"
+            ],
+            "fieldMode": "selector"
+          },
+          "singleSelect": true,
+          "description": "Click on a field from available data"
+        },
+        "customField": {
+          "type": "string",
+          "label": "Custom Field Path",
+          "required": false,
+          "condition": {
+            "operation": [
+              "sum",
+              "average",
+              "min",
+              "max"
+            ],
+            "fieldMode": "custom"
+          },
+          "placeholder": "field.name"
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "array-slice",
+      "label": "Array Slice",
+      "category": "data-processing",
+      "description": "Extrai porções de um array (first, last, take N, skip N)",
+      "icon": "material-symbols:cut",
+      "color": "#f59e0b",
+      "method": "lib/methods/processors/arraySlice.js:execute",
+      "validator": "lib/methods/processors/arraySlice.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input",
+              "label": "Array",
+              "type": "array",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": []
+        }
+      },
+      "dynamicHandles": {
+        "mode": "operation",
+        "first": {
+          "inputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-input",
+                "label": "Array",
+                "type": "array",
+                "position": "left",
+                "required": true
+              }
+            ]
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "First Item",
+                "type": "any",
+                "position": "right",
+                "dynamic": {
+                  "mode": "input-inference",
+                  "inferFrom": "data-input",
+                  "description": "Tipo inferido do primeiro elemento do array conectado"
+                }
+              }
+            ]
+          }
+        },
+        "last": {
+          "inputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-input",
+                "label": "Array",
+                "type": "array",
+                "position": "left",
+                "required": true
+              }
+            ]
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Last Item",
+                "type": "any",
+                "position": "right",
+                "dynamic": {
+                  "mode": "input-inference",
+                  "inferFrom": "data-input",
+                  "description": "Tipo inferido do último elemento do array conectado"
+                }
+              }
+            ]
+          }
+        },
+        "take": {
+          "inputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-input",
+                "label": "Array",
+                "type": "array",
+                "position": "left",
+                "required": true
+              }
+            ]
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Array",
+                "type": "array",
+                "position": "right"
+              }
+            ]
+          }
+        },
+        "skip": {
+          "inputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-input",
+                "label": "Array",
+                "type": "array",
+                "position": "left",
+                "required": true
+              }
+            ]
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Array",
+                "type": "array",
+                "position": "right"
+              }
+            ]
+          }
+        },
+        "slice": {
+          "inputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-input",
+                "label": "Array",
+                "type": "array",
+                "position": "left",
+                "required": true
+              }
+            ]
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Array",
+                "type": "array",
+                "position": "right"
+              }
+            ]
+          }
+        }
+      },
+      "config": {
+        "operation": {
+          "type": "select",
+          "label": "Operation",
+          "required": true,
+          "default": "first",
+          "options": [
+            {
+              "value": "first",
+              "label": "First Item"
+            },
+            {
+              "value": "last",
+              "label": "Last Item"
+            },
+            {
+              "value": "take",
+              "label": "Take N Items"
+            },
+            {
+              "value": "skip",
+              "label": "Skip N Items"
+            },
+            {
+              "value": "slice",
+              "label": "Slice (Start/End)"
+            }
+          ]
+        },
+        "count": {
+          "type": "number",
+          "label": "Count",
+          "required": false,
+          "condition": {
+            "operation": [
+              "take",
+              "skip"
+            ]
+          },
+          "default": 1
+        },
+        "start": {
+          "type": "number",
+          "label": "Start Index",
+          "required": false,
+          "condition": {
+            "operation": "slice"
+          },
+          "default": 0
+        },
+        "end": {
+          "type": "number",
+          "label": "End Index",
+          "required": false,
+          "condition": {
+            "operation": "slice"
+          }
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "array-sort",
+      "label": "Array Sort",
+      "category": "data-processing",
+      "description": "Ordena array por campo específico (crescente/decrescente)",
+      "icon": "material-symbols:sort",
+      "color": "#06b6d4",
+      "method": "lib/methods/processors/arraySort.js:execute",
+      "validator": "lib/methods/processors/arraySort.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input",
+              "label": "Array",
+              "type": "array",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Sorted Array",
+              "type": "array",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "fieldMode": {
+          "type": "select",
+          "label": "Field Selection",
+          "required": false,
+          "default": "selector",
+          "options": [
+            {
+              "value": "selector",
+              "label": "Select from available fields"
+            },
+            {
+              "value": "custom",
+              "label": "Custom (type manually)"
+            }
+          ]
+        },
+        "selectedField": {
+          "type": "fieldSelector",
+          "label": "Select Field to Sort By",
+          "required": false,
+          "condition": {
+            "fieldMode": "selector"
+          },
+          "singleSelect": true,
+          "description": "Click on a field from available data"
+        },
+        "customField": {
+          "type": "string",
+          "label": "Custom Field Path",
+          "required": false,
+          "condition": {
+            "fieldMode": "custom"
+          },
+          "placeholder": "field.name"
+        },
+        "sortType": {
+          "type": "select",
+          "label": "Sort Type",
+          "required": true,
+          "default": "auto",
+          "options": [
+            {
+              "value": "auto",
+              "label": "Auto (detect number vs string)"
+            },
+            {
+              "value": "string",
+              "label": "String (alphabetical)"
+            },
+            {
+              "value": "number",
+              "label": "Number (numeric)"
+            },
+            {
+              "value": "date",
+              "label": "Date (chronological)"
+            },
+            {
+              "value": "boolean",
+              "label": "Boolean (false/true)"
+            },
+            {
+              "value": "natural",
+              "label": "Natural (file1, file2, file10)"
+            }
+          ],
+          "description": "Type of sorting to apply"
+        },
+        "order": {
+          "type": "select",
+          "label": "Sort Order",
+          "required": true,
+          "default": "asc",
+          "options": [
+            {
+              "value": "asc",
+              "label": "Ascending (A-Z, 0-9, oldest first)"
+            },
+            {
+              "value": "desc",
+              "label": "Descending (Z-A, 9-0, newest first)"
+            }
+          ]
+        },
+        "dateFormat": {
+          "type": "select",
+          "label": "Date Format",
+          "required": false,
+          "default": "iso",
+          "condition": {
+            "sortType": "date"
+          },
+          "options": [
+            {
+              "value": "iso",
+              "label": "ISO 8601 (2025-01-15)"
+            },
+            {
+              "value": "iso-datetime",
+              "label": "ISO DateTime (2025-01-15T14:30:00)"
+            },
+            {
+              "value": "br",
+              "label": "Brazilian (15/01/2025)"
+            },
+            {
+              "value": "us",
+              "label": "US (01/15/2025)"
+            },
+            {
+              "value": "timestamp",
+              "label": "Unix Timestamp (milliseconds)"
+            }
+          ],
+          "description": "Format of date values in the array"
+        },
+        "caseSensitive": {
+          "type": "boolean",
+          "label": "Case Sensitive",
+          "required": false,
+          "default": false,
+          "condition": {
+            "sortType": "string"
+          },
+          "description": "Distinguish between uppercase and lowercase letters"
+        },
+        "locale": {
+          "type": "select",
+          "label": "Locale",
+          "required": false,
+          "default": "pt-BR",
+          "condition": {
+            "sortType": "string"
+          },
+          "options": [
+            {
+              "value": "pt-BR",
+              "label": "Portuguese (Brazil)"
+            },
+            {
+              "value": "en-US",
+              "label": "English (US)"
+            },
+            {
+              "value": "es-ES",
+              "label": "Spanish (Spain)"
+            },
+            {
+              "value": "fr-FR",
+              "label": "French (France)"
+            },
+            {
+              "value": "de-DE",
+              "label": "German (Germany)"
+            }
+          ],
+          "description": "Language-specific sorting rules"
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "array-map",
+      "label": "Array Map",
+      "category": "data-processing",
+      "description": "Transforma cada item do array extraindo campos específicos",
+      "icon": "material-symbols:transform",
+      "color": "#ec4899",
+      "method": "lib/methods/processors/arrayMap.js:execute",
+      "validator": "lib/methods/processors/arrayMap.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input",
+              "label": "Array",
+              "type": "array",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Mapped Array",
+              "type": "array",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "fieldMode": {
+          "type": "select",
+          "label": "Field Selection",
+          "required": false,
+          "default": "selector",
+          "options": [
+            {
+              "value": "selector",
+              "label": "Select from available fields"
+            },
+            {
+              "value": "custom",
+              "label": "Custom (type manually)"
+            }
+          ]
+        },
+        "selectedField": {
+          "type": "fieldSelector",
+          "label": "Select Fields to Extract",
+          "required": false,
+          "condition": {
+            "fieldMode": "selector"
+          },
+          "description": "Click on fields to extract from each item (multiple selection allowed)"
+        },
+        "customField": {
+          "type": "string",
+          "label": "Custom Field Path",
+          "required": false,
+          "condition": {
+            "fieldMode": "custom"
+          },
+          "placeholder": "field.name"
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "array-groupby",
+      "label": "Array Group By",
+      "category": "data-processing",
+      "description": "Agrupa items do array por campo específico",
+      "icon": "material-symbols:group-work",
+      "color": "#14b8a6",
+      "method": "lib/methods/processors/arrayGroupBy.js:execute",
+      "validator": "lib/methods/processors/arrayGroupBy.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input",
+              "label": "Array",
+              "type": "array",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Grouped Object",
+              "type": "object",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "fieldMode": {
+          "type": "select",
+          "label": "Field Selection",
+          "required": false,
+          "default": "selector",
+          "options": [
+            {
+              "value": "selector",
+              "label": "Select from available fields"
+            },
+            {
+              "value": "custom",
+              "label": "Custom (type manually)"
+            }
+          ]
+        },
+        "selectedField": {
+          "type": "fieldSelector",
+          "label": "Select Field to Group By",
+          "required": false,
+          "condition": {
+            "fieldMode": "selector"
+          },
+          "singleSelect": true,
+          "description": "Click on a field to group by"
+        },
+        "customField": {
+          "type": "string",
+          "label": "Custom Field Path",
+          "required": false,
+          "condition": {
+            "fieldMode": "custom"
+          },
+          "placeholder": "field.name"
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "array-distinct",
+      "label": "Array Distinct",
+      "category": "data-processing",
+      "description": "Remove valores duplicados do array",
+      "icon": "material-symbols:filter-alt-off",
+      "color": "#eab308",
+      "method": "lib/methods/processors/arrayDistinct.js:execute",
+      "validator": "lib/methods/processors/arrayDistinct.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input",
+              "label": "Array",
+              "type": "array",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Unique Array",
+              "type": "array",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "mode": {
+          "type": "select",
+          "label": "Distinct Mode",
+          "required": true,
+          "default": "values",
+          "options": [
+            {
+              "value": "values",
+              "label": "Distinct Values (primitives)"
+            },
+            {
+              "value": "field",
+              "label": "Distinct by Field (objects)"
+            }
+          ]
+        },
+        "fieldMode": {
+          "type": "select",
+          "label": "Field Selection",
+          "required": false,
+          "default": "selector",
+          "condition": {
+            "mode": "field"
+          },
+          "options": [
+            {
+              "value": "selector",
+              "label": "Select from available fields"
+            },
+            {
+              "value": "custom",
+              "label": "Custom (type manually)"
+            }
+          ]
+        },
+        "selectedField": {
+          "type": "fieldSelector",
+          "label": "Select Field for Uniqueness",
+          "required": false,
+          "condition": {
+            "mode": "field",
+            "fieldMode": "selector"
+          },
+          "singleSelect": true,
+          "description": "Click on a field to check uniqueness"
+        },
+        "customField": {
+          "type": "string",
+          "label": "Custom Field Path",
+          "required": false,
+          "condition": {
+            "mode": "field",
+            "fieldMode": "custom"
+          },
+          "placeholder": "field.name"
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "array-merge",
+      "label": "Array Merge",
+      "category": "data-processing",
+      "description": "Junta múltiplos arrays em um único array",
+      "icon": "material-symbols:join",
+      "color": "#14b8a6",
+      "method": "lib/methods/processors/arrayMerge.js:execute",
+      "validator": "lib/methods/processors/arrayMerge.js:validate",
+      "component": "GenericNode",
+      "propertiesComponent": "ArrayMergeProperties",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-array1",
+              "label": "Array 1",
+              "type": "array",
+              "position": "left",
+              "required": true
+            },
+            {
+              "id": "data-array2",
+              "label": "Array 2",
+              "type": "array",
+              "position": "left",
+              "required": true
+            },
+            {
+              "id": "data-array3",
+              "label": "Array 3",
+              "type": "array",
+              "position": "left",
+              "required": false
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Merged Array",
+              "type": "array",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "removeDuplicates": {
+          "type": "boolean",
+          "label": "Remove Duplicates",
+          "required": false,
+          "default": false,
+          "description": "Remove duplicate values from the merged array"
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "object-create",
+      "label": "Object Create",
+      "category": "data-processing",
+      "description": "Cria um objeto com propriedades dinâmicas",
+      "icon": "material-symbols:add-box",
+      "color": "#3b82f6",
+      "method": "lib/methods/processors/objectCreate.js:execute",
+      "validator": "lib/methods/processors/objectCreate.js:validate",
+      "component": "GenericNode",
+      "propertiesComponent": "ObjectCreateProperties",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-prop1",
+              "label": "key1",
+              "type": "any",
+              "position": "left",
+              "required": false
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Object",
+              "type": "object",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {},
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "array-create",
+      "label": "Array Create",
+      "category": "data-processing",
+      "description": "Cria um array com itens dinâmicos",
+      "icon": "material-symbols:playlist-add",
+      "color": "#a855f7",
+      "method": "lib/methods/processors/arrayCreate.js:execute",
+      "validator": "lib/methods/processors/arrayCreate.js:validate",
+      "component": "GenericNode",
+      "propertiesComponent": "ArrayCreateProperties",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-item1",
+              "label": "Item 1",
+              "type": "any",
+              "position": "left",
+              "required": false
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Array",
+              "type": "array",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {},
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "object-merge",
+      "label": "Object Merge",
+      "category": "data-processing",
+      "description": "Combina múltiplos objetos em um único objeto",
+      "icon": "material-symbols:merge",
+      "color": "#10b981",
+      "method": "lib/methods/processors/objectMerge.js:execute",
+      "validator": "lib/methods/processors/objectMerge.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input-1",
+              "label": "Object 1",
+              "type": "object",
+              "position": "left",
+              "required": true
+            },
+            {
+              "id": "data-input-2",
+              "label": "Object 2",
+              "type": "object",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Merged Object",
+              "type": "object",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "mergeMode": {
+          "type": "select",
+          "label": "Merge Strategy",
+          "required": true,
+          "default": "shallow",
+          "options": [
+            {
+              "value": "shallow",
+              "label": "Shallow (Object 2 overwrites Object 1)"
+            },
+            {
+              "value": "deep",
+              "label": "Deep Merge (recursive)"
+            },
+            {
+              "value": "numbered",
+              "label": "Numbered (rename conflicts with _1, _2)"
+            }
+          ]
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "object-pick",
+      "label": "Object Pick",
+      "category": "data-processing",
+      "description": "Mantém apenas propriedades específicas de um objeto",
+      "icon": "material-symbols:check-box",
+      "color": "#8b5cf6",
+      "method": "lib/methods/processors/objectPick.js:execute",
+      "validator": "lib/methods/processors/objectPick.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input",
+              "label": "Object",
+              "type": "object",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Picked Object",
+              "type": "object",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "fieldMode": {
+          "type": "select",
+          "label": "Field Selection",
+          "required": false,
+          "default": "selector",
+          "options": [
+            {
+              "value": "selector",
+              "label": "Select from available fields"
+            },
+            {
+              "value": "custom",
+              "label": "Custom (type manually)"
+            }
+          ]
+        },
+        "selectedFields": {
+          "type": "fieldSelector",
+          "label": "Fields to Keep",
+          "required": false,
+          "condition": {
+            "fieldMode": "selector"
+          },
+          "description": "Click on fields to keep them"
+        },
+        "customFields": {
+          "type": "string",
+          "label": "Custom Fields (comma-separated)",
+          "required": false,
+          "condition": {
+            "fieldMode": "custom"
+          },
+          "placeholder": "field1, field2, nested.field"
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "object-keys-values",
+      "label": "Object Keys/Values",
+      "category": "data-processing",
+      "description": "Extrai as chaves ou valores de um objeto como array",
+      "icon": "material-symbols:key",
+      "color": "#f59e0b",
+      "method": "lib/methods/processors/objectKeysValues.js:execute",
+      "validator": "lib/methods/processors/objectKeysValues.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input",
+              "label": "Object",
+              "type": "object",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Array",
+              "type": "array",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "operation": {
+          "type": "select",
+          "label": "Operation",
+          "required": true,
+          "default": "keys",
+          "options": [
+            {
+              "value": "keys",
+              "label": "Extract Keys"
+            },
+            {
+              "value": "values",
+              "label": "Extract Values"
+            },
+            {
+              "value": "entries",
+              "label": "Extract Entries [key, value]"
+            }
+          ]
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "object-rename",
+      "label": "Object Rename",
+      "category": "data-processing",
+      "description": "Renomeia propriedades de um objeto",
+      "icon": "material-symbols:drive-file-rename-outline",
+      "color": "#06b6d4",
+      "method": "lib/methods/processors/objectRename.js:execute",
+      "validator": "lib/methods/processors/objectRename.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input",
+              "label": "Object",
+              "type": "object",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Renamed Object",
+              "type": "object",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "fieldMode": {
+          "type": "select",
+          "label": "Field Selection",
+          "required": false,
+          "default": "selector",
+          "options": [
+            {
+              "value": "selector",
+              "label": "Select from available fields"
+            },
+            {
+              "value": "custom",
+              "label": "Custom (type manually)"
+            }
+          ]
+        },
+        "selectedField": {
+          "type": "fieldSelector",
+          "label": "Select Field to Rename",
+          "required": false,
+          "condition": {
+            "fieldMode": "selector"
+          },
+          "singleSelect": true,
+          "description": "Click on a field to rename"
+        },
+        "customField": {
+          "type": "string",
+          "label": "Custom Field Path",
+          "required": false,
+          "condition": {
+            "fieldMode": "custom"
+          },
+          "placeholder": "field.name"
+        },
+        "newName": {
+          "type": "string",
+          "label": "New Property Name",
+          "required": true,
+          "placeholder": "newPropertyName"
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "object-set-property",
+      "label": "Object Set Property",
+      "category": "data-processing",
+      "description": "Define ou modifica propriedades de um objeto",
+      "icon": "material-symbols:edit",
+      "color": "#ec4899",
+      "method": "lib/methods/processors/objectSetProperty.js:execute",
+      "validator": "lib/methods/processors/objectSetProperty.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input",
+              "label": "Object",
+              "type": "object",
+              "position": "left",
+              "required": true
+            },
+            {
+              "id": "value-input",
+              "label": "Value",
+              "type": "any",
+              "position": "left",
+              "required": false
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Modified Object",
+              "type": "object",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "fieldMode": {
+          "type": "select",
+          "label": "Property Selection",
+          "required": false,
+          "default": "selector",
+          "options": [
+            {
+              "value": "selector",
+              "label": "Select from available fields"
+            },
+            {
+              "value": "custom",
+              "label": "Custom (type manually)"
+            }
+          ]
+        },
+        "selectedField": {
+          "type": "fieldSelector",
+          "label": "Select Property",
+          "required": false,
+          "condition": {
+            "fieldMode": "selector"
+          },
+          "singleSelect": true,
+          "description": "Click on a property to modify"
+        },
+        "customField": {
+          "type": "string",
+          "label": "Custom Property Path",
+          "required": false,
+          "condition": {
+            "fieldMode": "custom"
+          },
+          "placeholder": "field.name"
+        },
+        "valueMode": {
+          "type": "select",
+          "label": "Value Source",
+          "required": true,
+          "default": "static",
+          "options": [
+            {
+              "value": "static",
+              "label": "Static Value (type below)"
+            },
+            {
+              "value": "input",
+              "label": "Input Handle"
+            }
+          ]
+        },
+        "staticValue": {
+          "type": "string",
+          "label": "Static Value",
+          "required": false,
+          "condition": {
+            "valueMode": "static"
+          },
+          "placeholder": "Enter value"
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "object-to-array",
+      "label": "Object To Array",
+      "category": "data-processing",
+      "description": "Converte objeto em array de objetos {key, value}",
+      "icon": "material-symbols:swap-horiz",
+      "color": "#14b8a6",
+      "method": "lib/methods/processors/objectToArray.js:execute",
+      "validator": "lib/methods/processors/objectToArray.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input",
+              "label": "Object",
+              "type": "object",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Array",
+              "type": "array",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "keyName": {
+          "type": "string",
+          "label": "Key Property Name",
+          "required": false,
+          "default": "key",
+          "placeholder": "key"
+        },
+        "valueName": {
+          "type": "string",
+          "label": "Value Property Name",
+          "required": false,
+          "default": "value",
+          "placeholder": "value"
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "object-transform",
+      "label": "Object Transform",
+      "category": "data-processing",
+      "description": "Transforma valores de propriedades aplicando operações",
+      "icon": "material-symbols:transform",
+      "color": "#eab308",
+      "method": "lib/methods/processors/objectTransform.js:execute",
+      "validator": "lib/methods/processors/objectTransform.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input",
+              "label": "Object",
+              "type": "object",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Transformed Object",
+              "type": "object",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "fieldMode": {
+          "type": "select",
+          "label": "Field Selection",
+          "required": false,
+          "default": "selector",
+          "options": [
+            {
+              "value": "selector",
+              "label": "Select from available fields"
+            },
+            {
+              "value": "custom",
+              "label": "Custom (type manually)"
+            }
+          ]
+        },
+        "selectedField": {
+          "type": "fieldSelector",
+          "label": "Select Field to Transform",
+          "required": false,
+          "condition": {
+            "fieldMode": "selector"
+          },
+          "singleSelect": true,
+          "description": "Click on a field to transform"
+        },
+        "customField": {
+          "type": "string",
+          "label": "Custom Field Path",
+          "required": false,
+          "condition": {
+            "fieldMode": "custom"
+          },
+          "placeholder": "field.name"
+        },
+        "operation": {
+          "type": "select",
+          "label": "Transform Operation",
+          "required": true,
+          "default": "uppercase",
+          "options": [
+            {
+              "value": "uppercase",
+              "label": "To Uppercase"
+            },
+            {
+              "value": "lowercase",
+              "label": "To Lowercase"
+            },
+            {
+              "value": "trim",
+              "label": "Trim Whitespace"
+            },
+            {
+              "value": "number",
+              "label": "To Number"
+            },
+            {
+              "value": "string",
+              "label": "To String"
+            },
+            {
+              "value": "boolean",
+              "label": "To Boolean"
+            }
+          ]
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "constant",
+      "label": "Constant",
+      "category": "data-input",
+      "description": "Define um valor constante de qualquer tipo",
+      "icon": "material-symbols:label",
+      "color": "#6366f1",
+      "method": "lib/methods/constants/constant.js:execute",
+      "validator": "lib/methods/constants/constant.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": []
+        },
+        "outputs": {
+          "execution": [],
+          "data": []
+        }
+      },
+      "dynamicHandles": {
+        "mode": "valueType",
+        "number": {
+          "inputs": {
+            "execution": [],
+            "data": []
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Number",
+                "type": "number",
+                "position": "right",
+                "dynamic": {
+                  "mode": "config-based",
+                  "configField": "valueType",
+                  "description": "Tipo baseado na configuração do valor constante"
+                }
+              }
+            ]
+          }
+        },
+        "string": {
+          "inputs": {
+            "execution": [],
+            "data": []
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "String",
+                "type": "string",
+                "position": "right",
+                "dynamic": {
+                  "mode": "config-based",
+                  "configField": "valueType",
+                  "description": "Tipo baseado na configuração do valor constante"
+                }
+              }
+            ]
+          }
+        },
+        "boolean": {
+          "inputs": {
+            "execution": [],
+            "data": []
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Boolean",
+                "type": "boolean",
+                "position": "right",
+                "dynamic": {
+                  "mode": "config-based",
+                  "configField": "valueType",
+                  "description": "Tipo baseado na configuração do valor constante"
+                }
+              }
+            ]
+          }
+        },
+        "object": {
+          "inputs": {
+            "execution": [],
+            "data": []
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Object",
+                "type": "object",
+                "position": "right",
+                "dynamic": {
+                  "mode": "config-based",
+                  "configField": "valueType",
+                  "description": "Tipo baseado na configuração do valor constante"
+                }
+              }
+            ]
+          }
+        },
+        "array": {
+          "inputs": {
+            "execution": [],
+            "data": []
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Array",
+                "type": "array",
+                "position": "right",
+                "dynamic": {
+                  "mode": "config-based",
+                  "configField": "valueType",
+                  "description": "Tipo baseado na configuração do valor constante"
+                }
+              }
+            ]
+          }
+        },
+        "null": {
+          "inputs": {
+            "execution": [],
+            "data": []
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Null",
+                "type": "any",
+                "position": "right",
+                "dynamic": {
+                  "mode": "config-based",
+                  "configField": "valueType",
+                  "description": "Tipo baseado na configuração do valor constante"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "config": {
+        "valueType": {
+          "type": "select",
+          "label": "Value Type",
+          "required": true,
+          "default": "number",
+          "options": [
+            {
+              "value": "number",
+              "label": "Number"
+            },
+            {
+              "value": "string",
+              "label": "String"
+            },
+            {
+              "value": "boolean",
+              "label": "Boolean"
+            },
+            {
+              "value": "object",
+              "label": "Object (JSON)"
+            },
+            {
+              "value": "array",
+              "label": "Array (JSON)"
+            },
+            {
+              "value": "null",
+              "label": "Null"
+            }
+          ]
+        },
+        "numberValue": {
+          "type": "number",
+          "label": "Number Value",
+          "required": false,
+          "default": 0,
+          "condition": {
+            "valueType": "number"
+          }
+        },
+        "stringValue": {
+          "type": "string",
+          "label": "String Value",
+          "required": false,
+          "default": "",
+          "condition": {
+            "valueType": "string"
+          }
+        },
+        "booleanValue": {
+          "type": "boolean",
+          "label": "Boolean Value",
+          "required": false,
+          "default": false,
+          "condition": {
+            "valueType": "boolean"
+          }
+        },
+        "objectValue": {
+          "type": "textarea",
+          "label": "Object Value (JSON)",
+          "required": false,
+          "default": "{}",
+          "condition": {
+            "valueType": "object"
+          },
+          "placeholder": "{\"key\": \"value\"}"
+        },
+        "arrayValue": {
+          "type": "textarea",
+          "label": "Array Value (JSON)",
+          "required": false,
+          "default": "[]",
+          "condition": {
+            "valueType": "array"
+          },
+          "placeholder": "[1, 2, 3]"
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 1000
+      }
+    },
+    {
+      "type": "compare",
+      "label": "Compare",
+      "category": "logic-control",
+      "description": "Compara dois valores usando a operação selecionada",
+      "icon": "material-symbols:compare-arrows",
+      "color": "#10b981",
+      "method": "lib/methods/comparison/comparison.js:compare",
+      "validator": "lib/methods/comparison/comparison.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-a",
+              "label": "A",
+              "type": "any",
+              "position": "left",
+              "required": true
+            },
+            {
+              "id": "data-b",
+              "label": "B",
+              "type": "any",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Result",
+              "type": "boolean",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "operation": {
+          "type": "select",
+          "label": "Operation",
+          "required": true,
+          "default": "equals",
+          "options": [
+            {
+              "value": "equals",
+              "label": "Equals (==)"
+            },
+            {
+              "value": "not-equals",
+              "label": "Not Equals (!=)"
+            },
+            {
+              "value": "greater-than",
+              "label": "Greater Than (>)"
+            },
+            {
+              "value": "less-than",
+              "label": "Less Than (<)"
+            },
+            {
+              "value": "greater-or-equal",
+              "label": "Greater or Equal (>=)"
+            },
+            {
+              "value": "less-or-equal",
+              "label": "Less or Equal (<=)"
+            }
+          ]
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 1000
+      }
+    },
+    {
+      "type": "conditional-branch",
+      "label": "Conditional Branch",
+      "category": "logic-control",
+      "description": "Ramifica o fluxo baseado em uma condição (IF/ELSE)",
+      "icon": "material-symbols:alt-route",
+      "color": "#f97316",
+      "method": "lib/methods/logic/conditionalBranch.js:execute",
+      "validator": "lib/methods/logic/conditionalBranch.js:validate",
+      "component": "GenericNode",
+      "executable": true,
+      "handles": {
+        "inputs": {
+          "execution": [
+            {
+              "id": "exec-in",
+              "label": "Execute",
+              "type": "exec",
+              "position": "left"
+            }
+          ],
+          "data": [
+            {
+              "id": "data-condition",
+              "label": "Condition",
+              "type": "boolean",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [
+            {
+              "id": "exec-true",
+              "label": "✓ True",
+              "type": "exec",
+              "position": "right"
+            },
+            {
+              "id": "exec-false",
+              "label": "✗ False",
+              "type": "exec",
+              "position": "right"
+            }
+          ],
+          "data": []
+        }
+      },
+      "config": {},
+      "execution": {
+        "mode": "manual",
+        "async": false,
+        "timeout": 1000
+      }
+    },
+    {
+      "type": "type-conversion",
+      "label": "Type Conversion",
+      "category": "operations",
+      "description": "Converte valores entre tipos (number, string, boolean)",
+      "icon": "material-symbols:transform",
+      "color": "#06b6d4",
+      "method": "lib/methods/conversion/typeConversion.js:execute",
+      "validator": "lib/methods/conversion/typeConversion.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-value",
+              "label": "Value",
+              "type": "any",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Result",
+              "type": "any",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "targetType": {
+          "type": "select",
+          "label": "Convert To",
+          "required": true,
+          "default": "string",
+          "options": [
+            {
+              "value": "number",
+              "label": "Number"
+            },
+            {
+              "value": "string",
+              "label": "String"
+            },
+            {
+              "value": "boolean",
+              "label": "Boolean"
+            }
+          ]
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 1000
+      }
+    },
+    {
+      "type": "logic",
+      "label": "Logic Operation",
+      "category": "logic-control",
+      "description": "Operações lógicas (AND, OR, NOT)",
+      "icon": "material-symbols:logic",
+      "color": "#8b5cf6",
+      "method": "lib/methods/logic/logic.js:execute",
+      "validator": "lib/methods/logic/logic.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": []
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Result",
+              "type": "boolean",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "dynamicHandles": {
+        "mode": "operation",
+        "and": {
+          "inputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-a",
+                "label": "A",
+                "type": "boolean",
+                "position": "left",
+                "required": true
+              },
+              {
+                "id": "data-b",
+                "label": "B",
+                "type": "boolean",
+                "position": "left",
+                "required": true
+              }
+            ]
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Result",
+                "type": "boolean",
+                "position": "right"
+              }
+            ]
+          }
+        },
+        "or": {
+          "inputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-a",
+                "label": "A",
+                "type": "boolean",
+                "position": "left",
+                "required": true
+              },
+              {
+                "id": "data-b",
+                "label": "B",
+                "type": "boolean",
+                "position": "left",
+                "required": true
+              }
+            ]
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Result",
+                "type": "boolean",
+                "position": "right"
+              }
+            ]
+          }
+        },
+        "not": {
+          "inputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-value",
+                "label": "Value",
+                "type": "boolean",
+                "position": "left",
+                "required": true
+              }
+            ]
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Result",
+                "type": "boolean",
+                "position": "right"
+              }
+            ]
+          }
+        }
+      },
+      "config": {
+        "operation": {
+          "type": "select",
+          "label": "Operation",
+          "required": true,
+          "default": "and",
+          "options": [
+            {
+              "value": "and",
+              "label": "AND (&&)"
+            },
+            {
+              "value": "or",
+              "label": "OR (||)"
+            },
+            {
+              "value": "not",
+              "label": "NOT (!)"
+            }
+          ]
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 1000
+      }
+    },
+    {
+      "type": "string-ops",
+      "label": "String Operations",
+      "category": "operations",
+      "description": "Operações com strings (concat, split, replace, template)",
+      "icon": "material-symbols:text-fields",
+      "color": "#f59e0b",
+      "method": "lib/methods/string/stringOps.js:execute",
+      "validator": "lib/methods/string/stringOps.js:validate",
+      "component": "GenericNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": []
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Result",
+              "type": "string",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "dynamicHandles": {
+        "mode": "operation",
+        "concat": {
+          "inputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-a",
+                "label": "String A",
+                "type": "string",
+                "position": "left",
+                "required": true
+              },
+              {
+                "id": "data-b",
+                "label": "String B",
+                "type": "string",
+                "position": "left",
+                "required": true
+              }
+            ]
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Result",
+                "type": "string",
+                "position": "right"
+              }
+            ]
+          }
+        },
+        "split": {
+          "inputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-input",
+                "label": "String",
+                "type": "string",
+                "position": "left",
+                "required": true
+              },
+              {
+                "id": "data-separator",
+                "label": "Separator",
+                "type": "string",
+                "position": "left",
+                "required": true
+              }
+            ]
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Result",
+                "type": "array",
+                "position": "right"
+              }
+            ]
+          }
+        },
+        "replace": {
+          "inputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-input",
+                "label": "String",
+                "type": "string",
+                "position": "left",
+                "required": true
+              },
+              {
+                "id": "data-search",
+                "label": "Search",
+                "type": "string",
+                "position": "left",
+                "required": true
+              },
+              {
+                "id": "data-replace",
+                "label": "Replace With",
+                "type": "string",
+                "position": "left",
+                "required": true
+              }
+            ]
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Result",
+                "type": "string",
+                "position": "right"
+              }
+            ]
+          }
+        },
+        "template": {
+          "inputs": {
+            "execution": [],
+            "data": []
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Result",
+                "type": "string",
+                "position": "right"
+              }
+            ]
+          }
+        }
+      },
+      "config": {
+        "operation": {
+          "type": "select",
+          "label": "Operation",
+          "required": true,
+          "default": "concat",
+          "options": [
+            {
+              "value": "concat",
+              "label": "Concat"
+            },
+            {
+              "value": "split",
+              "label": "Split"
+            },
+            {
+              "value": "replace",
+              "label": "Replace"
+            },
+            {
+              "value": "template",
+              "label": "Template"
+            }
+          ]
+        },
+        "templateString": {
+          "type": "textarea",
+          "label": "Template String",
+          "required": false,
+          "default": "Hello {name}!",
+          "condition": {
+            "operation": "template"
+          }
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 1000
+      }
+    },
+    {
+      "type": "for-each",
+      "label": "For Each",
+      "category": "logic-control",
+      "description": "Itera sobre cada item de um array",
+      "icon": "material-symbols:loop",
+      "color": "#ec4899",
+      "method": "lib/methods/iteration/forEach.js:execute",
+      "validator": "lib/methods/iteration/forEach.js:validate",
+      "component": "GenericNode",
+      "executable": true,
+      "handles": {
+        "inputs": {
+          "execution": [
+            {
+              "id": "exec-in",
+              "label": "Execute",
+              "type": "exec",
+              "position": "left"
+            }
+          ],
+          "data": [
+            {
+              "id": "data-array",
+              "label": "Array",
+              "type": "array",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [
+            {
+              "id": "exec-loop-body",
+              "label": "⟳ Loop Body",
+              "type": "exec",
+              "position": "right"
+            },
+            {
+              "id": "exec-complete",
+              "label": "✓ Complete",
+              "type": "exec",
+              "position": "right"
+            }
+          ],
+          "data": [
+            {
+              "id": "data-current-item",
+              "label": "Current Item",
+              "type": "any",
+              "position": "right"
+            },
+            {
+              "id": "data-current-index",
+              "label": "Current Index",
+              "type": "number",
+              "position": "right"
+            },
+            {
+              "id": "data-total-count",
+              "label": "Total Count",
+              "type": "number",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {},
+      "execution": {
+        "mode": "manual",
+        "async": true,
+        "timeout": 10000
+      }
+    },
+    {
+      "type": "while-loop",
+      "label": "While Loop",
+      "category": "logic-control",
+      "description": "Executa loop enquanto condição for verdadeira",
+      "icon": "material-symbols:repeat",
+      "color": "#a855f7",
+      "method": "lib/methods/iteration/whileLoop.js:execute",
+      "validator": "lib/methods/iteration/whileLoop.js:validate",
+      "component": "GenericNode",
+      "executable": true,
+      "handles": {
+        "inputs": {
+          "execution": [
+            {
+              "id": "exec-in",
+              "label": "Execute",
+              "type": "exec",
+              "position": "left"
+            }
+          ],
+          "data": [
+            {
+              "id": "data-condition",
+              "label": "Condition",
+              "type": "boolean",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [
+            {
+              "id": "exec-loop-body",
+              "label": "⟳ Loop Body",
+              "type": "exec",
+              "position": "right"
+            },
+            {
+              "id": "exec-complete",
+              "label": "✓ Complete",
+              "type": "exec",
+              "position": "right"
+            }
+          ],
+          "data": [
+            {
+              "id": "data-iteration-count",
+              "label": "Iteration Count",
+              "type": "number",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "maxIterations": {
+          "type": "number",
+          "label": "Max Iterations (safety)",
+          "required": false,
+          "default": 1000
+        }
+      },
+      "execution": {
+        "mode": "manual",
+        "async": true,
+        "timeout": 30000
+      }
+    },
+    {
+      "type": "debug-viewer",
+      "label": "Debug Viewer",
+      "category": "debug",
+      "description": "Visualiza dados em tempo real (objeto, array, primitivos)",
+      "icon": "material-symbols:bug-report",
+      "color": "#f43f5e",
+      "method": "lib/methods/processors/debugViewer.js:execute",
+      "component": "DebugViewerNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-input",
+              "label": "Data",
+              "type": "any",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": []
+        }
+      },
+      "config": {
+        "label": {
+          "type": "string",
+          "label": "Viewer Label",
+          "required": false,
+          "default": "Debug Viewer",
+          "placeholder": "My Data"
+        },
+        "expanded": {
+          "type": "boolean",
+          "label": "Expand by Default",
+          "required": false,
+          "default": true
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 1000
+      }
+    },
+    {
+      "type": "add",
+      "label": "Add",
+      "category": "operations",
+      "description": "Soma dois valores numéricos",
+      "icon": "material-symbols:add",
+      "color": "#a855f7",
+      "method": "lib/methods/processors/math.js:add",
+      "validator": "lib/methods/processors/math.js:validate",
+      "component": "MathNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-a",
+              "label": "A",
+              "type": "number",
+              "position": "left",
+              "required": true
+            },
+            {
+              "id": "data-b",
+              "label": "B",
+              "type": "number",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Result",
+              "type": "number",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {},
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 1000
+      }
+    },
+    {
+      "type": "subtract",
+      "label": "Subtract",
+      "category": "operations",
+      "description": "Subtrai dois valores numéricos",
+      "icon": "material-symbols:remove",
+      "color": "#a855f7",
+      "method": "lib/methods/processors/math.js:subtract",
+      "validator": "lib/methods/processors/math.js:validate",
+      "component": "MathNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-a",
+              "label": "A",
+              "type": "number",
+              "position": "left",
+              "required": true
+            },
+            {
+              "id": "data-b",
+              "label": "B",
+              "type": "number",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Result",
+              "type": "number",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {},
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 1000
+      }
+    },
+    {
+      "type": "multiply",
+      "label": "Multiply",
+      "category": "operations",
+      "description": "Multiplica dois valores numéricos",
+      "icon": "material-symbols:close",
+      "color": "#a855f7",
+      "method": "lib/methods/processors/math.js:multiply",
+      "validator": "lib/methods/processors/math.js:validate",
+      "component": "MathNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-a",
+              "label": "A",
+              "type": "number",
+              "position": "left",
+              "required": true
+            },
+            {
+              "id": "data-b",
+              "label": "B",
+              "type": "number",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Result",
+              "type": "number",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {},
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 1000
+      }
+    },
+    {
+      "type": "divide",
+      "label": "Divide",
+      "category": "operations",
+      "description": "Divide dois valores numéricos",
+      "icon": "material-symbols:divide",
+      "color": "#a855f7",
+      "method": "lib/methods/processors/math.js:divide",
+      "validator": "lib/methods/processors/math.js:validate",
+      "component": "MathNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-a",
+              "label": "A",
+              "type": "number",
+              "position": "left",
+              "required": true
+            },
+            {
+              "id": "data-b",
+              "label": "B",
+              "type": "number",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Result",
+              "type": "number",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {},
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 1000
+      }
+    },
+    {
+      "type": "round",
+      "label": "Round",
+      "category": "operations",
+      "description": "Arredonda um número para casas decimais específicas",
+      "icon": "material-symbols:dialpad-rounded",
+      "color": "#a855f7",
+      "method": "lib/methods/processors/round.js:execute",
+      "validator": "lib/methods/processors/round.js:validate",
+      "component": "MathNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-value",
+              "label": "Value",
+              "type": "number",
+              "position": "left",
+              "required": true
+            }
+          ]
+        },
+        "outputs": {
+          "execution": [],
+          "data": [
+            {
+              "id": "data-out",
+              "label": "Result",
+              "type": "number",
+              "position": "right"
+            }
+          ]
+        }
+      },
+      "config": {
+        "decimalPlaces": {
+          "type": "number",
+          "label": "Casas Decimais",
+          "required": true,
+          "default": 2,
+          "min": 0,
+          "max": 10,
+          "placeholder": "2",
+          "description": "Número de casas decimais para arredondar"
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 1000
+      }
+    },
+    {
+      "type": "variable",
+      "label": "Variable",
+      "category": "data-input",
+      "description": "Armazena ou recupera variáveis globais (wildcard type)",
+      "icon": "material-symbols:variable",
+      "color": "#ec4899",
+      "method": "lib/methods/storage/variable.js:execute",
+      "validator": "lib/methods/storage/variable.js:validate",
+      "component": "VariableNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": []
+        },
+        "outputs": {
+          "execution": [],
+          "data": []
+        }
+      },
+      "dynamicHandles": {
+        "mode": "get",
+        "get": {
+          "inputs": {
+            "execution": [],
+            "data": []
+          },
+          "outputs": {
+            "execution": [],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Value",
+                "type": "any",
+                "position": "right",
+                "wildcard": true,
+                "dynamic": {
+                  "mode": "wildcard",
+                  "description": "Tipo propagado automaticamente baseado na conexão (GET mode)"
+                }
+              }
+            ]
+          }
+        },
+        "set": {
+          "inputs": {
+            "execution": [
+              {
+                "id": "exec-in",
+                "label": "Execute",
+                "type": "exec",
+                "position": "left"
+              }
+            ],
+            "data": [
+              {
+                "id": "data-input",
+                "label": "Value",
+                "type": "any",
+                "position": "left",
+                "required": true,
+                "wildcard": true,
+                "dynamic": {
+                  "mode": "wildcard",
+                  "description": "Aceita qualquer tipo (SET mode input)"
+                }
+              }
+            ]
+          },
+          "outputs": {
+            "execution": [
+              {
+                "id": "exec-out",
+                "label": "On Complete",
+                "type": "exec",
+                "position": "right"
+              }
+            ],
+            "data": [
+              {
+                "id": "data-out",
+                "label": "Value",
+                "type": "any",
+                "position": "right",
+                "wildcard": true,
+                "dynamic": {
+                  "mode": "wildcard",
+                  "description": "Tipo propagado automaticamente baseado na conexão (SET mode output)"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "config": {
+        "mode": {
+          "type": "select",
+          "label": "Mode",
+          "required": true,
+          "default": "get",
+          "options": [
+            {
+              "value": "get",
+              "label": "GET (Retrieve)"
+            },
+            {
+              "value": "set",
+              "label": "SET (Store)"
+            }
+          ]
+        },
+        "variableName": {
+          "type": "variableSelector",
+          "label": "Variable Name",
+          "required": true,
+          "placeholder": "Select a variable",
+          "allowCustom": false,
+          "condition": {
+            "mode": "get"
+          }
+        },
+        "variableNameSet": {
+          "type": "string",
+          "label": "Variable Name",
+          "required": true,
+          "placeholder": "myVariable",
+          "condition": {
+            "mode": "set"
+          },
+          "mapTo": "variableName"
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 1000
+      }
+    },
+    {
+      "type": "input",
+      "label": "Input",
+      "category": "data-input",
+      "description": "Define parâmetros de entrada para o flow",
+      "icon": "material-symbols:input",
+      "color": "#3b82f6",
+      "method": "lib/methods/io/input.js:execute",
+      "validator": "lib/methods/io/input.js:validate",
+      "component": "InputNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": []
+        },
+        "outputs": {
+          "execution": [
+            {
+              "id": "exec-out",
+              "label": "On Start",
+              "type": "exec",
+              "position": "right"
+            }
+          ],
+          "data": []
+        }
+      },
+      "config": {
+        "parameters": {
+          "type": "array",
+          "label": "Parameters",
+          "required": false,
+          "default": [],
+          "itemType": "object",
+          "schema": {
+            "name": {
+              "type": "string",
+              "required": true
+            },
+            "type": {
+              "type": "string",
+              "required": true
+            },
+            "required": {
+              "type": "boolean",
+              "default": false
+            },
+            "defaultValue": {
+              "type": "any",
+              "required": false
+            }
+          }
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 1000
+      }
+    },
+    {
+      "type": "output",
+      "label": "Output",
+      "category": "data-input",
+      "description": "Define a saída do flow",
+      "icon": "material-symbols:output",
+      "color": "#ef4444",
+      "method": "lib/methods/io/output.js:execute",
+      "validator": "lib/methods/io/output.js:validate",
+      "component": "OutputNode",
+      "handles": {
+        "inputs": {
+          "execution": [
+            {
+              "id": "exec-in",
+              "label": "Execute",
+              "type": "exec",
+              "position": "left"
+            }
+          ],
+          "data": []
+        },
+        "outputs": {
+          "execution": [],
+          "data": []
+        }
+      },
+      "config": {
+        "destination": {
+          "type": "select",
+          "label": "Destination",
+          "required": true,
+          "default": "display",
+          "options": [
+            {
+              "value": "display",
+              "label": "Display Only"
+            },
+            {
+              "value": "apiResponse",
+              "label": "API Response"
+            },
+            {
+              "value": "webhook",
+              "label": "Webhook"
+            },
+            {
+              "value": "email",
+              "label": "Email"
+            },
+            {
+              "value": "googleSheets",
+              "label": "Google Sheets"
+            },
+            {
+              "value": "download",
+              "label": "Download"
+            }
+          ]
+        }
+      },
+      "execution": {
+        "mode": "auto",
+        "async": false,
+        "timeout": 5000
+      }
+    },
+    {
+      "type": "marker",
+      "label": "Marker",
+      "category": "organization",
+      "description": "Visual frame for organizing and grouping nodes",
+      "icon": "material-symbols:square",
+      "color": "#6b7280",
+      "component": "MarkerNode",
+      "handles": {
+        "inputs": {
+          "execution": [],
+          "data": []
+        },
+        "outputs": {
+          "execution": [],
+          "data": []
+        }
+      },
+      "config": {
+        "name": {
+          "type": "string",
+          "label": "Frame Name",
+          "required": false,
+          "default": "Frame",
+          "placeholder": "Enter frame name"
+        },
+        "color": {
+          "type": "color",
+          "label": "Background Color",
+          "required": false,
+          "default": "#f3f4f6"
+        },
+        "width": {
+          "type": "number",
+          "label": "Width",
+          "required": false,
+          "default": 400,
+          "min": 200
+        },
+        "height": {
+          "type": "number",
+          "label": "Height",
+          "required": false,
+          "default": 300,
+          "min": 150
+        }
+      },
+      "execution": {
+        "mode": "none",
+        "async": false
+      },
+      "method": "organization/marker"
+    }
+  ]
+}

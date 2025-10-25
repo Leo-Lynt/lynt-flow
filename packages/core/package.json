@@ -1,0 +1,85 @@
+{
+  "name": "@leo-lynt/lynt-flow-core",
+  "version": "0.1.0",
+  "description": "FlowForge Core - Pure JavaScript execution engines and utilities",
+  "type": "module",
+  "main": "./src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Leo-Lynt/lynt-flow-core.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "require": "./src/index.js"
+    },
+    "./engine": {
+      "import": "./src/engine/index.js",
+      "require": "./src/engine/index.js"
+    },
+    "./engine/*": {
+      "import": "./src/engine/*",
+      "require": "./src/engine/*"
+    },
+    "./storage/*": {
+      "import": "./src/storage/*",
+      "require": "./src/storage/*"
+    },
+    "./utils": {
+      "import": "./src/utils/index.js",
+      "require": "./src/utils/index.js"
+    },
+    "./src/methods/*": {
+      "import": "./src/methods/*",
+      "require": "./src/methods/*"
+    },
+    "./src/engine/*": {
+      "import": "./src/engine/*",
+      "require": "./src/engine/*"
+    },
+    "./src/interfaces/*": {
+      "import": "./src/interfaces/*",
+      "require": "./src/interfaces/*"
+    },
+    "./src/contracts/*": {
+      "import": "./src/contracts/*",
+      "require": "./src/contracts/*"
+    },
+    "./src/utils/*": {
+      "import": "./src/utils/*",
+      "require": "./src/utils/*"
+    },
+    "./src/config/*": {
+      "import": "./src/config/*",
+      "require": "./src/config/*"
+    },
+    "./interfaces/*": {
+      "import": "./src/interfaces/*",
+      "require": "./src/interfaces/*"
+    },
+    "./config/*": {
+      "import": "./src/config/*",
+      "require": "./src/config/*"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Tests not implemented yet\" && exit 0"
+  },
+  "keywords": [
+    "flow",
+    "workflow",
+    "automation",
+    "execution-engine"
+  ],
+  "author": "FlowForge Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  }
+}

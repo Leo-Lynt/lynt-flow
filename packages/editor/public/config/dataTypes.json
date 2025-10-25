@@ -1,0 +1,109 @@
+{
+  "$schema": "./dataTypes.schema.json",
+  "version": "1.0.0",
+  "metadata": {
+    "name": "FlowForge Data Types",
+    "description": "Sistema de tipos de dados com cores e regras de compatibilidade",
+    "lastUpdated": "2025-10-02"
+  },
+  "types": {
+    "exec": {
+      "label": "Execution",
+      "color": "#FFFFFF",
+      "description": "Fluxo de execução",
+      "icon": "material-symbols:electric-bolt"
+    },
+    "any": {
+      "label": "Any",
+      "color": "#8C8C8C",
+      "description": "Aceita qualquer tipo de dado (wildcard)",
+      "icon": "material-symbols:data-object"
+    },
+    "boolean": {
+      "label": "Boolean",
+      "color": "#CC0000",
+      "description": "Verdadeiro ou falso",
+      "icon": "material-symbols:toggle-on"
+    },
+    "integer": {
+      "label": "Integer",
+      "color": "#00FF00",
+      "description": "Número inteiro",
+      "icon": "material-symbols:numbers"
+    },
+    "float": {
+      "label": "Float",
+      "color": "#00FF00",
+      "description": "Número decimal",
+      "icon": "material-symbols:numbers"
+    },
+    "number": {
+      "label": "Number",
+      "color": "#00FF00",
+      "description": "Número inteiro ou decimal",
+      "icon": "material-symbols:numbers"
+    },
+    "string": {
+      "label": "String",
+      "color": "#FF00FF",
+      "description": "Texto ou string",
+      "icon": "material-symbols:text-fields"
+    },
+    "object": {
+      "label": "Object",
+      "color": "#0000FF",
+      "description": "Objeto com propriedades (struct)",
+      "icon": "material-symbols:data-object"
+    },
+    "array": {
+      "label": "Array",
+      "color": "#9933FF",
+      "description": "Lista de itens",
+      "icon": "material-symbols:list"
+    },
+    "date": {
+      "label": "Date",
+      "color": "#FFA500",
+      "description": "Data e hora",
+      "icon": "material-symbols:calendar-month"
+    },
+    "null": {
+      "label": "Null",
+      "color": "#6b7280",
+      "description": "Valor nulo",
+      "icon": "material-symbols:block"
+    }
+  },
+  "compatibility": {
+    "any": ["any", "string", "number", "integer", "float", "boolean", "array", "object", "date", "null"],
+    "string": ["any", "string"],
+    "number": ["any", "number", "integer", "float"],
+    "integer": ["any", "number", "integer"],
+    "float": ["any", "number", "float"],
+    "boolean": ["any", "boolean"],
+    "array": ["any", "array"],
+    "object": ["any", "object"],
+    "date": ["any", "date", "string"],
+    "null": ["any", "null"]
+  },
+  "conversionRules": {
+    "string_to_number": {
+      "from": "string",
+      "to": "number",
+      "automatic": false,
+      "description": "Converte string para número se possível"
+    },
+    "number_to_string": {
+      "from": "number",
+      "to": "string",
+      "automatic": true,
+      "description": "Converte número para string automaticamente"
+    },
+    "array_to_object": {
+      "from": "array",
+      "to": "object",
+      "automatic": false,
+      "description": "Converte array para objeto"
+    }
+  }
+}

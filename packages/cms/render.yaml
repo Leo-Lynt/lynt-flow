@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: flow-forge-cms
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+
+    healthCheckPath: /
+
+    pullRequestPreviewsEnabled: true
+
+    envVars:
+      - key: NODE_VERSION
+        value: 20.19.0
+
+      - key: VITE_API_URL
+        value: https://api-flow.lynt.io
+
+      - key: VITE_CMS_URL
+        value: https://cms-flow.lynt.io
+
+      - key: VITE_EDITOR_URL
+        value: https://editor-flow.lynt.io

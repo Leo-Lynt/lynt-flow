@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* LyntFlow Brand Theme Colors */
+    --brand-pink: #BF1F6A;
+    --brand-purple: #58328C;
+    --brand-green: #8CBF3F;
+    --brand-orange: #F27830;
+    --brand-red: #D93030;
+
+    /* RGB values for transparency usage */
+    --brand-pink-rgb: 191, 31, 106;
+    --brand-purple-rgb: 88, 50, 140;
+    --brand-green-rgb: 140, 191, 63;
+    --brand-orange-rgb: 242, 120, 48;
+    --brand-red-rgb: 217, 48, 48;
+  }
+}
+
+@layer utilities {
+  /* Custom gradient utilities using brand colors */
+  .bg-gradient-brand {
+    background: linear-gradient(135deg, var(--brand-purple), var(--brand-pink));
+  }
+
+  .bg-gradient-brand-alt {
+    background: linear-gradient(135deg, var(--brand-green), var(--brand-orange));
+  }
+
+  .bg-gradient-brand-full {
+    background: linear-gradient(135deg, var(--brand-purple), var(--brand-pink), var(--brand-orange));
+  }
+
+  /* Text gradient utilities */
+  .text-gradient-brand {
+    background: linear-gradient(135deg, var(--brand-purple), var(--brand-pink));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
