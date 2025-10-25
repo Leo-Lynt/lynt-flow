@@ -166,7 +166,7 @@
           <input
             v-model="destinationConfig.subject"
             @input="updateDestinationConfig"
-            placeholder="Relatório FlowForge"
+            placeholder="Relatório LyntFlow"
             class="w-full px-3 py-2 text-sm bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-md"
           />
         </div>
@@ -306,7 +306,7 @@ function getDefaultConfig(destination) {
   const defaults = {
     apiResponse: { format: 'wrapped' },
     webhook: { url: '', method: 'POST', headers: '{}', retry: true },
-    email: { to: '', subject: 'FlowForge Report', format: 'html' },
+    email: { to: '', subject: 'LyntFlow Report', format: 'html' },
     googleSheets: { connectionId: '', spreadsheetUrl: '', sheetName: 'Sheet1', writeMode: 'append' },
     download: { filename: 'output', format: 'json' }
   }

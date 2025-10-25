@@ -26,7 +26,7 @@ const seedData = async () => {
     // Criar usuário de teste
     const testUser = new User({
       name: 'Usuário Teste',
-      email: 'teste@flowforge.com',
+      email: 'teste@LyntFlow.com',
       password: 'senha123'
     });
 

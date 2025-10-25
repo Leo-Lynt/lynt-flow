@@ -9,7 +9,7 @@ const options = {
       description: 'API backend para Flow-Forge - Ferramenta visual de transformação de dados',
       contact: {
         name: 'Flow-Forge Support',
-        email: 'support@flowforge.com'
+        email: 'support@LyntFlow.com'
       },
       license: {
         name: 'MIT',

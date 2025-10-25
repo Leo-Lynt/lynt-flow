@@ -22,7 +22,7 @@ let executionStateManagerInstance = null
 export function getCacheManager() {
   if (!cacheManagerInstance) {
     try {
-      const storageAdapter = new LocalStorageAdapter('flowforge')
+      const storageAdapter = new LocalStorageAdapter('LyntFlow')
       cacheManagerInstance = new CacheManager(storageAdapter)
       console.log('✅ CacheManager initialized with LocalStorageAdapter')
     } catch (error) {

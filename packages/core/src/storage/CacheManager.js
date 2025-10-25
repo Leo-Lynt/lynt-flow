@@ -1,5 +1,5 @@
 /**
- * CacheManager - Sistema unificado de cache para FlowForge
+ * CacheManager - Sistema unificado de cache para LyntFlow
  *
  * Gerencia cache de dados, detecção de tipos e estados temporários
  * usando storage adapter injetado (LocalStorage, Memory, Redis, etc.)

@@ -1,7 +1,7 @@
 {
   "name": "@flow-forge/editor",
   "version": "0.1.0",
-  "description": "FlowForge Editor - Vue.js Application",
+  "description": "LyntFlow Editor - Vue.js Application",
   "private": true,
   "type": "module",
   "engines": {

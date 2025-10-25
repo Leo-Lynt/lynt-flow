@@ -1,5 +1,5 @@
 /**
- * FlowForge Engine - Main Entry Point
+ * LyntFlow Engine - Main Entry Point
  * Exporta todas as funcionalidades do engine
  */
 

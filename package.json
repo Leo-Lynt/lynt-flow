@@ -1,7 +1,7 @@
 {
   "name": "flow-forge-monorepo",
   "version": "0.1.0",
-  "description": "FlowForge - Visual Flow Programming Platform",
+  "description": "LyntFlow - Visual Flow Programming Platform",
   "private": true,
   "type": "module",
   "engines": {
@@ -18,8 +18,9 @@
     "build:api": "echo 'API has no build step - Node.js runtime'",
     "build:editor": "pnpm --filter @flow-forge/editor build",
     "build:cms": "cd packages/cms && pnpm build",
+    "build:vercel": "pnpm build:cms && pnpm build:editor && node scripts/merge-builds.mjs",
     "preview": "pnpm --filter @flow-forge/editor preview",
-    "clean": "rm -rf node_modules packages/*/node_modules",
+    "clean": "rm -rf node_modules packages/*/node_modules dist",
     "install:all": "pnpm install"
   },
   "keywords": [
@@ -29,7 +30,7 @@
     "visual-programming",
     "monorepo"
   ],
-  "author": "FlowForge Team",
+  "author": "LyntFlow Team",
   "license": "MIT",
   "devDependencies": {
     "concurrently": "^9.2.1"

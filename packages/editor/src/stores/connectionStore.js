@@ -112,7 +112,7 @@ export const useConnectionStore = defineStore('connection', () => {
 
       if (!token) {
         // Check localStorage fallback
-        const fallbackToken = localStorage.getItem('flowforge_token')
+        const fallbackToken = localStorage.getItem('LyntFlow_token')
         if (fallbackToken) {
           throw new Error('⚠️ Token não foi passado corretamente. Verifique que flowStore.apiConfig.token está configurado.')
         }

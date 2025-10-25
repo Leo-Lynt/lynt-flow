@@ -2,8 +2,8 @@
   "$schema": "./nodes.schema.json",
   "version": "1.0.0",
   "metadata": {
-    "name": "FlowForge Node Catalog",
-    "description": "Catálogo de nodes disponíveis para o FlowForge engine",
+    "name": "LyntFlow Node Catalog",
+    "description": "Catálogo de nodes disponíveis para o LyntFlow engine",
     "lastUpdated": "2025-10-02"
   },
   "categories": [

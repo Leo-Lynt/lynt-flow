@@ -63,7 +63,7 @@ class LogController {
     try {
       const { filename } = req.query;
       const today = new Date().toISOString().split('T')[0];
-      const file = filename || `flowforge-api-${today}.log`;
+      const file = filename || `LyntFlow-api-${today}.log`;
 
       const stats = await logService.getStats(file);
       return res.json(formatSuccess(stats));

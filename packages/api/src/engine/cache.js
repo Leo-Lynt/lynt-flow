@@ -40,7 +40,7 @@ async function getCacheManager(config = {}) {
           port: config.redis.port || process.env.REDIS_PORT || 6379,
           password: config.redis.password || process.env.REDIS_PASSWORD,
           db: config.redis.db || 0,
-          prefix: 'flowforge-api'
+          prefix: 'LyntFlow-api'
         });
 
         cacheManagerInstance = new CacheManager(redisAdapter);

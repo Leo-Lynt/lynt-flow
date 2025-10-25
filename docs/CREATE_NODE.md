@@ -1,10 +1,10 @@
 # Guia de Criação de Nodes
 
-Este guia explica o processo completo para criar um novo node no FlowForge.
+Este guia explica o processo completo para criar um novo node no LyntFlow.
 
 ## Visão Geral
 
-Um node no FlowForge consiste em:
+Um node no LyntFlow consiste em:
 1. **Método de execução** - Lógica do node (JavaScript com ES Modules)
 2. **Definição no catálogo** - Configuração no `nodes.json`
 3. **Template visual** - Componente Vue para renderização (opcional)
@@ -327,7 +327,7 @@ Veja os arquivos criados para o node Round como referência:
 
 ### Registry Dual (Core vs Frontend)
 
-O FlowForge usa **dois registries separados**:
+O LyntFlow usa **dois registries separados**:
 
 1. **Registry do Core** (`packages/core/src/engine/registry.js`)
    - Usado pela API/backend

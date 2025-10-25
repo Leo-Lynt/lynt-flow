@@ -202,7 +202,7 @@ const loadConnections = async () => {
     const apiUrl = flowStore.apiConfig.baseUrl || 'http://localhost:3001'
     const response = await fetch(`${apiUrl}/api/oauth/connections`, {
       headers: {
-        'Authorization': `Bearer ${flowStore.apiConfig.token || localStorage.getItem('flowforge_token')}`
+        'Authorization': `Bearer ${flowStore.apiConfig.token || localStorage.getItem('LyntFlow_token')}`
       }
     })
 
@@ -226,7 +226,7 @@ const connectGoogleAnalytics = async () => {
     const apiUrl = flowStore.apiConfig.baseUrl || 'http://localhost:3001'
     const response = await fetch(`${apiUrl}/api/oauth/google_analytics/authorize`, {
       headers: {
-        'Authorization': `Bearer ${flowStore.apiConfig.token || localStorage.getItem('flowforge_token')}`
+        'Authorization': `Bearer ${flowStore.apiConfig.token || localStorage.getItem('LyntFlow_token')}`
       }
     })
 
@@ -252,7 +252,7 @@ const testConnection = async (connectionId) => {
     const response = await fetch(`${apiUrl}/api/oauth/connections/${connectionId}/test`, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${flowStore.apiConfig.token || localStorage.getItem('flowforge_token')}`
+        'Authorization': `Bearer ${flowStore.apiConfig.token || localStorage.getItem('LyntFlow_token')}`
       }
     })
 
@@ -277,7 +277,7 @@ const disconnectConnection = async (connectionId) => {
     const response = await fetch(`${apiUrl}/api/oauth/connections/${connectionId}`, {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${flowStore.apiConfig.token || localStorage.getItem('flowforge_token')}`
+        'Authorization': `Bearer ${flowStore.apiConfig.token || localStorage.getItem('LyntFlow_token')}`
       }
     })
 

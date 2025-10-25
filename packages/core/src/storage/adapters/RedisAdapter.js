@@ -10,7 +10,7 @@
 import { StorageAdapter } from '../CacheManager.js'
 
 export class RedisAdapter extends StorageAdapter {
-  constructor(redisClient, prefix = 'flowforge') {
+  constructor(redisClient, prefix = 'LyntFlow') {
     super()
 
     if (!redisClient) {
@@ -231,7 +231,7 @@ export class RedisAdapter extends StorageAdapter {
  * @param {number} config.port - Porta do Redis (padrão: 6379)
  * @param {string} config.password - Senha (opcional)
  * @param {number} config.db - Database number (padrão: 0)
- * @param {string} config.prefix - Prefix das chaves (padrão: flowforge)
+ * @param {string} config.prefix - Prefix das chaves (padrão: LyntFlow)
  */
 export async function createRedisAdapter(config = {}) {
   try {
@@ -243,7 +243,7 @@ export async function createRedisAdapter(config = {}) {
       port = 6379,
       password,
       db = 0,
-      prefix = 'flowforge'
+      prefix = 'LyntFlow'
     } = config
 
     const client = redis.createClient({

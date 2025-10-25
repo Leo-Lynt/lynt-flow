@@ -1,6 +1,8 @@
 {
   "version": 2,
+  "buildCommand": "pnpm install && pnpm build:vercel",
   "outputDirectory": "dist",
+  "installCommand": "pnpm install --frozen-lockfile=false",
   "rewrites": [
     {
       "source": "/api/:path*",

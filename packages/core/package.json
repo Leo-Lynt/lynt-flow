@@ -1,7 +1,7 @@
 {
   "name": "@leo-lynt/lynt-flow-core",
   "version": "0.1.0",
-  "description": "FlowForge Core - Pure JavaScript execution engines and utilities",
+  "description": "LyntFlow Core - Pure JavaScript execution engines and utilities",
   "type": "module",
   "main": "./src/index.js",
   "repository": {
@@ -74,7 +74,7 @@
     "automation",
     "execution-engine"
   ],
-  "author": "FlowForge Team",
+  "author": "LyntFlow Team",
   "license": "MIT",
   "engines": {
     "node": ">=18.0.0"

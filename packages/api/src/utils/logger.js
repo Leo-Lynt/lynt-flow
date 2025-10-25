@@ -36,7 +36,7 @@ if (!isServerless) {
 
   // Transport para arquivo com rotação diária (apenas em ambientes locais)
   fileRotateTransport = new DailyRotateFile({
-    filename: path.join(logsDir, 'flowforge-api-%DATE%.log'),
+    filename: path.join(logsDir, 'LyntFlow-api-%DATE%.log'),
     datePattern: 'YYYY-MM-DD',
     maxSize: '20m',
     maxFiles: '14d',
@@ -50,7 +50,7 @@ let errorFileTransport = null;
 if (!isServerless) {
   // Transport para erros (apenas em ambientes locais)
   errorFileTransport = new DailyRotateFile({
-    filename: path.join(logsDir, 'flowforge-error-%DATE%.log'),
+    filename: path.join(logsDir, 'LyntFlow-error-%DATE%.log'),
     datePattern: 'YYYY-MM-DD',
     maxSize: '20m',
     maxFiles: '30d',
@@ -73,7 +73,7 @@ const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || defaultLevel,
   format: customFormat,
   defaultMeta: {
-    service: 'flowforge-api',
+    service: 'LyntFlow-api',
     environment: process.env.NODE_ENV || 'development'
   },
   transports: transports

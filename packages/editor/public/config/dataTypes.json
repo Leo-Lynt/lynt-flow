@@ -2,7 +2,7 @@
   "$schema": "./dataTypes.schema.json",
   "version": "1.0.0",
   "metadata": {
-    "name": "FlowForge Data Types",
+    "name": "LyntFlow Data Types",
     "description": "Sistema de tipos de dados com cores e regras de compatibilidade",
     "lastUpdated": "2025-10-02"
   },

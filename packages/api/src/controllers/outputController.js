@@ -136,7 +136,7 @@ exports.email = async (req, res) => {
 
     const {
       to,
-      subject = 'FlowForge Output',
+      subject = 'LyntFlow Output',
       format = 'html',
       smtpConfig
     } = config;
@@ -181,7 +181,7 @@ exports.email = async (req, res) => {
           content: JSON.stringify(data, null, 2),
           contentType: 'application/json'
         }];
-        emailContent = `<p>FlowForge Output data attached.</p><pre>${JSON.stringify(data, null, 2)}</pre>`;
+        emailContent = `<p>LyntFlow Output data attached.</p><pre>${JSON.stringify(data, null, 2)}</pre>`;
         isHtml = true;
         break;
 
@@ -192,7 +192,7 @@ exports.email = async (req, res) => {
           content: csvContent,
           contentType: 'text/csv'
         }];
-        emailContent = '<p>FlowForge Output data attached as CSV.</p>';
+        emailContent = '<p>LyntFlow Output data attached as CSV.</p>';
         isHtml = true;
         break;
 

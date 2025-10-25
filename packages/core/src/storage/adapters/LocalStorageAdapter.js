@@ -8,7 +8,7 @@
 import { StorageAdapter } from '../CacheManager.js'
 
 export class LocalStorageAdapter extends StorageAdapter {
-  constructor(prefix = 'flowforge') {
+  constructor(prefix = 'LyntFlow') {
     super()
     this.prefix = prefix
 

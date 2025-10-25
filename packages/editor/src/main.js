@@ -8,7 +8,7 @@ import router from './router'
 import { bootstrap as initEngine } from './engine'
 
 /**
- * Inicializa a aplicação FlowForge
+ * Inicializa a aplicação LyntFlow
  * 1. Carrega o engine (nodes.json + registry)
  * 2. Configura Vue + Pinia + Router
  * 3. Monta a aplicação
@@ -50,7 +50,7 @@ async function bootstrap() {
             ⚠️ Falha ao Inicializar
           </h1>
           <p style="font-size: 1rem; margin-bottom: 2rem; color: #94a3b8;">
-            Não foi possível carregar o FlowForge Engine.
+            Não foi possível carregar o LyntFlow Engine.
           </p>
           <details style="
             text-align: left;

@@ -1,4 +1,4 @@
-# FlowForge 🚀
+# LyntFlow 🚀
 
 **Visual Flow Programming Platform** - Plataforma de programação visual baseada em nodes para criar workflows e automações.
 

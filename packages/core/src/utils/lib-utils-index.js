@@ -1,5 +1,5 @@
 /**
- * Utility functions for FlowForge nodes
+ * Utility functions for LyntFlow nodes
  * @module lib/utils
  */
 

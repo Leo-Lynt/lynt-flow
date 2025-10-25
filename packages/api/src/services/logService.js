@@ -70,7 +70,7 @@ class LogService {
     try {
       // Get the most recent log file instead of calculating date
       const files = await this.getLogFiles();
-      const apiLogFiles = files.filter(f => f.startsWith('flowforge-api-') && f.endsWith('.log') && !f.includes('.log.'));
+      const apiLogFiles = files.filter(f => f.startsWith('LyntFlow-api-') && f.endsWith('.log') && !f.includes('.log.'));
 
       if (apiLogFiles.length === 0) {
         throw new Error('No log files found');
@@ -112,7 +112,7 @@ class LogService {
   }
 
   /**
-   * Extract date from filename (flowforge-api-YYYY-MM-DD.log)
+   * Extract date from filename (LyntFlow-api-YYYY-MM-DD.log)
    */
   extractDateFromFilename(filename) {
     const match = filename.match(/(\d{4}-\d{2}-\d{2})/);

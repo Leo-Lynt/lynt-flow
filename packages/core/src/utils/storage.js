@@ -11,9 +11,9 @@ import { safeJSONParse, validateSafeValue, isValidJSON } from './security.js'
 const STORAGE_VERSION = 1
 
 /**
- * Prefix for all FlowForge storage keys
+ * Prefix for all LyntFlow storage keys
  */
-const KEY_PREFIX = 'flowforge_'
+const KEY_PREFIX = 'LyntFlow_'
 
 /**
  * Maximum size for stored values (1MB)
@@ -156,12 +156,12 @@ export function safeRemoveItem(key) {
 }
 
 /**
- * Clears all FlowForge items from localStorage
+ * Clears all LyntFlow items from localStorage
  */
 export function safeClear() {
   const keys = []
 
-  // Collect all FlowForge keys
+  // Collect all LyntFlow keys
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i)
     if (key && key.startsWith(KEY_PREFIX)) {
@@ -174,7 +174,7 @@ export function safeClear() {
 }
 
 /**
- * Gets all FlowForge keys in localStorage
+ * Gets all LyntFlow keys in localStorage
  * @returns {string[]} Array of keys (without prefix)
  */
 export function getAllKeys() {
@@ -221,7 +221,7 @@ export function getItemSize(key) {
 }
 
 /**
- * Gets total size of all FlowForge storage in bytes
+ * Gets total size of all LyntFlow storage in bytes
  * @returns {number} Total size in bytes
  */
 export function getTotalSize() {
@@ -239,7 +239,7 @@ export function getTotalSize() {
 }
 
 /**
- * Exports all FlowForge data as JSON
+ * Exports all LyntFlow data as JSON
  * @returns {Object} All stored data
  */
 export function exportData() {

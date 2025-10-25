@@ -1,5 +1,5 @@
 /**
- * FlowForge Engine - Main Entry Point (Frontend)
+ * LyntFlow Engine - Main Entry Point (Frontend)
  *
  * NOTA: Frontend mantém apenas registry.js e loader.js locais (com lógica browser-specific)
  * Todo o resto (executor, typeSystem) é importado do @leo-lynt/lynt-flow-core
