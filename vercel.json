@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "pnpm install && pnpm build:vercel",
+  "buildCommand": "cd packages/cms && pnpm build && cd ../.. && pnpm --filter @flow-forge/editor build && node scripts/merge-builds.mjs",
   "outputDirectory": "dist",
   "installCommand": "pnpm install --frozen-lockfile=false",
   "rewrites": [
