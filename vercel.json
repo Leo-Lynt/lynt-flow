@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "cd packages/cms && pnpm build && cd ../.. && pnpm --filter @flow-forge/editor build && node scripts/merge-builds.mjs",
+  "buildCommand": "pnpm --filter flow-forge build && pnpm --filter @flow-forge/editor build && node scripts/merge-builds.mjs",
   "outputDirectory": "dist",
   "installCommand": "pnpm install --frozen-lockfile=false",
   "rewrites": [
