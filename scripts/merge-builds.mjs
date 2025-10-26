@@ -104,6 +104,18 @@ if (existsSync(distDir)) {
   process.exit(1);
 }
 
+// TAMBÉM copiar para .vercel/output/static (Vercel Build Output API)
+console.log('\n📦 Creating Vercel Build Output API structure...');
+const vercelOutputDir = join(rootDir, '.vercel', 'output', 'static');
+try {
+  mkdirSync(vercelOutputDir, { recursive: true });
+  cpSync(distDir, vercelOutputDir, { recursive: true });
+  console.log('✅ Copied to .vercel/output/static');
+  console.log('📂 Path:', vercelOutputDir);
+} catch (err) {
+  console.warn('⚠️  Could not create Vercel output structure:', err.message);
+}
+
 console.log('\n📋 Expected structure:');
 console.log('   dist/');
 console.log('   ├── index.html (CMS)');
