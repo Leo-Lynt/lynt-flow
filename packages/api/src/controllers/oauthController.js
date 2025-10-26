@@ -52,11 +52,11 @@ class OAuthController {
 
       // Se houve erro na autorização
       if (error) {
-        return res.redirect(`${process.env.FRONTEND_URL}/connections?error=${error}`);
+        return res.redirect(`${process.env.FRONTEND_URL}/editor/connections?error=${error}`);
       }
 
       if (!code) {
-        return res.redirect(`${process.env.FRONTEND_URL}/connections?error=no_code`);
+        return res.redirect(`${process.env.FRONTEND_URL}/editor/connections?error=no_code`);
       }
 
       // Decodificar state para pegar userId e purpose
@@ -74,16 +74,16 @@ class OAuthController {
           `${process.env.FRONTEND_URL}/auth/callback?success=true&token=${result.token}&email=${result.email}`
         );
       } else {
-        // Connection - redirecionar para /connections
+        // Connection - redirecionar para /editor/connections
         return res.redirect(
-          `${process.env.FRONTEND_URL}/connections?success=true&provider=${provider}&serviceType=${serviceType || 'generic'}&email=${result.email}`
+          `${process.env.FRONTEND_URL}/editor/connections?success=true&provider=${provider}&serviceType=${serviceType || 'generic'}&email=${result.email}`
         );
       }
 
     } catch (error) {
       logger.error('Erro no callback OAuth:', error);
       return res.redirect(
-        `${process.env.FRONTEND_URL}/connections?error=${encodeURIComponent(error.message)}`
+        `${process.env.FRONTEND_URL}/editor/connections?error=${encodeURIComponent(error.message)}`
       );
     }
   }
