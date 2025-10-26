@@ -42,7 +42,7 @@ export async function executeOutput(outputData, destination, apiConfig) {
   }
 
   // All other types call backend routes
-  const baseUrl = apiConfig.baseUrl || 'http://localhost:3001'
+  const baseUrl = apiConfig.baseUrl
   const token = apiConfig.token
 
   if (!token) {

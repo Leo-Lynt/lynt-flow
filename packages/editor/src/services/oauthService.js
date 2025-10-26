@@ -10,7 +10,7 @@
  * @returns {Promise<void>} Redirects to Google OAuth
  */
 export async function initiateGoogleOAuth(serviceType, apiConfig) {
-  const baseUrl = apiConfig?.baseUrl || import.meta.env.VITE_API_URL || 'http://localhost:3001'
+  const baseUrl = apiConfig?.baseUrl || import.meta.env.VITE_API_URL
   const token = apiConfig?.token
 
   if (!token) {
@@ -98,7 +98,7 @@ export function handleOAuthCallback(queryParams) {
  * @returns {Promise<Array>} Array of connections
  */
 export async function listConnections(apiConfig) {
-  const baseUrl = apiConfig?.baseUrl || import.meta.env.VITE_API_URL || 'http://localhost:3001'
+  const baseUrl = apiConfig?.baseUrl || import.meta.env.VITE_API_URL
   const token = apiConfig?.token
 
   if (!token) {
@@ -132,7 +132,7 @@ export async function listConnections(apiConfig) {
  * @returns {Promise<Object>} { success: boolean }
  */
 export async function revokeConnection(connectionId, apiConfig) {
-  const baseUrl = apiConfig?.baseUrl || import.meta.env.VITE_API_URL || 'http://localhost:3001'
+  const baseUrl = apiConfig?.baseUrl || import.meta.env.VITE_API_URL
   const token = apiConfig?.token
 
   if (!token) {

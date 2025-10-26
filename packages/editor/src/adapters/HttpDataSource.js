@@ -10,7 +10,7 @@ export class HttpDataSource extends IDataSource {
   constructor(apiBaseUrl) {
     super()
     // Usar VITE_API_URL se disponível, senão fallback para localhost
-    const baseUrl = apiBaseUrl || `${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api`
+    const baseUrl = apiBaseUrl || `${import.meta.env.VITE_API_URL}/api`
     this.apiBaseUrl = baseUrl
     this.sourceType = null // Will be set by subclasses or constructor
   }

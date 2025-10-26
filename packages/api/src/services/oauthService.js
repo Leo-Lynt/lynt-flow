@@ -9,7 +9,7 @@ class OAuthService {
       google: {
         clientId: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        redirectUri: process.env.GOOGLE_REDIRECT_URI || 'http://localhost:3001/api/oauth/google/callback',
+        redirectUri: process.env.GOOGLE_REDIRECT_URI,
         scopePresets: {
           analytics: [
             'https://www.googleapis.com/auth/analytics.readonly',
@@ -29,7 +29,7 @@ class OAuthService {
       google_analytics: {
         clientId: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        redirectUri: process.env.GOOGLE_REDIRECT_URI || 'http://localhost:3001/api/oauth/google/callback',
+        redirectUri: process.env.GOOGLE_REDIRECT_URI,
         scopes: [
           'https://www.googleapis.com/auth/analytics.readonly',
           'https://www.googleapis.com/auth/analytics',
@@ -41,7 +41,7 @@ class OAuthService {
       google_sheets: {
         clientId: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        redirectUri: process.env.GOOGLE_REDIRECT_URI || 'http://localhost:3001/api/oauth/google/callback',
+        redirectUri: process.env.GOOGLE_REDIRECT_URI,
         scopes: [
           'https://www.googleapis.com/auth/spreadsheets',
           'https://www.googleapis.com/auth/drive.file',

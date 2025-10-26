@@ -692,7 +692,7 @@ const executeNode = async () => {
     // Prepare context with apiConfig
     const context = {
       apiConfig: {
-        baseUrl: flowStore.apiConfig?.baseUrl || 'http://localhost:3001',
+        baseUrl: flowStore.apiConfig?.baseUrl,
         token: flowStore.apiConfig?.token || ''
       }
     }

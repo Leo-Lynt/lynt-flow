@@ -72,7 +72,7 @@ function validateCatalog(catalog) {
  * @param {string} apiUrl - URL da API (default: import.meta.env.VITE_API_URL ou http://localhost:3001)
  * @returns {Promise<Object>} Catálogo carregado
  */
-export async function loadNodeCatalog(apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001') {
+export async function loadNodeCatalog(apiUrl = import.meta.env.VITE_API_URL) {
   if (catalogLoaded) {
     return catalogData
   }

@@ -199,7 +199,7 @@ const loadConnections = async () => {
   loading.value = true
 
   try {
-    const apiUrl = flowStore.apiConfig.baseUrl || 'http://localhost:3001'
+    const apiUrl = import.meta.env.VITE_API_URL
     const response = await fetch(`${apiUrl}/api/oauth/connections`, {
       headers: {
         'Authorization': `Bearer ${flowStore.apiConfig.token || localStorage.getItem('LyntFlow_token')}`
@@ -223,7 +223,7 @@ const connectGoogleAnalytics = async () => {
   isConnecting.value = true
 
   try {
-    const apiUrl = flowStore.apiConfig.baseUrl || 'http://localhost:3001'
+    const apiUrl = import.meta.env.VITE_API_URL
     const response = await fetch(`${apiUrl}/api/oauth/google_analytics/authorize`, {
       headers: {
         'Authorization': `Bearer ${flowStore.apiConfig.token || localStorage.getItem('LyntFlow_token')}`
@@ -248,7 +248,7 @@ const connectGoogleAnalytics = async () => {
 
 const testConnection = async (connectionId) => {
   try {
-    const apiUrl = flowStore.apiConfig.baseUrl || 'http://localhost:3001'
+    const apiUrl = import.meta.env.VITE_API_URL
     const response = await fetch(`${apiUrl}/api/oauth/connections/${connectionId}/test`, {
       method: 'POST',
       headers: {
@@ -273,7 +273,7 @@ const disconnectConnection = async (connectionId) => {
   if (!confirm('Are you sure you want to disconnect this service?')) return
 
   try {
-    const apiUrl = flowStore.apiConfig.baseUrl || 'http://localhost:3001'
+    const apiUrl = import.meta.env.VITE_API_URL
     const response = await fetch(`${apiUrl}/api/oauth/connections/${connectionId}`, {
       method: 'DELETE',
       headers: {

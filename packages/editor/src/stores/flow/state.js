@@ -21,7 +21,7 @@ export function createFlowState() {
     token: null,
     flowId: null,
     flowDataId: null,
-    baseUrl: import.meta.env.VITE_API_URL || 'http://localhost:3001',
+    baseUrl: import.meta.env.VITE_API_URL,
   })
 
   // Sync Status

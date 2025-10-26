@@ -55,7 +55,7 @@ export const useFlowStore = defineStore('flow', () => {
     token: null,
     flowId: null,
     flowDataId: null,
-    baseUrl: 'http://localhost:3001',
+    baseUrl: import.meta.env.VITE_API_URL,
   })
 
   // Sync Status
