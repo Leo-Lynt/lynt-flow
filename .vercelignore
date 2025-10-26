@@ -1,0 +1,16 @@
+# Vercel ignore file
+# Override .gitignore to include dist folder for deployment
+
+# Include everything by default
+!*
+
+# Only ignore these specific items
+node_modules
+.git
+.env.local
+.env.*.local
+*.log
+
+# Explicitly DO NOT ignore dist
+!dist
+!dist/**
