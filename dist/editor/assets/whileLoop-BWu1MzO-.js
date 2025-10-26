@@ -1,1 +1,0 @@
-import{u as a}from"./dataUtils-XrCV_Bny.js";function r({nodeData:n,inputs:t}){const o=a(t.condition),e=n.maxIterations||1e3;return{__whileLoop:!0,initialCondition:!!o,maxIterations:e}}function s(n){const t=n.maxIterations||1e3;return t<1||t>1e4?{valid:!1,errors:["Max iterations must be between 1 and 10000"]}:{valid:!0,errors:[]}}export{r as execute,s as validate};

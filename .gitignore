@@ -12,7 +12,7 @@ node_modules
 
 # Build outputs
 .DS_Store
-# dist # Commitando dist para Vercel servir como static
+dist
 dist-ssr
 coverage
 *.local

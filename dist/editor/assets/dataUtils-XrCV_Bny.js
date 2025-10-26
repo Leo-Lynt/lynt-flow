@@ -1,1 +1,0 @@
-function n(e){if(e==null)return e;if(e&&typeof e=="object"&&"type"in e&&"value"in e)return n(e.value);if(Array.isArray(e))return e.map(r=>n(r));if(typeof e=="object"){const r={};for(const[u,f]of Object.entries(e))r[u]=n(f);return r}return e}export{n as u};
