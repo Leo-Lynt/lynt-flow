@@ -1,6 +1,7 @@
 {
   "name": "@leo-lynt/lynt-flow-core",
   "version": "0.1.0",
+  "private": true,
   "description": "LyntFlow Core - Pure JavaScript execution engines and utilities",
   "type": "module",
   "main": "./src/index.js",
