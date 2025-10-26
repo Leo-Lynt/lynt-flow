@@ -1,0 +1,1 @@
+import{u as r}from"./dataUtils-XrCV_Bny.js";function c({nodeData:e,inputs:t}){const n=e.items||[],i=[];for(const o of n){const s=r(t[o.id]);i.push(s)}return i}function m(e){const t=[];return(e.items||[]).length===0&&t.push("É necessário adicionar pelo menos 1 item"),{valid:t.length===0,errors:t}}export{c as execute,m as validate};
