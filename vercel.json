@@ -2,20 +2,21 @@
   "buildCommand": "pnpm -w run build:vercel",
   "outputDirectory": "dist",
   "installCommand": "pnpm install",
-  "cleanUrls": true,
-  "trailingSlash": false,
-  "rewrites": [
+  "routes": [
     {
-      "source": "/api/:path*",
-      "destination": "https://api-flow.lynt.io/api/:path*"
+      "src": "/api/(.*)",
+      "dest": "https://api-flow.lynt.io/api/$1"
     },
     {
-      "source": "/editor/:path*",
-      "destination": "/editor/index.html"
+      "handle": "filesystem"
     },
     {
-      "source": "/:path*",
-      "destination": "/index.html"
+      "src": "/editor/(.*)",
+      "dest": "/editor/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ],
   "headers": [
