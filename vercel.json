@@ -10,11 +10,11 @@
       "destination": "https://api-flow.lynt.io/api/:path*"
     },
     {
-      "source": "/editor/:path((?!.*\\.).*)",
+      "source": "/editor/:path*",
       "destination": "/editor/index.html"
     },
     {
-      "source": "/:path((?!.*\\.).*)",
+      "source": "/:path*",
       "destination": "/index.html"
     }
   ],
