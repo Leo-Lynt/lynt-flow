@@ -72,7 +72,7 @@ class OAuthService {
   // Novo método v2 com scopes dinâmicos
   getGoogleAuthUrlV2(userId, state, options = {}) {
     const config = this.providers.google;
-    const { scopes = [], purpose = 'connection', serviceType = null } = options;
+    const { scopes = [], purpose = 'connection', serviceType = null, flowId = null } = options;
 
     // Construir scopes finais
     let finalScopes = [];
@@ -100,11 +100,12 @@ class OAuthService {
       config.redirectUri
     );
 
-    // State para segurança (inclui userId, purpose, serviceType)
+    // State para segurança (inclui userId, purpose, serviceType, flowId)
     const stateData = JSON.stringify({
       userId,
       purpose,
       serviceType,
+      flowId,
       timestamp: Date.now(),
       custom: state
     });

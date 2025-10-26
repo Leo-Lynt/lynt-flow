@@ -8,7 +8,7 @@ class OAuthController {
     try {
       const { provider } = req.params;
       const userId = req.user.userId;
-      const { state, scopes, purpose, serviceType } = req.query;
+      const { state, scopes, purpose, serviceType, flowId } = req.query;
 
       // Novo formato com scopes dinâmicos
       if (provider === 'google') {
@@ -17,7 +17,8 @@ class OAuthController {
         const options = {
           scopes: scopesArray,
           purpose: purpose || 'connection',
-          serviceType: serviceType || null
+          serviceType: serviceType || null,
+          flowId: flowId || null
         };
 
         const authUrl = oauthService.getAuthorizationUrl(provider, userId, state, options);
@@ -50,19 +51,38 @@ class OAuthController {
       const { provider } = req.params;
       const { code, state, error } = req.query;
 
+      // Tentar decodificar state para pegar flowId (mesmo em caso de erro)
+      let flowId = null;
+      if (state) {
+        try {
+          const stateDecoded = Buffer.from(state, 'base64').toString('utf8');
+          const stateData = JSON.parse(stateDecoded);
+          flowId = stateData.flowId || null;
+        } catch (e) {
+          logger.warn('Erro ao decodificar state:', e);
+        }
+      }
+
       // Se houve erro na autorização
       if (error) {
-        return res.redirect(`${process.env.FRONTEND_URL}/editor/connections?error=${error}`);
+        const redirectUrl = flowId
+          ? `${process.env.FRONTEND_URL}/editor/?flowId=${flowId}&error=${error}`
+          : `${process.env.FRONTEND_URL}/editor/?error=${error}`;
+        return res.redirect(redirectUrl);
       }
 
       if (!code) {
-        return res.redirect(`${process.env.FRONTEND_URL}/editor/connections?error=no_code`);
+        const redirectUrl = flowId
+          ? `${process.env.FRONTEND_URL}/editor/?flowId=${flowId}&error=no_code`
+          : `${process.env.FRONTEND_URL}/editor/?error=no_code`;
+        return res.redirect(redirectUrl);
       }
 
       // Decodificar state para pegar userId e purpose
       const stateDecoded = Buffer.from(state, 'base64').toString('utf8');
       const stateData = JSON.parse(stateDecoded);
       const { userId, purpose = 'connection', serviceType } = stateData;
+      flowId = stateData.flowId || flowId;
 
       // Trocar code por tokens
       const result = await oauthService.exchangeCodeForTokens(provider, code, userId, stateData);
@@ -74,17 +94,35 @@ class OAuthController {
           `${process.env.FRONTEND_URL}/auth/callback?success=true&token=${result.token}&email=${result.email}`
         );
       } else {
-        // Connection - redirecionar para /editor/connections
-        return res.redirect(
-          `${process.env.FRONTEND_URL}/editor/connections?success=true&provider=${provider}&serviceType=${serviceType || 'generic'}&email=${result.email}`
-        );
+        // Connection - redirecionar para /editor/ com flowId
+        const redirectUrl = flowId
+          ? `${process.env.FRONTEND_URL}/editor/?flowId=${flowId}&success=true&provider=${provider}&serviceType=${serviceType || 'generic'}&email=${result.email}`
+          : `${process.env.FRONTEND_URL}/editor/?success=true&provider=${provider}&serviceType=${serviceType || 'generic'}&email=${result.email}`;
+
+        return res.redirect(redirectUrl);
       }
 
     } catch (error) {
       logger.error('Erro no callback OAuth:', error);
-      return res.redirect(
-        `${process.env.FRONTEND_URL}/editor/connections?error=${encodeURIComponent(error.message)}`
-      );
+
+      // Tentar pegar flowId do state se houver erro
+      let flowId = null;
+      try {
+        const { state } = req.query;
+        if (state) {
+          const stateDecoded = Buffer.from(state, 'base64').toString('utf8');
+          const stateData = JSON.parse(stateDecoded);
+          flowId = stateData.flowId || null;
+        }
+      } catch (e) {
+        // Ignorar erro de decodificação
+      }
+
+      const redirectUrl = flowId
+        ? `${process.env.FRONTEND_URL}/editor/?flowId=${flowId}&error=${encodeURIComponent(error.message)}`
+        : `${process.env.FRONTEND_URL}/editor/?error=${encodeURIComponent(error.message)}`;
+
+      return res.redirect(redirectUrl);
     }
   }
 

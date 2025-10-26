@@ -130,8 +130,8 @@ export const useConnectionStore = defineStore('connection', () => {
         throw new Error(`Tipo de serviço desconhecido: ${serviceType}`)
       }
 
-
-      const url = `${baseUrl}/api/oauth/google/authorize?scopes=${scopes}&purpose=connection&serviceType=${serviceType}`
+      const flowId = apiConfig?.flowId
+      const url = `${baseUrl}/api/oauth/google/authorize?scopes=${scopes}&purpose=connection&serviceType=${serviceType}&flowId=${flowId || ''}`
 
       const response = await fetch(url, {
         method: 'GET',
