@@ -119,6 +119,22 @@ export const useConnectionStore = defineStore('connection', () => {
         throw new Error('⚠️ Token de autenticação não encontrado. Acesse a aplicação com ?accessToken=SEU_TOKEN&flowId=SEU_FLOW_ID')
       }
 
+      // Verificar se já existe conexão deste tipo
+      const existingConnections = getConnectionsByType(serviceType)
+      if (existingConnections.length > 0) {
+        const serviceLabel = serviceType === 'analytics' ? 'Google Analytics' : 'Google Sheets'
+        const existingEmails = existingConnections.map(c => c.email || c.providerData?.email || 'Conta existente').join(', ')
+
+        const confirmReconnect = window.confirm(
+          `Você já possui ${existingConnections.length} conexão(ões) ${serviceLabel}:\n\n${existingEmails}\n\nDeseja reconectar? Isso atualizará a conexão existente se for a mesma conta.`
+        )
+
+        if (!confirmReconnect) {
+          loading.value = false
+          return // Cancelar conexão
+        }
+      }
+
       // Mapear serviceType para scopes
       const scopesMap = {
         'analytics': 'analytics',

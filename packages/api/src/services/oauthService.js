@@ -293,26 +293,64 @@ class OAuthService {
   async handleConnectionFlow(userId, userData, tokens, expiresAt, serviceType) {
     const serviceName = serviceType ? this.getServiceName(serviceType) : 'Google';
 
-    const connection = new Connection({
+    // Buscar conexão existente (para evitar duplicatas)
+    const existingConnection = await Connection.findOne({
       userId,
       provider: 'google',
       serviceType: serviceType || 'generic',
-      purpose: 'connection',
-      name: `${serviceName} - ${userData.email}`,
-      accessToken: '', // Será criptografado abaixo
-      refreshToken: '',
-      expiresAt,
-      scope: tokens.scope ? tokens.scope.split(' ') : [],
-      providerData: userData
+      'providerData.email': userData.email
     });
 
-    // Criptografar tokens
+    let connection;
+    let isUpdate = false;
+
+    if (existingConnection) {
+      // Atualizar conexão existente (upsert)
+      logger.info('🔄 Atualizando conexão existente:', {
+        connectionId: existingConnection._id,
+        email: userData.email,
+        serviceType
+      });
+
+      connection = existingConnection;
+      connection.name = `${serviceName} - ${userData.email}`;
+      connection.expiresAt = expiresAt;
+      connection.scope = tokens.scope ? tokens.scope.split(' ') : [];
+      connection.providerData = userData;
+      connection.isActive = true;
+      connection.errorCount = 0;
+      connection.lastError = null;
+      isUpdate = true;
+    } else {
+      // Criar nova conexão
+      logger.info('✨ Criando nova conexão:', {
+        email: userData.email,
+        serviceType
+      });
+
+      connection = new Connection({
+        userId,
+        provider: 'google',
+        serviceType: serviceType || 'generic',
+        purpose: 'connection',
+        name: `${serviceName} - ${userData.email}`,
+        accessToken: '',
+        refreshToken: '',
+        expiresAt,
+        scope: tokens.scope ? tokens.scope.split(' ') : [],
+        providerData: userData
+      });
+    }
+
+    // Criptografar tokens (sempre atualizar, mesmo em update)
     connection.accessToken = connection.encryptToken(tokens.access_token);
     if (tokens.refresh_token) {
       connection.refreshToken = connection.encryptToken(tokens.refresh_token);
     }
 
     await connection.save();
+
+    logger.info(isUpdate ? '✅ Conexão atualizada com sucesso' : '✅ Nova conexão criada com sucesso');
 
     return {
       connection,
