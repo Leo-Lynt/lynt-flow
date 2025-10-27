@@ -355,8 +355,15 @@ const checkOAuthCallback = () => {
     // Show success notification
     alert(`✅ Successfully connected to Google Analytics!\n\nAccount: ${email}`)
 
-    // Clean URL
-    window.history.replaceState({}, document.title, window.location.pathname)
+    // Clean OAuth params but keep flowId and other params
+    urlParams.delete('success')
+    urlParams.delete('error')
+    urlParams.delete('provider')
+    urlParams.delete('serviceType')
+    urlParams.delete('email')
+
+    const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '')
+    window.history.replaceState({}, document.title, newUrl)
 
     // Reload connections in properties panel if it's open
     window.dispatchEvent(new CustomEvent('oauth-success'))
@@ -365,8 +372,15 @@ const checkOAuthCallback = () => {
   if (error) {
     alert(`❌ Connection failed: ${error}`)
 
-    // Clean URL
-    window.history.replaceState({}, document.title, window.location.pathname)
+    // Clean OAuth params but keep flowId and other params
+    urlParams.delete('success')
+    urlParams.delete('error')
+    urlParams.delete('provider')
+    urlParams.delete('serviceType')
+    urlParams.delete('email')
+
+    const newUrl = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '')
+    window.history.replaceState({}, document.title, newUrl)
   }
 }
 
