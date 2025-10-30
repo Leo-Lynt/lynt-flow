@@ -293,56 +293,98 @@ class OAuthService {
   async handleConnectionFlow(userId, userData, tokens, expiresAt, serviceType) {
     const serviceName = serviceType ? this.getServiceName(serviceType) : 'Google';
 
-    // Buscar conexão existente (para evitar duplicatas)
-    const existingConnection = await Connection.findOne({
+    // 1. Buscar TODAS as conexões existentes para este usuário e serviceType
+    // Incluindo formatos antigos (provider: 'google_sheets'/'google_analytics')
+    // e novos (provider: 'google' com serviceType)
+    const providerQueries = [];
+
+    // Query para novo formato
+    providerQueries.push({
       userId,
       provider: 'google',
       serviceType: serviceType || 'generic',
-      'providerData.email': userData.email
+      isActive: true
     });
 
-    let connection;
-    let isUpdate = false;
-
-    if (existingConnection) {
-      // Atualizar conexão existente (upsert)
-      logger.info('🔄 Atualizando conexão existente:', {
-        connectionId: existingConnection._id,
-        email: userData.email,
-        serviceType
-      });
-
-      connection = existingConnection;
-      connection.name = `${serviceName} - ${userData.email}`;
-      connection.expiresAt = expiresAt;
-      connection.scope = tokens.scope ? tokens.scope.split(' ') : [];
-      connection.providerData = userData;
-      connection.isActive = true;
-      connection.errorCount = 0;
-      connection.lastError = null;
-      isUpdate = true;
-    } else {
-      // Criar nova conexão
-      logger.info('✨ Criando nova conexão:', {
-        email: userData.email,
-        serviceType
-      });
-
-      connection = new Connection({
+    // Query para formato antigo compatível
+    if (serviceType === 'sheets') {
+      providerQueries.push({
         userId,
-        provider: 'google',
-        serviceType: serviceType || 'generic',
-        purpose: 'connection',
-        name: `${serviceName} - ${userData.email}`,
-        accessToken: '',
-        refreshToken: '',
-        expiresAt,
-        scope: tokens.scope ? tokens.scope.split(' ') : [],
-        providerData: userData
+        provider: 'google_sheets',
+        isActive: true
+      });
+    } else if (serviceType === 'analytics') {
+      providerQueries.push({
+        userId,
+        provider: 'google_analytics',
+        isActive: true
       });
     }
 
-    // Criptografar tokens (sempre atualizar, mesmo em update)
+    const existingConnections = await Connection.find({
+      $or: providerQueries
+    });
+
+    logger.info('🔍 Conexões existentes encontradas:', {
+      count: existingConnections.length,
+      serviceType,
+      email: userData.email
+    });
+
+    // 2. Identificar e remover duplicatas do mesmo email
+    let deletedCount = 0;
+    for (const conn of existingConnections) {
+      // Extrair email da conexão (tentar vários formatos)
+      let connEmail = null;
+
+      if (conn.providerData?.email) {
+        connEmail = conn.providerData.email;
+      } else if (conn.name) {
+        // Tentar extrair email do nome (formato: "Google Sheets - email@example.com")
+        const emailMatch = conn.name.match(/[\w\.-]+@[\w\.-]+\.\w+/);
+        if (emailMatch) {
+          connEmail = emailMatch[0];
+        }
+      }
+
+      // Se encontrou email e é o mesmo que está sendo conectado, deletar conexão antiga
+      if (connEmail && connEmail.toLowerCase() === userData.email.toLowerCase()) {
+        logger.info('🗑️  Removendo conexão duplicada:', {
+          connectionId: conn._id,
+          provider: conn.provider,
+          serviceType: conn.serviceType,
+          email: connEmail
+        });
+
+        await Connection.deleteOne({ _id: conn._id });
+        deletedCount++;
+      }
+    }
+
+    if (deletedCount > 0) {
+      logger.info(`✅ ${deletedCount} conexão(ões) duplicada(s) removida(s)`);
+    }
+
+    // 3. Criar nova conexão (sempre criar nova após limpar duplicatas)
+    logger.info('✨ Criando nova conexão:', {
+      email: userData.email,
+      serviceType
+    });
+
+    const connection = new Connection({
+      userId,
+      provider: 'google',
+      serviceType: serviceType || 'generic',
+      purpose: 'connection',
+      name: `${serviceName} - ${userData.email}`,
+      accessToken: '',
+      refreshToken: '',
+      expiresAt,
+      scope: tokens.scope ? tokens.scope.split(' ') : [],
+      providerData: userData
+    });
+
+    // Criptografar tokens
     connection.accessToken = connection.encryptToken(tokens.access_token);
     if (tokens.refresh_token) {
       connection.refreshToken = connection.encryptToken(tokens.refresh_token);
@@ -350,7 +392,7 @@ class OAuthService {
 
     await connection.save();
 
-    logger.info(isUpdate ? '✅ Conexão atualizada com sucesso' : '✅ Nova conexão criada com sucesso');
+    logger.info('✅ Nova conexão criada com sucesso (duplicatas limpas)');
 
     return {
       connection,
