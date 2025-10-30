@@ -37,7 +37,7 @@ onMounted(() => {
 
 <template>
   <div id="app" class="h-screen overflow-hidden bg-flow-bg dark:bg-flow-bg-dark text-flow-text dark:text-flow-text-dark font-sans antialiased transition-colors duration-200">
-    <FlowCanvas />
+    <router-view />
   </div>
 </template>
 

@@ -20,6 +20,32 @@ const router = createRouter({
       path: '/connections',
       name: 'connections',
       component: ConnectionsView,
+    },
+    {
+      path: '/docs',
+      component: () => import('../views/docs/DocsLayout.vue'),
+      children: [
+        {
+          path: '',
+          name: 'docs-home',
+          component: () => import('../views/docs/DocsHome.vue'),
+        },
+        {
+          path: 'getting-started',
+          name: 'docs-getting-started',
+          component: () => import('../views/docs/GettingStarted.vue'),
+        },
+        {
+          path: 'nodes',
+          name: 'docs-nodes',
+          component: () => import('../views/docs/NodesList.vue'),
+        },
+        {
+          path: 'nodes/:nodeType',
+          name: 'docs-node-detail',
+          component: () => import('../views/docs/NodeDetail.vue'),
+        }
+      ]
     }
   ],
 })

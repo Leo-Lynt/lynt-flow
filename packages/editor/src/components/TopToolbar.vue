@@ -113,6 +113,15 @@
       </div>
 
       <button
+        @click="goToDocs"
+        class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/40 dark:bg-gray-800/40 border border-gray-300 dark:border-gray-700 rounded-md text-gray-700 dark:text-gray-300 text-sm font-medium cursor-pointer transition-all hover:bg-white/60 dark:hover:bg-gray-800/60 hover:brightness-110"
+        title="Abrir Documentação"
+      >
+        <FlowIcon icon="material-symbols:help" :size="16" />
+        <span>Ajuda</span>
+      </button>
+
+      <button
         @click="toggleTheme"
         class="inline-flex items-center gap-1.5 px-2 py-1.5 bg-white/40 dark:bg-gray-800/40 border border-gray-300 dark:border-gray-700 rounded-md text-gray-700 dark:text-gray-300 text-sm font-medium cursor-pointer transition-all hover:bg-white/60 dark:hover:bg-gray-800/60 hover:brightness-110"
         :title="`Mudar para modo ${isDark ? 'claro' : 'escuro'}`"
@@ -126,9 +135,12 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 import { useFlowStore } from '../stores/flowStore'
 import { useTheme } from '../composables/useTheme.js'
 import FlowIcon from './Icon.vue'
+
+const router = useRouter()
 
 const props = defineProps({
   canUndo: {
@@ -236,6 +248,10 @@ const handleSaveClick = () => {
   if (props.hasUnsavedChanges && syncStatus.value !== 'syncing') {
     emit('save')
   }
+}
+
+const goToDocs = () => {
+  router.push('/docs')
 }
 </script>
 
