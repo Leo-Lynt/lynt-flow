@@ -1,0 +1,241 @@
+{
+  "id": "usecase-google-sheets",
+  "title": "Caso de Uso: Filtrar Dados do Google Sheets",
+  "description": "Neste exemplo, conectamos ao Google Sheets para buscar uma lista de pessoas. Em seguida, utilizamos o Array-filter para filtrar apenas as pessoas com idade maior que 30 anos. Os dados filtrados são enviados para o Output com a label 'Idade +30' e também visualizados no Debug-viewer para conferência.",
+  "flow": {
+    "nodes": [
+      {
+        "id": "input_1762003826457",
+        "type": "input",
+        "position": {
+          "x": -157.91632447939838,
+          "y": 204.85109074255922
+        },
+        "data": {
+          "label": "Input"
+        }
+      },
+      {
+        "id": "output_1762003826458",
+        "type": "output",
+        "position": {
+          "x": 916.2147308995402,
+          "y": 202.35256528430062
+        },
+        "data": {
+          "label": "Output"
+        }
+      },
+      {
+        "id": "connector_1762029330549",
+        "type": "connector",
+        "position": {
+          "x": 142.97178745566725,
+          "y": 215.05512472927478
+        },
+        "data": {
+          "label": "Data Connector",
+          "sourceType": "api",
+          "apiUrl": "",
+          "dataPath": ""
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "array-filter_1762039193528",
+        "type": "array-filter",
+        "position": {
+          "x": 451.4621438475484,
+          "y": 269.01408301032313
+        },
+        "data": {
+          "label": "Array-filter"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug-viewer_1762039302960",
+        "type": "debug-viewer",
+        "position": {
+          "x": 920.7016159473692,
+          "y": 345.8559363574585
+        },
+        "data": {
+          "label": "Debug-viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge_1762029333250",
+        "source": "input_1762003826457",
+        "target": "connector_1762029330549",
+        "sourceHandle": "exec-out",
+        "targetHandle": "exec-in",
+        "edgeType": "flow",
+        "dataType": "any",
+        "animated": true,
+        "style": {
+          "stroke": "#9ca3af",
+          "strokeWidth": 3
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 10,
+          "height": 10,
+          "color": "#9ca3af"
+        }
+      },
+      {
+        "id": "edge_1762029381345",
+        "source": "connector_1762029330549",
+        "target": "output_1762003826458",
+        "sourceHandle": "exec-out",
+        "targetHandle": "exec-in",
+        "edgeType": "flow",
+        "dataType": "any",
+        "animated": true,
+        "style": {
+          "stroke": "#9ca3af",
+          "strokeWidth": 3
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 10,
+          "height": 10,
+          "color": "#9ca3af"
+        }
+      },
+      {
+        "id": "edge_1762039205410",
+        "source": "connector_1762029330549",
+        "target": "array-filter_1762039193528",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-input",
+        "edgeType": "data",
+        "dataType": "array",
+        "animated": false,
+        "style": {
+          "stroke": "#ec4899",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#ec4899"
+        }
+      },
+      {
+        "id": "edge_1762039254299",
+        "source": "array-filter_1762039193528",
+        "target": "output_1762003826458",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-Idade +30",
+        "edgeType": "data",
+        "dataType": "array",
+        "animated": false,
+        "style": {
+          "stroke": "#ec4899",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#ec4899"
+        }
+      },
+      {
+        "id": "edge_1762039305387",
+        "source": "array-filter_1762039193528",
+        "target": "debug-viewer_1762039302960",
+        "sourceHandle": "data-out",
+        "targetHandle": "debug-viewer_1762039302960-data-input",
+        "edgeType": "data",
+        "dataType": "array",
+        "animated": false,
+        "style": {
+          "stroke": "#ec4899",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#ec4899"
+        }
+      }
+    ],
+    "nodeData": {
+      "connector_1762029330549": {
+        "sourceType": "google_sheets",
+        "apiUrl": "https://jsonplaceholder.typicode.com/users",
+        "mk3dTemporalRangeType": "relative",
+        "mk3dTemporalRelativeRange": "last_30_days",
+        "sheetsUrl": "https://docs.google.com/spreadsheets/d/1J-1N0p9b318sOrXeQ-YxDidG8tn_hwFPb032tKz7GYw/edit?gid=0#gid=0"
+      },
+      "input_1762003826457": {
+        "parameters": []
+      },
+      "array-filter_1762039193528": {
+        "fieldMode": "selector",
+        "selectedField": [
+          "Idade"
+        ],
+        "comparisonType": "number",
+        "operator": "greaterThan",
+        "value": "30",
+        "dateFormat": "iso"
+      },
+      "output_1762003826458": {
+        "dynamicInputs": [
+          {
+            "id": "input-1762039233250",
+            "key": "Idade +30",
+            "type": "array"
+          }
+        ],
+        "dynamicHandles": {
+          "inputs": [
+            {
+              "id": "data-Idade +30",
+              "label": "Idade +30",
+              "type": "array",
+              "position": "left"
+            }
+          ],
+          "_updated": 1762039259857
+        }
+      },
+      "debug-viewer_1762039302960": {}
+    },
+    "detectedTypes": {
+      "output_1762003826458": {
+        "data-out": "object"
+      },
+      "connector_1762029330549": {
+        "0": "object",
+        "1": "object",
+        "2": "object",
+        "3": "object",
+        "4": "object",
+        "5": "object",
+        "6": "object",
+        "7": "object",
+        "8": "object",
+        "9": "object",
+        "data-out": "array"
+      },
+      "array-filter_1762039193528": {
+        "data-out": "array"
+      }
+    },
+    "variables": {}
+  },
+  "exportedAt": "2025-11-01T23:21:50.971Z"
+}

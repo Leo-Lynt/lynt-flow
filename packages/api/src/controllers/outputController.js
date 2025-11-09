@@ -4,6 +4,7 @@ const logger = require('../utils/logger');
 const oauthService = require('../services/oauthService');
 const Connection = require('../models/Connection');
 const nodemailer = require('nodemailer');
+const emailTemplateService = require('../services/emailTemplateService');
 
 /**
  * API Response Output
@@ -136,9 +137,10 @@ exports.email = async (req, res) => {
 
     const {
       to,
-      subject = 'LyntFlow Output',
+      subject = 'Lynt Flow - Dados do Fluxo',
       format = 'html',
-      smtpConfig
+      smtpConfig,
+      flowName = 'Flow'
     } = config;
 
     const recipients = to.split(',').map(email => email.trim());
@@ -156,12 +158,28 @@ exports.email = async (req, res) => {
 
     // Verificar se SMTP está configurado
     if (!transportConfig.host || !transportConfig.auth?.user) {
+      logger.error('SMTP not configured', {
+        hasHost: !!transportConfig.host,
+        hasUser: !!transportConfig.auth?.user,
+        env: {
+          SMTP_HOST: process.env.SMTP_HOST,
+          SMTP_USER: process.env.SMTP_USER ? 'set' : 'not set'
+        }
+      });
+
       return res.status(400).json({
         success: false,
         message: 'SMTP not configured. Please set SMTP_HOST, SMTP_USER, SMTP_PASS in .env or provide smtpConfig',
         note: 'Example smtpConfig: { host: "smtp.gmail.com", port: 587, secure: false, auth: { user: "your@email.com", pass: "password" } }'
       });
     }
+
+    logger.info('📧 Sending email', {
+      to: recipients,
+      subject,
+      format,
+      from: transportConfig.auth.user
+    });
 
     const transporter = nodemailer.createTransport(transportConfig);
 
@@ -171,7 +189,11 @@ exports.email = async (req, res) => {
 
     switch (format) {
       case 'html':
-        emailContent = formatAsHTML(data);
+        // Usar template MJML profissional
+        emailContent = await emailTemplateService.generateDataTableEmail(data, {
+          flowName,
+          executedAt: new Date()
+        });
         isHtml = true;
         break;
 
@@ -181,7 +203,7 @@ exports.email = async (req, res) => {
           content: JSON.stringify(data, null, 2),
           contentType: 'application/json'
         }];
-        emailContent = `<p>LyntFlow Output data attached.</p><pre>${JSON.stringify(data, null, 2)}</pre>`;
+        emailContent = `<p>Lynt Flow - Dados anexados em JSON.</p><pre>${JSON.stringify(data, null, 2)}</pre>`;
         isHtml = true;
         break;
 
@@ -192,7 +214,7 @@ exports.email = async (req, res) => {
           content: csvContent,
           contentType: 'text/csv'
         }];
-        emailContent = '<p>LyntFlow Output data attached as CSV.</p>';
+        emailContent = '<p>Lynt Flow - Dados anexados em CSV.</p>';
         isHtml = true;
         break;
 
@@ -208,18 +230,27 @@ exports.email = async (req, res) => {
       attachments
     };
 
-    await transporter.sendMail(mailOptions);
+    const emailResult = await transporter.sendMail(mailOptions);
+
+    logger.info('✅ Email sent successfully', {
+      messageId: emailResult.messageId,
+      recipients: recipients.length,
+      accepted: emailResult.accepted,
+      rejected: emailResult.rejected
+    });
 
     return res.json({
       success: true,
-      message: `Email sent to ${recipients.length} recipient(s)`
+      message: `Email sent to ${recipients.length} recipient(s)`,
+      messageId: emailResult.messageId
     });
   } catch (error) {
-    logger.error('Email error:', error);
+    logger.error('❌ Email error:', error);
     return res.status(500).json({
       success: false,
       message: 'Error sending email',
-      error: error.message
+      error: error.message,
+      details: error.code || error.responseCode
     });
   }
 };

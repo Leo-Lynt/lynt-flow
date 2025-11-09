@@ -1,0 +1,159 @@
+{
+  "id": "multiplicacao-numeros",
+  "title": "Multiplicação de Dois Números",
+  "description": "Tutorial mostrando como multiplicar dois números (4 × 5 = 20)",
+  "flow": {
+    "nodes": [
+      {
+        "id": "constant_mult_1",
+        "type": "constant",
+        "position": {
+          "x": 84,
+          "y": 349
+        },
+        "data": {
+          "label": "Constant",
+          "valueType": "number",
+          "numberValue": 0,
+          "stringValue": "",
+          "booleanValue": false,
+          "objectValue": "{}",
+          "arrayValue": "[]"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "constant_mult_2",
+        "type": "constant",
+        "position": {
+          "x": 84,
+          "y": 483
+        },
+        "data": {
+          "label": "Constant",
+          "valueType": "number",
+          "numberValue": 0,
+          "stringValue": "",
+          "booleanValue": false,
+          "objectValue": "{}",
+          "arrayValue": "[]"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "multiply_node",
+        "type": "multiply",
+        "position": {
+          "x": 349,
+          "y": 388
+        },
+        "data": {
+          "label": "Multiply",
+          "operation": "multiply"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug-viewer_mult",
+        "type": "debug-viewer",
+        "position": {
+          "x": 616,
+          "y": 387
+        },
+        "data": {
+          "label": "Debug-viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge_mult_1",
+        "source": "constant_mult_1",
+        "target": "multiply_node",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-a",
+        "edgeType": "data",
+        "dataType": "any",
+        "animated": false,
+        "style": {
+          "stroke": "#3b82f6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#3b82f6"
+        }
+      },
+      {
+        "id": "edge_mult_2",
+        "source": "constant_mult_2",
+        "target": "multiply_node",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-b",
+        "edgeType": "data",
+        "dataType": "any",
+        "animated": false,
+        "style": {
+          "stroke": "#3b82f6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#3b82f6"
+        }
+      },
+      {
+        "id": "edge_mult_3",
+        "source": "multiply_node",
+        "target": "debug-viewer_mult",
+        "sourceHandle": "data-out",
+        "targetHandle": "debug-viewer_mult-data-input",
+        "edgeType": "data",
+        "dataType": "number",
+        "animated": false,
+        "style": {
+          "stroke": "#f59e0b",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#f59e0b"
+        }
+      }
+    ],
+    "nodeData": {
+      "constant_mult_1": {
+        "valueType": "number",
+        "numberValue": 4
+      },
+      "constant_mult_2": {
+        "valueType": "number",
+        "numberValue": 5
+      }
+    },
+    "detectedTypes": {
+      "constant_mult_1": {
+        "data-out": "integer"
+      },
+      "constant_mult_2": {
+        "data-out": "integer"
+      },
+      "multiply_node": {
+        "data-out": "integer"
+      }
+    },
+    "variables": {}
+  },
+  "exportedAt": "2025-11-01T14:00:00.000Z"
+}

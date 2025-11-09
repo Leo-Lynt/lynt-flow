@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, computed, watch, nextTick, onBeforeUnmount } from 'vue'
 import { useRouter } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import AppLayout from '../components/AppLayout.vue'
@@ -15,6 +15,7 @@ const showDeleteModal = ref(false)
 const flowToDelete = ref(null)
 const searchQuery = ref('')
 const executingFlows = ref(new Set())
+const openDropdownId = ref(null)
 
 // Execution modal
 const showExecutionModal = ref(false)
@@ -172,6 +173,40 @@ function formatDate(date) {
     minute: '2-digit'
   })
 }
+
+function toggleDropdown(flowId, event) {
+  event.stopPropagation()
+  openDropdownId.value = openDropdownId.value === flowId ? null : flowId
+}
+
+function closeDropdown() {
+  openDropdownId.value = null
+}
+
+function isDropdownOpen(flow) {
+  const flowId = flow._id || flow.id
+  return openDropdownId.value === flowId
+}
+
+// Fechar dropdown ao clicar fora
+function handleClickOutside() {
+  openDropdownId.value = null
+}
+
+// Adicionar/remover event listener baseado no estado do dropdown
+watch(openDropdownId, (isOpen) => {
+  if (isOpen) {
+    nextTick(() => {
+      document.addEventListener('click', handleClickOutside)
+    })
+  } else {
+    document.removeEventListener('click', handleClickOutside)
+  }
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
+})
 </script>
 
 <template>
@@ -185,7 +220,7 @@ function formatDate(date) {
         </div>
         <button
           @click="createFlow"
-          class="bg-brand-purple hover:brightness-110 text-white px-5 py-2.5 rounded flex items-center space-x-2 transition-all shadow-sm hover:shadow-lg text-sm font-medium tracking-wide"
+          class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-5 py-2.5 rounded-lg flex items-center space-x-2 transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 text-sm font-medium tracking-wide"
         >
           <Icon icon="lucide:plus" class="w-4 h-4" />
           <span>Criar Novo Fluxo</span>
@@ -203,14 +238,14 @@ function formatDate(date) {
           v-model="searchQuery"
           type="text"
           placeholder="Buscar fluxos por nome, descrição, categoria ou tags..."
-          class="block w-full pl-10 pr-3 py-2.5 bg-white/50 backdrop-blur-sm border border-gray-300 rounded text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand-purple focus:bg-white/70 transition-all text-sm tracking-wide"
+          class="block w-full pl-10 pr-3 py-2.5 bg-white/50 backdrop-blur-sm border border-gray-300 rounded-lg text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white/70 transition-all text-sm tracking-wide"
         />
       </div>
     </div>
 
     <!-- Flows Grid/List -->
     <div v-if="loading" class="flex justify-center py-12">
-      <Icon icon="lucide:loader-2" class="w-8 h-8 animate-spin text-brand-purple" />
+      <Icon icon="lucide:loader-2" class="w-8 h-8 animate-spin text-blue-600" />
     </div>
 
     <div v-else-if="filteredFlows.length === 0 && !searchQuery.trim()" class="text-center py-12 glass-card backdrop-blur-xl bg-white/30 rounded-lg border border-white/20">
@@ -221,7 +256,7 @@ function formatDate(date) {
       </p>
       <button
         @click="createFlow"
-        class="bg-brand-purple hover:brightness-110 text-white px-5 py-2.5 rounded transition-all inline-flex items-center space-x-2 text-sm font-medium tracking-wide"
+        class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-5 py-2.5 rounded-lg transition-all inline-flex items-center space-x-2 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 text-sm font-medium tracking-wide"
       >
         <Icon icon="lucide:plus" class="w-4 h-4" />
         <span>Criar Primeiro Fluxo</span>
@@ -237,7 +272,7 @@ function formatDate(date) {
       </p>
       <button
         @click="searchQuery = ''"
-        class="text-brand-purple hover:text-brand-purple/80 text-sm font-medium transition-colors underline decoration-brand-purple/30 hover:decoration-brand-purple/60 underline-offset-2"
+        class="text-blue-600 hover:text-blue-700 text-sm font-medium transition-colors underline decoration-blue-600/30 hover:decoration-blue-600/60 underline-offset-2"
       >
         Limpar busca
       </button>
@@ -248,82 +283,115 @@ function formatDate(date) {
       <div
         v-for="flow in filteredFlows"
         :key="flow._id || flow.id"
-        @click="openFlowEditor(flow)"
-        class="glass-card backdrop-blur-xl bg-white/30 rounded-lg border border-white/20 hover:shadow-xl hover:bg-white/40 transition-all duration-200 overflow-hidden group cursor-pointer"
+        :class="[
+          'glass-card backdrop-blur-xl bg-white/70 rounded-2xl border border-white/40 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group relative',
+          { 'z-50': isDropdownOpen(flow) }
+        ]"
       >
-        <!-- Flow Header -->
-        <div class="p-4 border-b border-gray-200/30">
-          <div class="mb-2 flex items-center justify-between">
-            <h3 class="text-base font-semibold text-gray-900 group-hover:text-brand-purple transition-colors tracking-wide">
+        <!-- Gradiente sutil no hover -->
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/0 to-cyan-500/0 group-hover:from-blue-500/5 group-hover:to-cyan-500/5 transition-all duration-300 pointer-events-none rounded-2xl overflow-hidden"></div>
+
+        <!-- Content -->
+        <div class="relative p-5 space-y-4">
+          <!-- Header -->
+          <div class="flex items-start justify-between gap-3">
+            <h3 class="text-base font-semibold text-gray-900 tracking-wide flex-1">
               {{ flow.name }}
             </h3>
             <Icon
               v-if="flow.isPublic"
               icon="lucide:globe"
-              class="w-4 h-4 text-brand-green flex-shrink-0"
+              class="w-4 h-4 text-green-600 flex-shrink-0 mt-0.5"
               title="Fluxo público"
             />
           </div>
-          <p class="text-xs text-gray-600 line-clamp-2 min-h-[2.5rem] tracking-wide">
+
+          <!-- Description -->
+          <p class="text-xs text-gray-600 line-clamp-2 min-h-[2.5rem] tracking-wide leading-relaxed">
             {{ flow.description || 'Sem descrição disponível' }}
           </p>
-        </div>
 
-        <!-- Flow Info -->
-        <div class="px-4 py-3 bg-white/20 backdrop-blur-sm text-xs text-gray-600 space-y-1.5">
-          <div class="flex items-center justify-between">
-            <span class="flex items-center">
-              <Icon icon="lucide:git-branch" class="w-3 h-3 mr-1.5 text-brand-purple" />
+          <!-- Stats -->
+          <div class="flex items-center gap-4 text-xs text-gray-600">
+            <span class="flex items-center gap-1.5">
+              <Icon icon="lucide:git-branch" class="w-3.5 h-3.5 text-blue-500" />
               {{ flow.totalNodes || 0 }} nós
             </span>
-            <span class="flex items-center">
-              <Icon icon="lucide:play" class="w-3 h-3 mr-1.5 text-brand-green" />
-              {{ flow.executionStats?.totalExecutions || 0 }} execuções
+            <span class="flex items-center gap-1.5">
+              <Icon icon="lucide:play" class="w-3.5 h-3.5 text-green-500" />
+              {{ flow.executionStats?.totalExecutions || 0 }}
             </span>
           </div>
-          <div class="flex items-center">
-            <Icon icon="lucide:clock" class="w-3 h-3 mr-1.5 text-brand-orange" />
-            Atualizado {{ formatDate(flow.updatedAt || flow.createdAt) }}
-          </div>
-        </div>
 
-        <!-- Flow Actions -->
-        <div class="p-3 bg-white/10 backdrop-blur-sm border-t border-gray-200/30">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center space-x-1">
-              <button
-                @click.stop="handleExecuteFlow(flow)"
-                :disabled="isExecuting(flow)"
-                class="p-1.5 text-brand-green hover:bg-white/30 rounded transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                title="Executar Fluxo"
-              >
-                <Icon
-                  :icon="isExecuting(flow) ? 'lucide:loader-2' : 'lucide:play'"
-                  :class="['w-4 h-4', { 'animate-spin': isExecuting(flow) }]"
-                />
-              </button>
-              <button
-                @click.stop="editFlow(flow)"
-                class="p-1.5 text-brand-purple hover:bg-white/30 rounded transition-all"
-                title="Editar"
-              >
-                <Icon icon="lucide:edit" class="w-4 h-4" />
-              </button>
-              <button
-                @click.stop="duplicateFlow(flow)"
-                class="p-1.5 text-brand-pink hover:bg-white/30 rounded transition-all"
-                title="Duplicar"
-              >
-                <Icon icon="lucide:copy" class="w-4 h-4" />
-              </button>
-            </div>
+          <!-- Date -->
+          <div class="flex items-center gap-1.5 text-xs text-gray-500">
+            <Icon icon="lucide:clock" class="w-3.5 h-3.5" />
+            {{ formatDate(flow.updatedAt || flow.createdAt) }}
+          </div>
+
+          <!-- Primary Actions -->
+          <div class="flex items-center gap-2 pt-2 border-t border-gray-200/50">
             <button
-              @click.stop="confirmDelete(flow)"
-              class="p-1.5 text-brand-red hover:bg-white/30 rounded transition-all"
-              title="Excluir"
+              @click="handleExecuteFlow(flow)"
+              :disabled="isExecuting(flow)"
+              class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-green-500/10 text-green-700 hover:bg-green-500/20 rounded-lg transition-all text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Executar Fluxo"
             >
-              <Icon icon="lucide:trash-2" class="w-4 h-4" />
+              <Icon
+                :icon="isExecuting(flow) ? 'lucide:loader-2' : 'lucide:play'"
+                :class="['w-3.5 h-3.5', { 'animate-spin': isExecuting(flow) }]"
+              />
+              <span>Executar</span>
             </button>
+            <button
+              @click="openFlowEditor(flow)"
+              class="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-blue-500/10 text-blue-700 hover:bg-blue-500/20 rounded-lg transition-all text-xs font-medium"
+              title="Abrir Editor"
+            >
+              <Icon icon="lucide:square-pen" class="w-3.5 h-3.5" />
+              <span>Editor</span>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div class="relative">
+              <button
+                @click="toggleDropdown(flow._id || flow.id, $event)"
+                class="p-2 text-gray-600 hover:bg-gray-500/10 rounded-lg transition-all"
+                title="Mais opções"
+              >
+                <Icon icon="lucide:more-vertical" class="w-4 h-4" />
+              </button>
+
+              <!-- Dropdown content -->
+              <div
+                v-if="isDropdownOpen(flow)"
+                @click.stop
+                class="absolute right-0 top-full mt-1 w-40 backdrop-blur-xl bg-white/90 rounded-xl shadow-xl border border-white/40 py-1 z-50 overflow-hidden"
+              >
+                <button
+                  @click="editFlow(flow); closeDropdown()"
+                  class="w-full flex items-center gap-2 px-3 py-2 text-blue-600 hover:bg-blue-500/10 transition-all text-xs"
+                >
+                  <Icon icon="lucide:settings" class="w-3.5 h-3.5" />
+                  <span>Editar</span>
+                </button>
+                <button
+                  @click="duplicateFlow(flow); closeDropdown()"
+                  class="w-full flex items-center gap-2 px-3 py-2 text-cyan-600 hover:bg-cyan-500/10 transition-all text-xs"
+                >
+                  <Icon icon="lucide:copy" class="w-3.5 h-3.5" />
+                  <span>Duplicar</span>
+                </button>
+                <div class="border-t border-gray-200/50 my-1"></div>
+                <button
+                  @click="confirmDelete(flow); closeDropdown()"
+                  class="w-full flex items-center gap-2 px-3 py-2 text-red-600 hover:bg-red-500/10 transition-all text-xs"
+                >
+                  <Icon icon="lucide:trash-2" class="w-3.5 h-3.5" />
+                  <span>Excluir</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -346,9 +414,9 @@ function formatDate(date) {
       class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm flex items-center justify-center z-50"
       @click="showDeleteModal = false"
     >
-      <div class="glass-card backdrop-blur-xl bg-white/30 rounded-lg border border-white/20 p-6 max-w-sm w-full mx-4" @click.stop>
+      <div class="glass-card backdrop-blur-xl bg-white/70 rounded-lg border border-white/40 p-6 max-w-sm w-full mx-4 shadow-xl" @click.stop>
         <div class="flex items-center mb-4">
-          <Icon icon="lucide:alert-triangle" class="w-6 h-6 text-brand-red mr-3" />
+          <Icon icon="lucide:alert-triangle" class="w-6 h-6 text-red-600 mr-3" />
           <h3 class="text-lg font-semibold text-gray-900 tracking-wide">Excluir Fluxo</h3>
         </div>
         <p class="text-gray-700 mb-6 text-sm tracking-wide">
@@ -357,13 +425,13 @@ function formatDate(date) {
         <div class="flex space-x-3">
           <button
             @click="showDeleteModal = false"
-            class="flex-1 px-4 py-2.5 bg-white/50 backdrop-blur-sm border border-gray-300 text-gray-700 rounded hover:bg-white/70 hover:brightness-95 transition-all text-sm font-medium tracking-wide"
+            class="flex-1 px-4 py-2.5 bg-white/70 backdrop-blur-sm border border-gray-300 text-gray-700 rounded-lg hover:bg-white/90 hover:brightness-95 transition-all text-sm font-medium tracking-wide"
           >
             Cancelar
           </button>
           <button
             @click="handleDelete"
-            class="flex-1 px-4 py-2.5 bg-brand-red text-white rounded hover:brightness-110 transition-all text-sm font-medium tracking-wide"
+            class="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-all text-sm font-medium tracking-wide shadow-lg shadow-red-500/30"
           >
             Excluir
           </button>

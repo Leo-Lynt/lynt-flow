@@ -143,6 +143,46 @@ class GoogleSheetsAPI {
 }
 
 /**
+ * Google Analytics Admin API
+ */
+class GoogleAnalyticsAdminAPI {
+  constructor(config) {
+    this.auth = config.auth;
+    this.version = config.version;
+    // Usar v1alpha conforme documentação oficial
+    this.baseUrl = 'https://analyticsadmin.googleapis.com/v1alpha';
+  }
+
+  async getAuthHeader() {
+    let token;
+    if (this.auth.credentials?.access_token) {
+      token = this.auth.credentials.access_token;
+    } else if (typeof this.auth === 'string') {
+      token = this.auth;
+    } else if (this.auth.credentials) {
+      token = this.auth.credentials;
+    } else {
+      throw new Error('Token de acesso não encontrado no objeto auth');
+    }
+    console.log('🔑 GoogleAnalyticsAdminAPI - Token:', token?.substring(0, 20) + '...');
+    return { Authorization: `Bearer ${token}` };
+  }
+
+  accountSummaries = {
+    list: async () => {
+      const authHeader = await this.getAuthHeader();
+      console.log('📡 Fazendo request para Analytics Admin API:', `${this.baseUrl}/accountSummaries`);
+      const response = await axios.get(
+        `${this.baseUrl}/accountSummaries`,
+        { headers: authHeader }
+      );
+      console.log('✅ Resposta da Analytics Admin API:', response.status, response.data);
+      return { data: response.data };
+    }
+  };
+}
+
+/**
  * Main Google API object
  */
 const google = {
@@ -150,7 +190,9 @@ const google = {
 
   sheets: (config) => new GoogleSheetsAPI(config),
 
-  oauth2: (config) => new GoogleOAuth2API(config.auth)
+  oauth2: (config) => new GoogleOAuth2API(config.auth),
+
+  analyticsadmin: (config) => new GoogleAnalyticsAdminAPI(config)
 };
 
 module.exports = { google };

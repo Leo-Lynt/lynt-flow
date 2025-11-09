@@ -84,21 +84,21 @@ function formatDuration(ms) {
 
     <div v-else-if="execution">
       <!-- Header -->
-      <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center justify-between mb-8">
         <div>
           <div class="flex items-center space-x-3 mb-2">
             <button
               @click="router.push('/executions')"
-              class="text-gray-600 hover:text-gray-900"
+              class="text-gray-600 hover:text-gray-900 transition-colors"
             >
               <Icon icon="lucide:arrow-left" class="w-5 h-5" />
             </button>
-            <h1 class="text-2xl font-bold text-gray-900">Execution Response</h1>
+            <h1 class="text-3xl font-semibold text-gray-800 tracking-wide">Detalhes da Execução</h1>
             <ExecutionStatusBadge :status="execution.status" />
           </div>
-          <p class="text-gray-600 ml-8">
-            Flow: <span class="font-medium">{{ execution.flowName || 'Unknown' }}</span>
-            <span v-if="execution.flowDeleted" class="text-red-600 ml-2">(Flow Deleted)</span>
+          <p class="text-gray-600 ml-8 text-sm tracking-wide">
+            Fluxo: <span class="font-medium">{{ execution.flowName || 'Desconhecido' }}</span>
+            <span v-if="execution.flowDeleted" class="text-red-600 ml-2">(Fluxo Excluído)</span>
           </p>
         </div>
         <div class="flex items-center space-x-3">
@@ -106,42 +106,42 @@ function formatDuration(ms) {
             v-if="!execution.flowDeleted"
             @click="handleReexecute"
             :disabled="reexecuting"
-            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 flex items-center space-x-2"
+            class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-4 py-2.5 rounded-lg disabled:opacity-50 flex items-center space-x-2 transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 text-sm font-medium tracking-wide"
           >
             <Icon
               :icon="reexecuting ? 'lucide:loader-2' : 'lucide:repeat'"
               :class="['w-4 h-4', { 'animate-spin': reexecuting }]"
             />
-            <span>{{ reexecuting ? 'Re-executing...' : 'Re-execute' }}</span>
+            <span>{{ reexecuting ? 'Reexecutando...' : 'Reexecutar' }}</span>
           </button>
           <button
             v-if="!execution.flowDeleted"
             @click="viewFlow"
-            class="bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 flex items-center space-x-2"
+            class="bg-white/70 backdrop-blur-sm border border-gray-300 text-gray-700 px-4 py-2.5 rounded-lg hover:bg-white/90 hover:brightness-95 transition-all flex items-center space-x-2 text-sm font-medium tracking-wide"
           >
             <Icon icon="lucide:workflow" class="w-4 h-4" />
-            <span>View Flow</span>
+            <span>Ver Fluxo</span>
           </button>
         </div>
       </div>
 
       <!-- Execution Info -->
-      <BaseCard title="Execution Information" class="mb-8">
+      <BaseCard title="Informações da Execução" subtitle="Detalhes gerais sobre esta execução" class="mb-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <h4 class="text-sm font-medium text-gray-700 mb-3">General Information</h4>
+            <h4 class="text-sm font-medium text-gray-700 mb-3 tracking-wide">Informações Gerais</h4>
             <dl class="space-y-2">
               <div class="flex justify-between text-sm">
-                <dt class="text-gray-600">Execution ID:</dt>
-                <dd class="font-mono text-gray-900">{{ execution.executionId || executionId }}</dd>
+                <dt class="text-gray-600">ID da Execução:</dt>
+                <dd class="font-mono text-gray-900 text-xs">{{ execution.executionId || executionId }}</dd>
               </div>
               <div class="flex justify-between text-sm">
-                <dt class="text-gray-600">Flow ID:</dt>
-                <dd class="font-mono text-gray-900">{{ execution.flowId || '-' }}</dd>
+                <dt class="text-gray-600">ID do Fluxo:</dt>
+                <dd class="font-mono text-gray-900 text-xs">{{ execution.flowId || '-' }}</dd>
               </div>
               <div class="flex justify-between text-sm">
-                <dt class="text-gray-600">Flow Name:</dt>
-                <dd class="text-gray-900">{{ execution.flowName || 'Unknown' }}</dd>
+                <dt class="text-gray-600">Nome do Fluxo:</dt>
+                <dd class="text-gray-900">{{ execution.flowName || 'Desconhecido' }}</dd>
               </div>
               <div class="flex justify-between text-sm">
                 <dt class="text-gray-600">Status:</dt>
@@ -150,16 +150,16 @@ function formatDuration(ms) {
                 </dd>
               </div>
               <div class="flex justify-between text-sm">
-                <dt class="text-gray-600">Started At:</dt>
+                <dt class="text-gray-600">Iniciado em:</dt>
                 <dd class="text-gray-900">{{ formatDate(execution.startedAt) }}</dd>
               </div>
               <div class="flex justify-between text-sm">
-                <dt class="text-gray-600">Completed At:</dt>
+                <dt class="text-gray-600">Concluído em:</dt>
                 <dd class="text-gray-900">{{ formatDate(execution.completedAt) }}</dd>
               </div>
               <div class="flex justify-between text-sm">
-                <dt class="text-gray-600">Execution Time:</dt>
-                <dd class="text-gray-900">{{ formatDuration(execution.executionTime) }}</dd>
+                <dt class="text-gray-600">Tempo de Execução:</dt>
+                <dd class="text-gray-900 font-medium">{{ formatDuration(execution.executionTime) }}</dd>
               </div>
             </dl>
           </div>
@@ -167,37 +167,38 @@ function formatDuration(ms) {
       </BaseCard>
 
       <!-- Input Data -->
-      <BaseCard title="Input Data" subtitle="Data used to execute this flow" class="mb-8">
-        <div v-if="execution.inputData && Object.keys(execution.inputData).length > 0" class="bg-gray-50 rounded-lg p-4 overflow-x-auto">
-          <pre class="text-sm text-gray-800">{{ JSON.stringify(execution.inputData, null, 2) }}</pre>
+      <BaseCard title="Dados de Entrada" subtitle="Dados utilizados para executar este fluxo" class="mb-8">
+        <div v-if="execution.inputData && Object.keys(execution.inputData).length > 0" class="bg-white/50 rounded-lg p-4 overflow-x-auto border border-gray-200">
+          <pre class="text-sm text-gray-800 font-mono">{{ JSON.stringify(execution.inputData, null, 2) }}</pre>
         </div>
         <div v-else class="text-center py-8 text-gray-500">
           <Icon icon="lucide:file-input" class="w-12 h-12 mx-auto mb-3 text-gray-400" />
-          <p>No input data was provided</p>
+          <p class="text-sm tracking-wide">Nenhum dado de entrada foi fornecido</p>
         </div>
       </BaseCard>
 
       <!-- Output Data -->
-      <BaseCard title="Output Data" subtitle="Result data from the execution" class="mb-8">
-        <div v-if="execution.outputData && Object.keys(execution.outputData).length > 0" class="bg-gray-50 rounded-lg p-4 overflow-x-auto">
-          <pre class="text-sm text-gray-800">{{ JSON.stringify(execution.outputData, null, 2) }}</pre>
+      <BaseCard title="Dados de Saída" subtitle="Resultado da execução do fluxo" class="mb-8">
+        <div v-if="execution.outputData && Object.keys(execution.outputData).length > 0" class="bg-white/50 rounded-lg p-4 overflow-x-auto border border-gray-200">
+          <pre class="text-sm text-gray-800 font-mono">{{ JSON.stringify(execution.outputData, null, 2) }}</pre>
         </div>
         <div v-else class="text-center py-8 text-gray-500">
           <Icon icon="lucide:file-text" class="w-12 h-12 mx-auto mb-3 text-gray-400" />
-          <p>No output data available</p>
+          <p class="text-sm tracking-wide">Nenhum dado de saída disponível</p>
         </div>
       </BaseCard>
     </div>
 
-    <div v-else class="text-center py-8">
+    <div v-else class="text-center py-12">
       <Icon icon="lucide:alert-circle" class="w-16 h-16 text-gray-400 mx-auto mb-4" />
-      <h3 class="text-lg font-medium text-gray-900 mb-2">Execution not found</h3>
-      <p class="text-gray-600 mb-4">The execution you're looking for doesn't exist.</p>
+      <h3 class="text-lg font-semibold text-gray-800 mb-2 tracking-wide">Execução não encontrada</h3>
+      <p class="text-gray-600 mb-6 text-sm tracking-wide">A execução que você está procurando não existe.</p>
       <button
         @click="router.push('/executions')"
-        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+        class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-5 py-2.5 rounded-lg transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 inline-flex items-center space-x-2 text-sm font-medium tracking-wide"
       >
-        Back to Executions
+        <Icon icon="lucide:arrow-left" class="w-4 h-4" />
+        <span>Voltar para Execuções</span>
       </button>
     </div>
   </AppLayout>

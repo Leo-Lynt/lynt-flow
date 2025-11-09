@@ -1,28 +1,46 @@
 <template>
   <div class="connection-select space-y-2">
-    <!-- Connection dropdown -->
-    <div v-if="availableConnections.length > 0">
+    <!-- Connection dropdown + Refresh Button -->
+    <div class="flex items-center gap-2">
+      <!-- Connection dropdown -->
       <select
+        v-if="availableConnections.length > 0"
         :value="modelValue"
         @change="handleChange"
-        class="w-full px-3 py-2 text-sm bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="flex-1 px-3 py-2 text-sm bg-white dark:bg-gray-900 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <option value="">Selecione uma conexão...</option>
         <option
           v-for="conn in availableConnections"
-          :key="conn.id"
-          :value="conn.id"
+          :key="conn.id || conn._id || Math.random()"
+          :value="conn.id || conn._id || conn.connectionId"
         >
-          {{ conn.email || conn.accountEmail || conn.name || `Conexão ${conn.id?.substring(0, 8)}` }}
+          {{ conn.email || conn.accountEmail || conn.name || `Conexão ${(conn.id || conn._id)?.substring(0, 8)}` }}
+          {{ !conn.id && !conn._id ? ' (⚠️ SEM ID)' : '' }}
         </option>
       </select>
-    </div>
 
-    <!-- No connections state -->
-    <div v-else class="text-center py-3 bg-gray-50 dark:bg-gray-800 rounded-md border border-dashed border-gray-300 dark:border-gray-600">
-      <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
-        Nenhuma conexão {{ serviceLabel }} disponível
-      </p>
+      <!-- No connections placeholder -->
+      <div v-else class="flex-1 text-center py-2 bg-gray-50 dark:bg-gray-800 rounded-md border border-dashed border-gray-300 dark:border-gray-600">
+        <p class="text-xs text-gray-600 dark:text-gray-400">
+          Nenhuma conexão disponível
+        </p>
+      </div>
+
+      <!-- Refresh Icon Button -->
+      <button
+        v-if="availableConnections.length > 0"
+        @click="refreshConnections"
+        type="button"
+        :disabled="refreshing"
+        class="p-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        :class="{ 'animate-spin': refreshing }"
+        title="Recarregar conexões"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
+      </button>
     </div>
 
     <!-- Add connection button -->
@@ -34,17 +52,6 @@
     >
       <span class="mr-2">{{ availableConnections.length > 0 ? '➕' : '🔗' }}</span>
       {{ connecting ? 'Conectando...' : `${availableConnections.length > 0 ? 'Adicionar' : 'Conectar'} ${serviceLabel}` }}
-    </button>
-
-    <!-- Refresh button (if connections exist) -->
-    <button
-      v-if="availableConnections.length > 0"
-      @click="refreshConnections"
-      :disabled="refreshing"
-      type="button"
-      class="w-full px-2 py-1.5 text-xs text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
-    >
-      {{ refreshing ? 'Atualizando...' : '🔄 Atualizar lista' }}
     </button>
   </div>
 </template>
@@ -89,7 +96,9 @@ const serviceLabel = computed(() => {
 
 // Methods
 const handleChange = (event) => {
-  emit('update:modelValue', event.target.value)
+  const value = event.target.value
+  console.log('🔌 ConnectionSelect: Emitindo valor:', { value, type: typeof value })
+  emit('update:modelValue', value)
 }
 
 const handleAddConnection = async () => {
@@ -119,6 +128,12 @@ onMounted(async () => {
   if (connectionStore.connections.length === 0) {
     await connectionStore.fetchConnections(flowStore.apiConfig)
   }
+
+  console.log('🔌 Conexões disponíveis:', availableConnections.value.map(c => ({
+    id: c.id,
+    email: c.email,
+    serviceType: c.serviceType
+  })))
 })
 </script>
 

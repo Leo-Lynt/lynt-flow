@@ -1,0 +1,209 @@
+{
+  "id": "input-output",
+  "title": "Input e Output",
+  "description": "Tutorial básico mostrando como dados fluem do Input para o Output através de um fluxo simples",
+  "flow": {
+    "nodes": [
+      {
+        "id": "input_node",
+        "type": "input",
+        "position": {
+          "x": 100,
+          "y": 300
+        },
+        "data": {
+          "label": "Input"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "constant_message",
+        "type": "constant",
+        "position": {
+          "x": 100,
+          "y": 200
+        },
+        "data": {
+          "label": "Constant",
+          "valueType": "string",
+          "numberValue": 0,
+          "stringValue": "",
+          "booleanValue": false,
+          "objectValue": "{}",
+          "arrayValue": "[]"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "variable_set",
+        "type": "variable",
+        "position": {
+          "x": 400,
+          "y": 250
+        },
+        "data": {
+          "label": "Variable",
+          "mode": "set",
+          "variableName": ""
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "output_node",
+        "type": "output",
+        "position": {
+          "x": 700,
+          "y": 250
+        },
+        "data": {
+          "label": "Output"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug_viewer",
+        "type": "debug-viewer",
+        "position": {
+          "x": 400,
+          "y": 380
+        },
+        "data": {
+          "label": "Debug Viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "variable_get",
+        "type": "variable",
+        "position": {
+          "x": 100,
+          "y": 380
+        },
+        "data": {
+          "label": "Variable",
+          "mode": "get",
+          "variableName": ""
+        },
+        "zIndex": 1,
+        "selected": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge_input_var",
+        "source": "input_node",
+        "target": "variable_set",
+        "sourceHandle": "exec-out",
+        "targetHandle": "exec-in",
+        "edgeType": "flow",
+        "dataType": "any",
+        "animated": true,
+        "style": {
+          "stroke": "#9ca3af",
+          "strokeWidth": 3
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 10,
+          "height": 10,
+          "color": "#9ca3af"
+        }
+      },
+      {
+        "id": "edge_const_var",
+        "source": "constant_message",
+        "target": "variable_set",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-input",
+        "edgeType": "data",
+        "dataType": "string",
+        "animated": false,
+        "style": {
+          "stroke": "#3b82f6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#3b82f6"
+        }
+      },
+      {
+        "id": "edge_var_output",
+        "source": "variable_set",
+        "target": "output_node",
+        "sourceHandle": "exec-out",
+        "targetHandle": "exec-in",
+        "edgeType": "flow",
+        "dataType": "any",
+        "animated": true,
+        "style": {
+          "stroke": "#9ca3af",
+          "strokeWidth": 3
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 10,
+          "height": 10,
+          "color": "#9ca3af"
+        }
+      },
+      {
+        "id": "edge_var_get_debug",
+        "source": "variable_get",
+        "target": "debug_viewer",
+        "sourceHandle": "data-out",
+        "targetHandle": "debug_viewer-data-input",
+        "edgeType": "data",
+        "dataType": "string",
+        "animated": false,
+        "style": {
+          "stroke": "#3b82f6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#3b82f6"
+        }
+      }
+    ],
+    "nodeData": {
+      "constant_message": {
+        "valueType": "string",
+        "stringValue": "Olá, Mundo!"
+      },
+      "variable_set": {
+        "mode": "set",
+        "variableNameSet": "Mensagem",
+        "variableName": "Mensagem"
+      },
+      "variable_get": {
+        "mode": "get",
+        "variableName": "Mensagem"
+      }
+    },
+    "detectedTypes": {
+      "constant_message": {
+        "data-out": "string"
+      },
+      "variable_set": {
+        "data-out": "string"
+      },
+      "variable_get": {
+        "data-out": "string"
+      }
+    },
+    "variables": {
+      "Mensagem": "Olá, Mundo!"
+    }
+  },
+  "exportedAt": "2025-11-01T18:00:00.000Z"
+}

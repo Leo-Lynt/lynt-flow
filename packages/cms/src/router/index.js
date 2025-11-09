@@ -45,6 +45,24 @@ const router = createRouter({
       // Sem meta - não verificar autenticação, é parte do fluxo de verificação
     },
     {
+      path: '/auth/callback',
+      name: 'auth-callback',
+      component: () => import('../views/AuthCallbackView.vue')
+      // Sem meta - não verificar autenticação, é parte do fluxo OAuth
+    },
+    {
+      path: '/privacy-policy',
+      name: 'privacy-policy',
+      component: () => import('../views/PrivacyPolicyView.vue')
+      // Sem meta - rota pública para Google OAuth verification
+    },
+    {
+      path: '/terms-of-service',
+      name: 'terms-of-service',
+      component: () => import('../views/TermsOfServiceView.vue')
+      // Sem meta - rota pública para Google OAuth verification
+    },
+    {
       path: '/dashboard',
       name: 'dashboard',
       component: () => import('../views/DashboardView.vue'),
@@ -114,6 +132,18 @@ const router = createRouter({
       path: '/profile',
       name: 'profile',
       component: () => import('../views/ProfileView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/billing/success',
+      name: 'billing-success',
+      component: () => import('../views/BillingSuccessView.vue'),
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/billing/cancel',
+      name: 'billing-cancel',
+      component: () => import('../views/BillingCancelView.vue'),
       meta: { requiresAuth: true }
     },
     {

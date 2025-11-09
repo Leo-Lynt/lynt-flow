@@ -84,6 +84,11 @@ export const useConnectionStore = defineStore('connection', () => {
           continue
         }
 
+        // Normalizar: garantir que conn.id sempre existe
+        if (!conn.id) {
+          conn.id = connId
+        }
+
         if (!seenIds.has(connId)) {
           seenIds.add(connId)
           uniqueConnections.push(conn)

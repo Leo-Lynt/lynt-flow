@@ -84,14 +84,18 @@ class OAuthController {
       const { userId, purpose = 'connection', serviceType } = stateData;
       flowId = stateData.flowId || flowId;
 
+      // Extrair IP e User-Agent para sessões
+      const ip = req.ip || req.connection.remoteAddress;
+      const userAgent = req.get('user-agent');
+
       // Trocar code por tokens
-      const result = await oauthService.exchangeCodeForTokens(provider, code, userId, stateData);
+      const result = await oauthService.exchangeCodeForTokens(provider, code, userId, stateData, ip, userAgent);
 
       // Redirecionar conforme purpose
       if (purpose === 'authentication') {
-        // Login social - redirecionar para /auth/callback com token
+        // Login social - redirecionar para /auth/callback com tokens
         return res.redirect(
-          `${process.env.FRONTEND_URL}/auth/callback?success=true&token=${result.token}&email=${result.email}`
+          `${process.env.FRONTEND_URL}/auth/callback?success=true&token=${result.accessToken}&refreshToken=${result.refreshToken}&email=${result.email}`
         );
       } else {
         // Connection - redirecionar para /editor/ com flowId

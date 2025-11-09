@@ -29,7 +29,7 @@ export function useAuth() {
     localStorage.removeItem('refreshToken')
   }
 
-  async function login(email, password) {
+  async function login(email, password, returnUrl = null) {
     try {
       loading.value = true
       const response = await api.post('/auth/login', { email, password })
@@ -53,7 +53,14 @@ export function useAuth() {
       user.value = userData
       setTokens(newAccessToken, newRefreshToken)
 
-      router.push('/dashboard')
+      // Se houver returnUrl, redirecionar de volta com tokens
+      if (returnUrl) {
+        const separator = returnUrl.includes('?') ? '&' : '?'
+        window.location.href = `${returnUrl}${separator}authToken=${newAccessToken}&refreshToken=${newRefreshToken}`
+      } else {
+        router.push('/dashboard')
+      }
+
       return { success: true }
     } catch (error) {
       const errorData = error.response?.data?.error || {}
@@ -70,7 +77,7 @@ export function useAuth() {
     }
   }
 
-  async function verify2FALogin(tempToken, code) {
+  async function verify2FALogin(tempToken, code, returnUrl = null) {
     try {
       loading.value = true
       const response = await api.post('/auth/2fa/login', {
@@ -89,8 +96,15 @@ export function useAuth() {
       // Aguardar um momento para garantir que localStorage foi atualizado
       await new Promise(resolve => setTimeout(resolve, 50))
 
-      // Usar window.location para forçar navegação e evitar problemas com guards
-      window.location.href = '/dashboard'
+      // Se houver returnUrl, redirecionar de volta com tokens
+      if (returnUrl) {
+        const separator = returnUrl.includes('?') ? '&' : '?'
+        window.location.href = `${returnUrl}${separator}authToken=${newAccessToken}&refreshToken=${newRefreshToken}`
+      } else {
+        // Usar window.location para forçar navegação e evitar problemas com guards
+        window.location.href = '/dashboard'
+      }
+
       return { success: true }
     } catch (error) {
       const errorData = error.response?.data?.error || {}
@@ -129,6 +143,28 @@ export function useAuth() {
       }
     } finally {
       loading.value = false
+    }
+  }
+
+  async function loginWithGoogle() {
+    try {
+      loading.value = true
+      const response = await api.get('/auth/google/login')
+
+      // Extract the OAuth URL from the response
+      const { data } = response.data
+      const authUrl = data.authUrl
+
+      // Redirect to Google OAuth page
+      window.location.href = authUrl
+
+      return { success: true }
+    } catch (error) {
+      loading.value = false
+      return {
+        success: false,
+        error: error.response?.data?.message || 'Erro ao iniciar login com Google'
+      }
     }
   }
 
@@ -451,6 +487,7 @@ export function useAuth() {
     login,
     verify2FALogin,
     register,
+    loginWithGoogle,
     logout,
     getProfile,
     updateProfile,

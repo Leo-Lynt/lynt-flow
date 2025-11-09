@@ -14,7 +14,7 @@ defineProps({
 </script>
 
 <template>
-  <div :class="['glass-card backdrop-blur-xl bg-white/30 rounded-lg border border-white/20', shadow, padding]">
+  <div :class="['glass-card backdrop-blur-xl bg-white/70 rounded-xl border border-white/40', shadow, padding]">
     <div v-if="title || subtitle" class="mb-4">
       <h3 v-if="title" class="text-lg font-semibold text-gray-900 tracking-wide">{{ title }}</h3>
       <p v-if="subtitle" class="text-sm text-gray-600 mt-1 tracking-wide">{{ subtitle }}</p>

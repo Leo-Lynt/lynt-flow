@@ -1,0 +1,72 @@
+<!-- Template: Simple Table Data (Email Compatible) -->
+<mjml>
+  <mj-head>
+    <mj-title>Lynt Flow - Dados do Fluxo</mj-title>
+    <mj-preview>Seus dados processados estão prontos</mj-preview>
+    <mj-attributes>
+      <mj-all font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" />
+      <mj-text font-size="14px" color="#4B5563" line-height="1.6" />
+    </mj-attributes>
+  </mj-head>
+
+  <mj-body background-color="#F3F4F6">
+    <!-- Main Container with rounded corners -->
+    <mj-wrapper padding="20px">
+      <mj-section background-color="#FFFFFF" padding="0" border="1px solid #E5E7EB" css-class="main-container">
+        <mj-column>
+          <!-- Intro Message -->
+          <mj-text color="#4B5563" font-size="14px" line-height="1.6" padding="32px 20px 20px 20px">
+            Olá! Seu fluxo <strong>{{flowName}}</strong> foi executado com sucesso. Veja os dados abaixo:
+          </mj-text>
+
+          <!-- Content - Blocks -->
+          {{#each blocks}}
+          <mj-table cellpadding="0" cellspacing="0" border="0" padding="0 20px 20px 20px">
+            <!-- Block Title -->
+            <tr>
+              <td colspan="2" style="background-color: #3B82F6; padding: 12px 16px; font-size: 14px; font-weight: 600; color: #FFFFFF; border-radius: 8px 8px 0 0;">
+                {{this.title}}
+              </td>
+            </tr>
+
+            <!-- Block Rows -->
+            {{#each this.rows}}
+            <tr>
+              <td style="background-color: #FFFFFF; padding: 12px 16px; color: #374151; font-size: 14px; font-weight: 500; width: 50%;">
+                {{this.label}}
+              </td>
+              <td style="background-color: #FFFFFF; padding: 12px 16px; text-align: right; color: #2563EB; font-size: 14px; font-weight: 600; width: 50%;">
+                {{this.value}}
+              </td>
+            </tr>
+            {{/each}}
+
+            <!-- Bottom Border with rounded corners -->
+            <tr>
+              <td colspan="2" style="padding: 0; background-color: #3B82F6; border-radius: 0 0 8px 8px; height: 2px; line-height: 0;"></td>
+            </tr>
+          </mj-table>
+          {{/each}}
+
+          <!-- Footer -->
+          <mj-divider border-width="1px" border-color="#E5E7EB" padding="24px 20px 16px 20px" />
+
+          <mj-text align="center" color="#6B7280" font-size="12px" padding="0 0 8px 0">
+            <strong>Lynt Flow</strong> • Automação de fluxos de dados
+          </mj-text>
+
+          <mj-text align="center" color="#9CA3AF" font-size="11px" padding="0 0 24px 0">
+            Executado em {{executedAt}}
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
+
+  <mj-style>
+    .main-container {
+      border-radius: 12px;
+      overflow: hidden;
+    }
+  </mj-style>
+</mjml>

@@ -22,6 +22,7 @@ class SchedulerService {
     }
 
     try {
+      logger.info('🔍 Searching for active schedules in database...');
       const schedules = await FlowSchedule.find({
         enabled: true,
         $or: [
@@ -30,16 +31,28 @@ class SchedulerService {
         ]
       }).populate('flowId');
 
+      logger.info(`📊 Found ${schedules.length} enabled schedules`);
+
       for (const schedule of schedules) {
+        logger.info(`🔄 Processing schedule ${schedule._id}`, {
+          hasFlow: !!schedule.flowId,
+          scheduleType: schedule.scheduleType
+        });
         if (schedule.flowId) {
           await this.registerSchedule(schedule);
+        } else {
+          logger.warn(`⚠️  Schedule ${schedule._id} has no flow, skipping`);
         }
       }
 
       this.initialized = true;
       logger.info(`✅ Scheduler initialized with ${schedules.length} active schedules`);
     } catch (error) {
-      logger.error('❌ Failed to initialize scheduler:', error);
+      logger.error('❌ Failed to initialize scheduler:', {
+        error: error.message,
+        stack: error.stack,
+        name: error.name
+      });
       throw error;
     }
   }
@@ -67,7 +80,19 @@ class SchedulerService {
 
       // Criar job
       const task = cron.schedule(cronExpression, async () => {
-        await this.executeScheduledFlow(scheduleId);
+        try {
+          logger.info(`🔄 Cron triggered for schedule ${scheduleId}`);
+          await this.executeScheduledFlow(scheduleId);
+          logger.info(`✅ Cron completed for schedule ${scheduleId}`);
+        } catch (error) {
+          logger.error(`❌ Cron callback error for schedule ${scheduleId}:`, {
+            error: error.message,
+            stack: error.stack,
+            name: error.name
+          });
+          // Re-throw para manter comportamento original
+          throw error;
+        }
       }, {
         timezone: schedule.timezone || 'UTC',
         scheduled: true
@@ -100,11 +125,16 @@ class SchedulerService {
     let schedule;
 
     try {
+      logger.info(`📋 Starting executeScheduledFlow for ${scheduleId}`);
       schedule = await FlowSchedule.findById(scheduleId).populate({
         path: 'flowId',
         populate: {
           path: 'flowDataId'
         }
+      });
+      logger.info(`📋 Schedule loaded for ${scheduleId}:`, {
+        enabled: schedule?.enabled,
+        hasFlow: !!schedule?.flowId
       });
 
       if (!schedule || !schedule.enabled) {
@@ -177,7 +207,15 @@ class SchedulerService {
       logger.info(`✅ Schedule ${scheduleId} executed successfully`);
 
     } catch (error) {
-      logger.error(`❌ Schedule ${scheduleId} failed:`, error);
+      logger.error(`❌ Schedule ${scheduleId} failed:`, {
+        error: error.message,
+        stack: error.stack,
+        name: error.name,
+        scheduleId: scheduleId
+      });
+      console.error('🔴 SCHEDULE EXECUTION ERROR DETAILS:');
+      console.error('Error:', error);
+      console.error('Schedule ID:', scheduleId);
 
       if (schedule) {
         // Atualizar falha

@@ -170,6 +170,10 @@ class FlowController {
       flow.totalNodes = 2; // Input + Output
       await flow.save();
 
+      // Atualizar contador de flows ativos
+      const usageTrackingService = require('../services/usageTrackingService');
+      await usageTrackingService.updateActiveFlows(userId);
+
       return res.status(201).json(formatSuccess({
         ...flow.toObject(),
         flowDataId: flowData._id
@@ -345,6 +349,10 @@ class FlowController {
 
       // Deletar flow
       await Flow.findByIdAndDelete(id);
+
+      // Atualizar contador de flows ativos
+      const usageTrackingService = require('../services/usageTrackingService');
+      await usageTrackingService.updateActiveFlows(userId);
 
       return res.status(200).json(formatSuccess(null, 'Fluxo deletado com sucesso'));
 
@@ -545,6 +553,15 @@ class FlowController {
       const startTime = Date.now();
       const result = await flowExecutor.executeFlow(flow, inputData, userId, 'api');
       const executionTime = Date.now() - startTime;
+
+      // Incrementar contador de execuções
+      try {
+        const usageTrackingService = require('../services/usageTrackingService');
+        await usageTrackingService.incrementExecutions(userId, id, result.executionId || id);
+      } catch (usageError) {
+        logger.error('Erro ao incrementar contador de execuções:', usageError);
+        // Não bloquear a resposta por erro no tracking
+      }
 
       // Log sucesso
       logger.logFlowExecution(id, userId, 'success', executionTime, {

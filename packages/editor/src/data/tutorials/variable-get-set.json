@@ -1,0 +1,218 @@
+{
+  "id": "variable-get-set",
+  "title": "Variable: SET e GET",
+  "description": "Tutorial mostrando como armazenar (SET) e recuperar (GET) valores usando variáveis",
+  "flow": {
+    "nodes": [
+      {
+        "id": "input_start",
+        "type": "input",
+        "position": {
+          "x": 100,
+          "y": 250
+        },
+        "data": {
+          "label": "Input"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "const_valor",
+        "type": "constant",
+        "position": {
+          "x": 100,
+          "y": 350
+        },
+        "data": {
+          "label": "Constant"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "variable_set",
+        "type": "variable",
+        "position": {
+          "x": 350,
+          "y": 250
+        },
+        "data": {
+          "label": "Variable"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "variable_get1",
+        "type": "variable",
+        "position": {
+          "x": 600,
+          "y": 180
+        },
+        "data": {
+          "label": "Variable"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "variable_get2",
+        "type": "variable",
+        "position": {
+          "x": 600,
+          "y": 320
+        },
+        "data": {
+          "label": "Variable"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug1",
+        "type": "debug-viewer",
+        "position": {
+          "x": 850,
+          "y": 180
+        },
+        "data": {
+          "label": "Debug Viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug2",
+        "type": "debug-viewer",
+        "position": {
+          "x": 850,
+          "y": 320
+        },
+        "data": {
+          "label": "Debug Viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge_input_varset",
+        "source": "input_start",
+        "target": "variable_set",
+        "sourceHandle": "exec-out",
+        "targetHandle": "exec-in",
+        "edgeType": "flow",
+        "dataType": "any",
+        "animated": true,
+        "style": {
+          "stroke": "#9ca3af",
+          "strokeWidth": 3
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 10,
+          "height": 10,
+          "color": "#9ca3af"
+        }
+      },
+      {
+        "id": "edge_const_varset",
+        "source": "const_valor",
+        "target": "variable_set",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-input",
+        "edgeType": "data",
+        "dataType": "string",
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#10b981"
+        }
+      },
+      {
+        "id": "edge_get1_debug1",
+        "source": "variable_get1",
+        "target": "debug1",
+        "sourceHandle": "data-out",
+        "targetHandle": "debug1-data-input",
+        "edgeType": "data",
+        "dataType": "string",
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#10b981"
+        }
+      },
+      {
+        "id": "edge_get2_debug2",
+        "source": "variable_get2",
+        "target": "debug2",
+        "sourceHandle": "data-out",
+        "targetHandle": "debug2-data-input",
+        "edgeType": "data",
+        "dataType": "string",
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#10b981"
+        }
+      }
+    ],
+    "nodeData": {
+      "const_valor": {
+        "valueType": "string",
+        "stringValue": "Meu Valor Armazenado"
+      },
+      "variable_set": {
+        "mode": "set",
+        "variableNameSet": "minhaVariavel"
+      },
+      "variable_get1": {
+        "mode": "get",
+        "variableName": "minhaVariavel"
+      },
+      "variable_get2": {
+        "mode": "get",
+        "variableName": "minhaVariavel"
+      }
+    },
+    "detectedTypes": {
+      "const_valor": {
+        "data-out": "string"
+      },
+      "variable_get1": {
+        "data-out": "string"
+      },
+      "variable_get2": {
+        "data-out": "string"
+      }
+    },
+    "variables": {
+      "minhaVariavel": {
+        "type": "string",
+        "value": "Meu Valor Armazenado"
+      }
+    }
+  },
+  "exportedAt": "2025-11-01T20:00:00.000Z"
+}

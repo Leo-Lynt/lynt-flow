@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { useAuth } from '../composables/useAuth.js'
@@ -12,6 +12,9 @@ const code = ref('')
 const error = ref('')
 const tempToken = ref('')
 const attemptsInfo = ref(null)
+
+// Capturar returnUrl da query string
+const returnUrl = computed(() => route.query.returnUrl || null)
 
 onMounted(() => {
   // Obter tempToken da rota
@@ -34,7 +37,7 @@ async function handleSubmit() {
     return
   }
 
-  const result = await verify2FALogin(tempToken.value, code.value)
+  const result = await verify2FALogin(tempToken.value, code.value, returnUrl.value)
 
   if (!result.success) {
     error.value = result.error

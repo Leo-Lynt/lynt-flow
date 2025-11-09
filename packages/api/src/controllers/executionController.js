@@ -239,6 +239,15 @@ async function saveExecution(req, res) {
     // Atualizar estatísticas do flow
     await updateFlowStats(flowId, status === 'success', executionTime);
 
+    // Incrementar contador de execuções mensais
+    try {
+      const usageTrackingService = require('../services/usageTrackingService');
+      await usageTrackingService.incrementExecutions(userId, flowId, execution._id);
+    } catch (usageError) {
+      logger.error('Erro ao incrementar contador de execuções:', usageError);
+      // Não bloquear o salvamento por erro no tracking
+    }
+
     return res.status(201).json(formatSuccess({
       executionId: execution._id,
       savedAt: execution.createdAt

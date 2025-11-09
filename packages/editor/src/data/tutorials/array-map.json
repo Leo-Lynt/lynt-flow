@@ -1,0 +1,110 @@
+{
+  "id": "array-map",
+  "title": "Transformar Array",
+  "description": "Tutorial mostrando como transformar cada elemento de um array (multiplicar por 2)",
+  "flow": {
+    "nodes": [
+      {
+        "id": "constant_array",
+        "type": "constant",
+        "position": {
+          "x": 100,
+          "y": 250
+        },
+        "data": {
+          "label": "Constant"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "map_node",
+        "type": "array-map",
+        "position": {
+          "x": 400,
+          "y": 250
+        },
+        "data": {
+          "label": "Array Map"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug_viewer",
+        "type": "debug-viewer",
+        "position": {
+          "x": 700,
+          "y": 250
+        },
+        "data": {
+          "label": "Debug Viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge_array_map",
+        "source": "constant_array",
+        "target": "map_node",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-input",
+        "edgeType": "data",
+        "dataType": "any",
+        "animated": false,
+        "style": {
+          "stroke": "#3b82f6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#3b82f6"
+        }
+      },
+      {
+        "id": "edge_map_debug",
+        "source": "map_node",
+        "target": "debug_viewer",
+        "sourceHandle": "data-out",
+        "targetHandle": "debug_viewer-data-input",
+        "edgeType": "data",
+        "dataType": "array",
+        "animated": false,
+        "style": {
+          "stroke": "#3b82f6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#3b82f6"
+        }
+      }
+    ],
+    "nodeData": {
+      "constant_array": {
+        "valueType": "array",
+        "arrayValue": "[1, 2, 3, 4, 5]"
+      },
+      "map_node": {
+        "operation": "multiply",
+        "value": "2"
+      }
+    },
+    "detectedTypes": {
+      "constant_array": {
+        "data-out": "array"
+      },
+      "map_node": {
+        "data-out": "array"
+      }
+    },
+    "variables": {}
+  },
+  "exportedAt": "2025-11-01T18:00:00.000Z"
+}

@@ -3,6 +3,7 @@ const router = express.Router();
 
 const flowController = require('../controllers/flowController');
 const { authenticate, optionalAuth } = require('../middleware/auth');
+const { checkFlowLimit, checkExecutionLimit } = require('../middleware/checkPlanLimits');
 const {
   validate,
   validateParams,
@@ -235,7 +236,7 @@ router.get('/', validateQuery(flowsQuerySchema), flowController.getFlows);
  *       401:
  *         $ref: '#/components/responses/UnauthorizedError'
  */
-router.post('/', validate(createFlowSchema), flowController.createFlow);
+router.post('/', validate(createFlowSchema), checkFlowLimit, flowController.createFlow);
 
 /**
  * @swagger
@@ -539,7 +540,7 @@ router.get('/:id/stats', validateParams(mongoIdSchema), flowController.getFlowSt
  *             schema:
  *               $ref: '#/components/schemas/ErrorResponse'
  */
-router.post('/:id/execute', validateParams(mongoIdSchema), validate(executeFlowSchema), flowController.executeFlow);
+router.post('/:id/execute', validateParams(mongoIdSchema), validate(executeFlowSchema), checkExecutionLimit, flowController.executeFlow);
 
 /**
  * @swagger

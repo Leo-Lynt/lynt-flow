@@ -1,9 +1,10 @@
 /**
- * Output Node (Frontend - Simplificado)
- * No frontend, output é apenas para display
+ * Output Node (Frontend)
+ * Coleta dados e envia para destinations (display, email, webhook, etc)
  */
 
 import { unwrapData } from '@leo-lynt/lynt-flow-core/utils'
+import { executeOutput } from '../../services/outputService'
 
 /**
  * Executa Output node
@@ -40,9 +41,58 @@ export async function execute({ nodeData, inputs, context }) {
     })
   }
 
-  // No frontend, output é apenas para display
-  // Destinations (webhook, email, etc) são executados na API
-  return outputData
+  // Determinar destination (default: display)
+  const destination = nodeData.destination || 'display'
+  const config = nodeData.destinationConfig || {}
+
+  // Se destination é display, apenas retornar os dados
+  if (destination === 'display') {
+    return outputData
+  }
+
+  // Para outras destinations (email, webhook, googleSheets, download, apiResponse)
+  // chamar outputService que faz requisição para a API
+  try {
+    const apiConfig = context?.apiConfig || {}
+
+    // Verificar se temos token de autenticação
+    if (!apiConfig.token) {
+      console.warn('⚠️ Output: No authentication token found. Cannot send to destination:', destination)
+      return {
+        success: false,
+        error: 'Authentication required',
+        data: outputData
+      }
+    }
+
+    console.log(`📤 Output: Sending to ${destination}`, {
+      config,
+      dataKeys: Object.keys(outputData)
+    })
+
+    // Executar output via service (chama API backend)
+    const result = await executeOutput(outputData, { type: destination, config }, apiConfig)
+
+    console.log(`✅ Output: Successfully sent to ${destination}`, result)
+
+    // Retornar resultado + dados originais
+    return {
+      success: true,
+      destination,
+      result,
+      data: outputData
+    }
+  } catch (error) {
+    console.error(`❌ Output: Error sending to ${destination}:`, error)
+
+    // Retornar erro mas manter dados
+    return {
+      success: false,
+      destination,
+      error: error.message,
+      data: outputData
+    }
+  }
 }
 
 /**

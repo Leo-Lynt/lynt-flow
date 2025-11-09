@@ -149,13 +149,61 @@
         },
         "gaConnectionId": {
           "type": "connection-select",
-          "label": "Google Analytics Connection",
+          "label": "Conexão Google Analytics",
           "required": true,
           "serviceType": "analytics",
-          "description": "Conecte sua conta Google Analytics",
+          "description": "Conecte sua conta do Google Analytics 4 (GA4)",
           "condition": {
             "sourceType": "google_analytics"
           }
+        },
+        "gaPropertyId": {
+          "type": "property-select",
+          "label": "Propriedade GA4",
+          "required": true,
+          "description": "Selecione qual site/app você deseja analisar",
+          "dependsOn": "gaConnectionId",
+          "condition": {
+            "sourceType": "google_analytics"
+          }
+        },
+        "gaMetrics": {
+          "type": "metrics-select",
+          "label": "Métricas",
+          "required": false,
+          "default": ["activeUsers", "sessions", "screenPageViews"],
+          "condition": {
+            "sourceType": "google_analytics"
+          }
+        },
+        "gaDimensions": {
+          "type": "dimensions-select",
+          "label": "Dimensões",
+          "required": false,
+          "default": ["date"],
+          "condition": {
+            "sourceType": "google_analytics"
+          }
+        },
+        "gaStartDate": {
+          "type": "date",
+          "label": "Data Início",
+          "required": false,
+          "description": "Data de início personalizada (deixe vazio para usar período padrão)",
+          "condition": {
+            "sourceType": "google_analytics"
+          },
+          "placeholder": "YYYY-MM-DD"
+        },
+        "gaEndDate": {
+          "type": "date",
+          "label": "Data Fim",
+          "required": false,
+          "description": "Data de fim personalizada (deixe vazio para usar período padrão)",
+          "condition": {
+            "sourceType": "google_analytics"
+          },
+          "placeholder": "YYYY-MM-DD"
         },
         "sheetsConnectionId": {
           "type": "connection-select",

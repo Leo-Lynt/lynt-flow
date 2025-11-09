@@ -28,7 +28,9 @@ export const FRONTEND_TO_CANONICAL = {
     gaPropertyId: 'propertyId',
     gaMetrics: 'metrics',
     gaDimensions: 'dimensions',
-    gaFilters: 'filters'
+    gaFilters: 'filters',
+    gaStartDate: 'startDate',
+    gaEndDate: 'endDate'
   },
 
   api: {

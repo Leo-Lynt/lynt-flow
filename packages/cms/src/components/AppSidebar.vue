@@ -72,7 +72,9 @@ const menuItems = [
     name: 'Documentação',
     icon: 'lucide:book-open',
     route: '/docs',
-    section: 'others'
+    section: 'others',
+    external: true,
+    externalUrl: import.meta.env.VITE_DOCS_URL
   }
 ]
 
@@ -113,7 +115,14 @@ function isActive(itemRoute) {
   return route.path === itemRoute || route.path.startsWith(itemRoute + '/')
 }
 
-function navigateTo(routePath) {
+function navigateTo(routePath, item = null) {
+  // Se for link externo, abrir em nova aba
+  if (item && item.external && item.externalUrl) {
+    window.open(item.externalUrl, '_blank')
+    emit('close')
+    return
+  }
+
   router.push(routePath)
   emit('close')
 }
@@ -130,13 +139,19 @@ function navigateTo(routePath) {
   <!-- Sidebar -->
   <div
     :class="[
-      'glass-sidebar fixed top-20 bottom-4 left-4 w-64 backdrop-blur-xl bg-white/30 border border-white/20 rounded-lg shadow-lg z-30 transition-transform duration-300 ease-in-out',
+      'glass-sidebar fixed top-20 bottom-4 left-4 w-64 backdrop-blur-xl bg-white/70 border border-white/40 rounded-2xl shadow-xl shadow-gray-900/5 z-30 transition-all duration-300 ease-in-out overflow-hidden group',
       'lg:translate-x-0',
       open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
     ]"
   >
+    <!-- Brilho no hover (sutil) -->
+    <div class="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/5 via-transparent to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+
+    <!-- Corner decoration (canto inferior direito) -->
+    <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-gradient-to-br from-blue-500 to-cyan-500 opacity-5 rounded-full blur-2xl group-hover:opacity-10 transition-opacity duration-500 pointer-events-none"></div>
+
     <!-- Close button for mobile -->
-    <div class="flex justify-end p-4 lg:hidden">
+    <div class="flex justify-end p-4 lg:hidden relative z-10">
       <button
         @click="emit('close')"
         class="p-2 rounded text-gray-600 hover:opacity-70 transition-opacity"
@@ -146,7 +161,7 @@ function navigateTo(routePath) {
     </div>
 
     <!-- Sidebar content -->
-    <div class="flex flex-col h-full">
+    <div class="flex flex-col h-full relative z-10">
       <!-- Navigation -->
       <nav class="flex-1 px-4 pb-4 space-y-8">
         <!-- Main section -->
@@ -156,19 +171,19 @@ function navigateTo(routePath) {
           </div>
           <div v-for="item in mainItems" :key="item.name">
             <button
-              @click="navigateTo(item.route)"
+              @click="navigateTo(item.route, item)"
               :class="[
-                'group flex items-center w-full px-3 py-2.5 text-sm font-medium rounded transition-all',
+                'group flex items-center w-full px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-300',
                 isActive(item.route)
-                  ? 'bg-brand-purple/10 text-brand-purple border-r-2 border-brand-purple'
-                  : 'text-gray-700 hover:bg-white/40 hover:brightness-95'
+                  ? 'bg-blue-500/10 text-blue-600 shadow-md shadow-blue-500/10'
+                  : 'text-gray-700 hover:bg-white/50 hover:shadow-sm hover:-translate-y-0.5'
               ]"
             >
               <Icon
                 :icon="item.icon"
                 :class="[
-                  'w-5 h-5 mr-3 flex-shrink-0 transition-colors',
-                  isActive(item.route) ? 'text-brand-purple' : 'text-gray-500'
+                  'w-5 h-5 mr-3 flex-shrink-0 transition-all duration-300',
+                  isActive(item.route) ? 'text-blue-600 scale-110' : 'text-gray-500 group-hover:scale-110'
                 ]"
               />
               {{ item.name }}
@@ -178,24 +193,24 @@ function navigateTo(routePath) {
 
         <!-- Admin section -->
         <div v-if="showAdminSection" class="space-y-1">
-          <div class="text-xs font-medium text-brand-pink uppercase tracking-wider px-3 py-2 mb-2">
+          <div class="text-xs font-medium text-cyan-600 uppercase tracking-wider px-3 py-2 mb-2">
             Admin
           </div>
           <div v-for="item in visibleAdminItems" :key="item.name">
             <button
-              @click="navigateTo(item.route)"
+              @click="navigateTo(item.route, item)"
               :class="[
-                'group flex items-center w-full px-3 py-2.5 text-sm font-medium rounded transition-all',
+                'group flex items-center w-full px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-300',
                 isActive(item.route)
-                  ? 'bg-brand-pink/10 text-brand-pink border-r-2 border-brand-pink'
-                  : 'text-gray-700 hover:bg-white/40 hover:brightness-95'
+                  ? 'bg-cyan-500/10 text-cyan-600 shadow-md shadow-cyan-500/10'
+                  : 'text-gray-700 hover:bg-white/50 hover:shadow-sm hover:-translate-y-0.5'
               ]"
             >
               <Icon
                 :icon="item.icon"
                 :class="[
-                  'w-5 h-5 mr-3 flex-shrink-0 transition-colors',
-                  isActive(item.route) ? 'text-brand-pink' : 'text-gray-500'
+                  'w-5 h-5 mr-3 flex-shrink-0 transition-all duration-300',
+                  isActive(item.route) ? 'text-cyan-600 scale-110' : 'text-gray-500 group-hover:scale-110'
                 ]"
               />
               {{ item.name }}
@@ -210,19 +225,19 @@ function navigateTo(routePath) {
           </div>
           <div v-for="item in otherItems" :key="item.name">
             <button
-              @click="navigateTo(item.route)"
+              @click="navigateTo(item.route, item)"
               :class="[
-                'group flex items-center w-full px-3 py-2.5 text-sm font-medium rounded transition-all',
+                'group flex items-center w-full px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-300',
                 isActive(item.route)
-                  ? 'bg-brand-purple/10 text-brand-purple border-r-2 border-brand-purple'
-                  : 'text-gray-700 hover:bg-white/40 hover:brightness-95'
+                  ? 'bg-blue-500/10 text-blue-600 shadow-md shadow-blue-500/10'
+                  : 'text-gray-700 hover:bg-white/50 hover:shadow-sm hover:-translate-y-0.5'
               ]"
             >
               <Icon
                 :icon="item.icon"
                 :class="[
-                  'w-5 h-5 mr-3 flex-shrink-0 transition-colors',
-                  isActive(item.route) ? 'text-brand-purple' : 'text-gray-500'
+                  'w-5 h-5 mr-3 flex-shrink-0 transition-all duration-300',
+                  isActive(item.route) ? 'text-blue-600 scale-110' : 'text-gray-500 group-hover:scale-110'
                 ]"
               />
               {{ item.name }}

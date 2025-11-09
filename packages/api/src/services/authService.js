@@ -379,7 +379,37 @@ class AuthService {
         return formatError('Usuário não encontrado', 'USER_NOT_FOUND');
       }
 
-      return formatSuccess(sanitizeUser(user), 'Perfil obtido com sucesso');
+      // Obter dados de plano e uso
+      const usageTrackingService = require('./usageTrackingService');
+      const usage = await usageTrackingService.getCurrentUsage(userId);
+
+      // Calcular percentuais de uso
+      const percentages = usage.getUsagePercentage(user.planLimits);
+
+      // Verificar avisos de limite
+      const { isNear, isOver, warnings } = await usageTrackingService.checkLimitWarnings(userId);
+
+      // Preparar resposta com dados do usuário e plano
+      const profile = {
+        ...sanitizeUser(user),
+        currentPlan: {
+          planId: user.currentPlanId,
+          isPaid: user.currentPlanId !== 'free'
+        },
+        usage: {
+          executions: usage.executions,
+          activeFlows: usage.activeFlows,
+          dataUsed: usage.dataUsed,
+          resetAt: usage.resetAt
+        },
+        limits: user.planLimits,
+        usagePercentages: percentages,
+        isNearLimit: isNear,
+        isOverLimit: isOver,
+        warnings
+      };
+
+      return formatSuccess(profile, 'Perfil obtido com sucesso');
     } catch (error) {
       throw error;
     }

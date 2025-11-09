@@ -30,6 +30,7 @@ const scheduleRoutes = require('./routes/scheduleRoutes');
 const publicFlowRoutes = require('./routes/publicFlows');
 const userManagementRoutes = require('./routes/userManagement');
 const dashboardRoutes = require('./routes/dashboard');
+const billingRoutes = require('./routes/billing');
 
 // Importar middleware
 const {
@@ -308,6 +309,7 @@ app.use('/api/nodes', nodesRoutes);
 app.use('/api/executions', userRateLimit, executionRoutes);
 app.use('/api/schedules', userRateLimit, scheduleRoutes);
 app.use('/api/dashboard', userRateLimit, dashboardRoutes);
+app.use('/api/billing', billingRoutes); // Note: webhook has its own rate limiting
 app.use('/api/cache', cacheRoutes);
 app.use('/api', userRateLimit, flowDataRoutes);
 
@@ -323,12 +325,40 @@ const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
 // Tratamento de erros não capturados (apenas em ambientes tradicionais)
 if (!isServerless) {
   process.on('uncaughtException', (err) => {
-    logger.error('Unhandled exception', { error: err });
+    logger.error('Unhandled exception', {
+      error: err,
+      message: err?.message,
+      stack: err?.stack,
+      name: err?.name
+    });
+    // Log adicional para debugging
+    console.error('🔴 UNCAUGHT EXCEPTION DETAILS:');
+    console.error('Error:', err);
+    if (err instanceof Error) {
+      console.error('Message:', err.message);
+      console.error('Stack:', err.stack);
+      console.error('Name:', err.name);
+    }
+    console.error('Type:', typeof err);
+    console.error('Constructor:', err?.constructor?.name);
     process.exit(1);
   });
 
   process.on('unhandledRejection', (reason, promise) => {
-    logger.error('Unhandled promise rejection', { reason });
+    logger.error('Unhandled promise rejection', {
+      reason: reason,
+      reasonMessage: reason?.message,
+      reasonStack: reason?.stack,
+      reasonName: reason?.name,
+      promiseString: promise?.toString()
+    });
+    // Log adicional para debugging
+    console.error('🔴 UNHANDLED REJECTION DETAILS:');
+    console.error('Reason:', reason);
+    console.error('Promise:', promise);
+    if (reason instanceof Error) {
+      console.error('Stack:', reason.stack);
+    }
     // Em produção, pode ser melhor fazer graceful shutdown
     process.exit(1);
   });

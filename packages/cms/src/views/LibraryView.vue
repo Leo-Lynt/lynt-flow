@@ -96,10 +96,10 @@ function handleFlowImported() {
 
 function getCategoryColor(category) {
   const colors = {
-    'automation': 'bg-brand-purple/10 text-brand-purple border border-brand-purple/30',
-    'data-processing': 'bg-brand-green/10 text-brand-green border border-brand-green/30',
-    'api-integration': 'bg-brand-pink/10 text-brand-pink border border-brand-pink/30',
-    'notification': 'bg-brand-orange/10 text-brand-orange border border-brand-orange/30',
+    'automation': 'bg-blue-500/10 text-blue-700 border border-blue-500/30',
+    'data-processing': 'bg-green-500/10 text-green-700 border border-green-500/30',
+    'api-integration': 'bg-cyan-500/10 text-cyan-700 border border-cyan-500/30',
+    'notification': 'bg-orange-500/10 text-orange-700 border border-orange-500/30',
     'utility': 'bg-gray-100 text-gray-700 border border-gray-300'
   }
   return colors[category] || colors.utility
@@ -107,9 +107,9 @@ function getCategoryColor(category) {
 
 function getDifficultyColor(difficulty) {
   const colors = {
-    'beginner': 'bg-brand-green/10 text-brand-green border border-brand-green/30',
-    'intermediate': 'bg-brand-orange/10 text-brand-orange border border-brand-orange/30',
-    'advanced': 'bg-brand-red/10 text-brand-red border border-brand-red/30'
+    'beginner': 'bg-green-500/10 text-green-700 border border-green-500/30',
+    'intermediate': 'bg-orange-500/10 text-orange-700 border border-orange-500/30',
+    'advanced': 'bg-red-500/10 text-red-700 border border-red-500/30'
   }
   return colors[difficulty] || colors.beginner
 }
@@ -124,7 +124,7 @@ function formatDate(date) {
 
 function generateAvatar(name) {
   const initials = name?.split(' ').map(n => n[0]).join('').substring(0, 2) || '??'
-  const colors = ['bg-brand-purple', 'bg-brand-green', 'bg-brand-pink', 'bg-brand-orange', 'bg-brand-red']
+  const colors = ['bg-blue-600', 'bg-green-600', 'bg-cyan-600', 'bg-orange-600', 'bg-red-600']
   const color = colors[name?.length % colors.length] || colors[0]
   return { initials, color }
 }
@@ -158,27 +158,27 @@ function previousPage() {
 
     <!-- Stats Bar -->
     <div class="grid grid-cols-3 gap-4 mb-6">
-      <div class="glass-card backdrop-blur-xl bg-white/30 rounded-lg p-4 border border-white/20 hover:bg-white/40 transition-all">
+      <div class="glass-card backdrop-blur-xl bg-white/70 rounded-xl p-4 border border-white/40 shadow-sm hover:bg-white/80 transition-all">
         <div class="flex items-center">
-          <Icon icon="lucide:users" class="w-8 h-8 text-brand-purple mr-3" />
+          <Icon icon="lucide:users" class="w-8 h-8 text-blue-600 mr-3" />
           <div>
             <p class="text-sm text-gray-700 tracking-wide">Fluxos da Comunidade</p>
             <p class="text-2xl font-bold text-gray-900">{{ stats.totalFlows }}</p>
           </div>
         </div>
       </div>
-      <div class="glass-card backdrop-blur-xl bg-white/30 rounded-lg p-4 border border-white/20 hover:bg-white/40 transition-all">
+      <div class="glass-card backdrop-blur-xl bg-white/70 rounded-xl p-4 border border-white/40 shadow-sm hover:bg-white/80 transition-all">
         <div class="flex items-center">
-          <Icon icon="lucide:download" class="w-8 h-8 text-brand-green mr-3" />
+          <Icon icon="lucide:download" class="w-8 h-8 text-green-600 mr-3" />
           <div>
             <p class="text-sm text-gray-700 tracking-wide">Total de Downloads</p>
             <p class="text-2xl font-bold text-gray-900">{{ stats.totalDownloads?.toLocaleString() || 0 }}</p>
           </div>
         </div>
       </div>
-      <div class="glass-card backdrop-blur-xl bg-white/30 rounded-lg p-4 border border-white/20 hover:bg-white/40 transition-all">
+      <div class="glass-card backdrop-blur-xl bg-white/70 rounded-xl p-4 border border-white/40 shadow-sm hover:bg-white/80 transition-all">
         <div class="flex items-center">
-          <Icon icon="lucide:shield-check" class="w-8 h-8 text-brand-pink mr-3" />
+          <Icon icon="lucide:shield-check" class="w-8 h-8 text-cyan-600 mr-3" />
           <div>
             <p class="text-sm text-gray-700 tracking-wide">Fluxos Verificados</p>
             <p class="text-2xl font-bold text-gray-900">{{ stats.verifiedFlows }}</p>
@@ -188,7 +188,7 @@ function previousPage() {
     </div>
 
     <!-- Filters -->
-    <div class="glass-card backdrop-blur-xl bg-white/30 rounded-lg border border-white/20 p-4 mb-6">
+    <div class="glass-card backdrop-blur-xl bg-white/70 rounded-xl border border-white/40 shadow-sm p-4 mb-6">
       <div class="flex flex-col sm:flex-row gap-4">
         <div class="flex-1">
           <div class="relative">
@@ -197,14 +197,14 @@ function previousPage() {
               v-model="searchQuery"
               type="text"
               placeholder="Buscar fluxos públicos..."
-              class="w-full pl-10 pr-3 py-2 border border-white/30 bg-white/50 backdrop-blur-sm rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
+              class="w-full pl-10 pr-3 py-2 border border-white/30 bg-white/50 backdrop-blur-sm rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             />
           </div>
         </div>
         <div class="flex gap-2 flex-wrap">
           <select
             v-model="selectedCategory"
-            class="px-3 py-2 border border-white/30 bg-white/50 backdrop-blur-sm rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple transition-all"
+            class="px-3 py-2 border border-white/30 bg-white/50 backdrop-blur-sm rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
           >
             <option v-for="cat in categories" :key="cat.value" :value="cat.value">
               {{ cat.label }}
@@ -212,7 +212,7 @@ function previousPage() {
           </select>
           <select
             v-model="selectedDifficulty"
-            class="px-3 py-2 border border-white/30 bg-white/50 backdrop-blur-sm rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple transition-all"
+            class="px-3 py-2 border border-white/30 bg-white/50 backdrop-blur-sm rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
           >
             <option v-for="diff in difficulties" :key="diff.value" :value="diff.value">
               {{ diff.label }}
@@ -220,7 +220,7 @@ function previousPage() {
           </select>
           <select
             v-model="sortBy"
-            class="px-3 py-2 border border-white/30 bg-white/50 backdrop-blur-sm rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-brand-purple transition-all"
+            class="px-3 py-2 border border-white/30 bg-white/50 backdrop-blur-sm rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
           >
             <option value="popular">Mais Popular</option>
             <option value="recent">Adicionados Recentemente</option>
@@ -231,7 +231,7 @@ function previousPage() {
             <input
               v-model="showVerifiedOnly"
               type="checkbox"
-              class="mr-2 h-4 w-4 text-brand-purple accent-brand-purple"
+              class="mr-2 h-4 w-4 text-blue-600 accent-blue-600"
             />
             Apenas Verificados
           </label>
@@ -241,11 +241,11 @@ function previousPage() {
 
     <!-- Loading State -->
     <div v-if="loading" class="flex items-center justify-center py-20">
-      <Icon icon="lucide:loader-2" class="w-12 h-12 text-brand-purple animate-spin" />
+      <Icon icon="lucide:loader-2" class="w-12 h-12 text-blue-600 animate-spin" />
     </div>
 
     <!-- Empty State -->
-    <div v-else-if="publicFlows.length === 0" class="text-center py-12 glass-card backdrop-blur-xl bg-white/30 rounded-lg border border-white/20">
+    <div v-else-if="publicFlows.length === 0" class="text-center py-12 glass-card backdrop-blur-xl bg-white/70 rounded-xl border border-white/40 shadow-sm">
       <Icon icon="lucide:search-x" class="w-16 h-16 text-gray-400 mx-auto mb-4" />
       <h3 class="text-lg font-semibold text-gray-900 mb-2 tracking-wide">Nenhum fluxo encontrado</h3>
       <p class="text-gray-600 tracking-wide">Tente ajustar seus termos de busca ou filtros</p>
@@ -257,10 +257,13 @@ function previousPage() {
         <div
           v-for="flow in publicFlows"
           :key="flow._id"
-          class="glass-card backdrop-blur-xl bg-white/30 rounded-lg border border-white/20 hover:shadow-xl hover:bg-white/40 transition-all duration-200 overflow-hidden"
+          class="glass-card backdrop-blur-xl bg-white/70 rounded-xl border border-white/40 shadow-sm hover:shadow-xl hover:bg-white/80 transition-all duration-200 overflow-hidden relative"
         >
+          <!-- Blue blur no topo -->
+          <div class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-blue-500/30 via-cyan-500/20 to-transparent blur-md pointer-events-none"></div>
+
           <!-- Flow Header -->
-          <div class="p-6">
+          <div class="p-6 relative z-10">
             <div class="flex items-start justify-between mb-3">
               <div class="flex-1">
                 <div class="flex items-center mb-2">
@@ -268,7 +271,7 @@ function previousPage() {
                   <Icon
                     v-if="flow.publicationData?.isVerified"
                     icon="lucide:shield-check"
-                    class="w-5 h-5 text-brand-purple"
+                    class="w-5 h-5 text-blue-600"
                     title="Fluxo Verificado"
                   />
                 </div>
@@ -331,18 +334,18 @@ function previousPage() {
           </div>
 
           <!-- Actions -->
-          <div class="px-6 py-4 bg-white/20 backdrop-blur-sm border-t border-white/20">
+          <div class="px-6 py-4 bg-white/20 backdrop-blur-sm border-t border-white/20 relative z-10">
             <div class="flex items-center justify-between">
               <button
                 @click="viewFlowDetails(flow)"
-                class="text-gray-700 hover:text-gray-900 flex items-center text-sm font-medium tracking-wide transition-all"
+                class="text-gray-700 hover:text-blue-600 flex items-center text-sm font-medium tracking-wide transition-all"
               >
                 <Icon icon="lucide:eye" class="w-4 h-4 mr-1" />
                 Ver Detalhes
               </button>
               <button
                 @click="importFlow(flow)"
-                class="bg-brand-purple text-white px-4 py-2 rounded-lg hover:brightness-110 text-sm transition-all flex items-center space-x-1 font-medium tracking-wide"
+                class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-4 py-2 rounded-lg text-sm transition-all flex items-center space-x-1 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 font-medium tracking-wide"
               >
                 <Icon icon="lucide:download" class="w-4 h-4" />
                 <span>Importar</span>
@@ -357,7 +360,7 @@ function previousPage() {
         <button
           @click="previousPage"
           :disabled="currentPage === 1"
-          class="px-4 py-2 backdrop-blur-sm bg-white/30 border border-white/20 rounded-lg hover:bg-white/40 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          class="px-4 py-2 backdrop-blur-sm bg-white/70 border border-white/40 rounded-lg hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"
         >
           <Icon icon="lucide:chevron-left" class="w-5 h-5" />
         </button>
@@ -367,7 +370,7 @@ function previousPage() {
         <button
           @click="nextPage"
           :disabled="currentPage === totalPages"
-          class="px-4 py-2 backdrop-blur-sm bg-white/30 border border-white/20 rounded-lg hover:bg-white/40 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+          class="px-4 py-2 backdrop-blur-sm bg-white/70 border border-white/40 rounded-lg hover:bg-white/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm"
         >
           <Icon icon="lucide:chevron-right" class="w-5 h-5" />
         </button>

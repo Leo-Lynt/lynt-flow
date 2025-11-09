@@ -1,11 +1,18 @@
 <script setup>
-import { onMounted } from 'vue'
-import FlowCanvas from './components/FlowCanvas.vue'
+import { computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { useTheme } from './composables/useTheme.js'
 import { useAuth } from './composables/useAuth.js'
 
+const route = useRoute()
 const { initTheme } = useTheme()
 const { isAuthenticated, checkTokenValidity, redirectToLogin } = useAuth()
+
+// Check if current route is playground (skip auth for playground)
+// Note: base path is '/editor/' so playground route is '/playground' not '/editor/playground'
+const isPlaygroundRoute = computed(() => {
+  return route.path.includes('playground') || route.query.tutorialId
+})
 
 // Function to handle token from URL (when coming from CMS)
 function handleTokenFromUrl() {
@@ -27,8 +34,8 @@ onMounted(() => {
   initTheme()
   handleTokenFromUrl()
 
-  // Check if user is authenticated
-  if (!isAuthenticated.value || !checkTokenValidity()) {
+  // Check if user is authenticated (skip for playground routes)
+  if (!isPlaygroundRoute.value && (!isAuthenticated.value || !checkTokenValidity())) {
     console.warn('User is not authenticated or token is invalid, redirecting to login')
     redirectToLogin()
   }

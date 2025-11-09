@@ -1,0 +1,245 @@
+{
+  "soma-numeros": {
+    "id": "soma-numeros",
+    "title": "Somar Dois Números",
+    "description": "Exemplo simples de como somar dois valores",
+    "flow": {
+      "nodes": [
+        {
+          "id": "1",
+          "type": "input",
+          "position": { "x": 100, "y": 150 },
+          "data": { "label": "Número 1", "value": 5, "config": { "value": 5 } }
+        },
+        {
+          "id": "2",
+          "type": "input",
+          "position": { "x": 100, "y": 300 },
+          "data": { "label": "Número 2", "value": 3, "config": { "value": 3 } }
+        },
+        {
+          "id": "3",
+          "type": "math-operation",
+          "position": { "x": 350, "y": 200 },
+          "data": { "label": "Somar", "operation": "add", "config": { "operation": "add" } }
+        },
+        {
+          "id": "4",
+          "type": "output",
+          "position": { "x": 600, "y": 200 },
+          "data": { "label": "Resultado" }
+        }
+      ],
+      "edges": [
+        { "id": "e1-3", "source": "1", "target": "3", "sourceHandle": "value", "targetHandle": "a" },
+        { "id": "e2-3", "source": "2", "target": "3", "sourceHandle": "value", "targetHandle": "b" },
+        { "id": "e3-4", "source": "3", "target": "4", "sourceHandle": "result", "targetHandle": "data" }
+      ]
+    }
+  },
+  "filtrar-lista": {
+    "id": "filtrar-lista",
+    "title": "Filtrar Lista de Dados",
+    "description": "Filtra uma lista baseado em condições",
+    "flow": {
+      "nodes": [
+        {
+          "id": "1",
+          "type": "input",
+          "position": { "x": 100, "y": 200 },
+          "data": {
+            "label": "Lista de Vendas",
+            "value": [
+              { "produto": "A", "valor": 150 },
+              { "produto": "B", "valor": 80 },
+              { "produto": "C", "valor": 200 }
+            ],
+            "config": { "value": [] }
+          }
+        },
+        {
+          "id": "2",
+          "type": "array-filter",
+          "position": { "x": 350, "y": 200 },
+          "data": {
+            "label": "Filtrar > 100",
+            "config": {
+              "field": "valor",
+              "operator": "greaterThan",
+              "value": "100"
+            }
+          }
+        },
+        {
+          "id": "3",
+          "type": "output",
+          "position": { "x": 600, "y": 200 },
+          "data": { "label": "Resultado" }
+        }
+      ],
+      "edges": [
+        { "id": "e1-2", "source": "1", "target": "2", "sourceHandle": "value", "targetHandle": "array" },
+        { "id": "e2-3", "source": "2", "target": "3", "sourceHandle": "filtered", "targetHandle": "data" }
+      ]
+    }
+  },
+  "calcular-media": {
+    "id": "calcular-media",
+    "title": "Calcular Média",
+    "description": "Soma valores e calcula a média",
+    "flow": {
+      "nodes": [
+        {
+          "id": "1",
+          "type": "input",
+          "position": { "x": 100, "y": 100 },
+          "data": { "label": "Valor 1", "value": 10, "config": { "value": 10 } }
+        },
+        {
+          "id": "2",
+          "type": "input",
+          "position": { "x": 100, "y": 200 },
+          "data": { "label": "Valor 2", "value": 20, "config": { "value": 20 } }
+        },
+        {
+          "id": "3",
+          "type": "input",
+          "position": { "x": 100, "y": 300 },
+          "data": { "label": "Valor 3", "value": 30, "config": { "value": 30 } }
+        },
+        {
+          "id": "4",
+          "type": "math-operation",
+          "position": { "x": 350, "y": 150 },
+          "data": { "label": "Somar 1+2", "operation": "add", "config": { "operation": "add" } }
+        },
+        {
+          "id": "5",
+          "type": "math-operation",
+          "position": { "x": 550, "y": 200 },
+          "data": { "label": "Somar +3", "operation": "add", "config": { "operation": "add" } }
+        },
+        {
+          "id": "6",
+          "type": "math-operation",
+          "position": { "x": 750, "y": 200 },
+          "data": { "label": "Dividir por 3", "operation": "divide", "config": { "operation": "divide" } }
+        },
+        {
+          "id": "7",
+          "type": "input",
+          "position": { "x": 550, "y": 350 },
+          "data": { "label": "Total (3)", "value": 3, "config": { "value": 3 } }
+        },
+        {
+          "id": "8",
+          "type": "output",
+          "position": { "x": 950, "y": 200 },
+          "data": { "label": "Média" }
+        }
+      ],
+      "edges": [
+        { "id": "e1-4", "source": "1", "target": "4", "sourceHandle": "value", "targetHandle": "a" },
+        { "id": "e2-4", "source": "2", "target": "4", "sourceHandle": "value", "targetHandle": "b" },
+        { "id": "e4-5", "source": "4", "target": "5", "sourceHandle": "result", "targetHandle": "a" },
+        { "id": "e3-5", "source": "3", "target": "5", "sourceHandle": "value", "targetHandle": "b" },
+        { "id": "e5-6", "source": "5", "target": "6", "sourceHandle": "result", "targetHandle": "a" },
+        { "id": "e7-6", "source": "7", "target": "6", "sourceHandle": "value", "targetHandle": "b" },
+        { "id": "e6-8", "source": "6", "target": "8", "sourceHandle": "result", "targetHandle": "data" }
+      ]
+    }
+  },
+  "decisao-condicional": {
+    "id": "decisao-condicional",
+    "title": "Decisão Condicional",
+    "description": "Usa condição para tomar decisões",
+    "flow": {
+      "nodes": [
+        {
+          "id": "1",
+          "type": "input",
+          "position": { "x": 100, "y": 200 },
+          "data": { "label": "Valor", "value": 150, "config": { "value": 150 } }
+        },
+        {
+          "id": "2",
+          "type": "input",
+          "position": { "x": 100, "y": 300 },
+          "data": { "label": "Limite (100)", "value": 100, "config": { "value": 100 } }
+        },
+        {
+          "id": "3",
+          "type": "condition",
+          "position": { "x": 350, "y": 250 },
+          "data": {
+            "label": "Valor > Limite?",
+            "config": { "operator": "greaterThan" }
+          }
+        },
+        {
+          "id": "4",
+          "type": "display",
+          "position": { "x": 600, "y": 150 },
+          "data": { "label": "Acima do limite!" }
+        },
+        {
+          "id": "5",
+          "type": "display",
+          "position": { "x": 600, "y": 350 },
+          "data": { "label": "Abaixo do limite" }
+        }
+      ],
+      "edges": [
+        { "id": "e1-3", "source": "1", "target": "3", "sourceHandle": "value", "targetHandle": "value1" },
+        { "id": "e2-3", "source": "2", "target": "3", "sourceHandle": "value", "targetHandle": "value2" },
+        { "id": "e3-4", "source": "3", "target": "4", "sourceHandle": "true", "targetHandle": "exec" },
+        { "id": "e3-5", "source": "3", "target": "5", "sourceHandle": "false", "targetHandle": "exec" }
+      ]
+    }
+  },
+  "ordenar-lista": {
+    "id": "ordenar-lista",
+    "title": "Ordenar Lista",
+    "description": "Ordena uma lista de dados",
+    "flow": {
+      "nodes": [
+        {
+          "id": "1",
+          "type": "input",
+          "position": { "x": 100, "y": 200 },
+          "data": {
+            "label": "Lista Desordenada",
+            "value": [
+              { "nome": "João", "idade": 25 },
+              { "nome": "Maria", "idade": 30 },
+              { "nome": "Pedro", "idade": 20 }
+            ],
+            "config": { "value": [] }
+          }
+        },
+        {
+          "id": "2",
+          "type": "array-sort",
+          "position": { "x": 350, "y": 200 },
+          "data": {
+            "label": "Ordenar por Idade",
+            "config": {
+              "field": "idade",
+              "order": "asc"
+            }
+          }
+        },
+        {
+          "id": "3",
+          "type": "output",
+          "position": { "x": 600, "y": 200 },
+          "data": { "label": "Lista Ordenada" }
+        }
+      ],
+      "edges": [
+        { "id": "e1-2", "source": "1", "target": "2", "sourceHandle": "value", "targetHandle": "array" },
+        { "id": "e2-3", "source": "2", "target": "3", "sourceHandle": "sorted", "targetHandle": "data" }
+      ]
+    }
+  }
+}

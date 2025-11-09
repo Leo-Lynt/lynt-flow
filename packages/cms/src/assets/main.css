@@ -18,6 +18,16 @@
     --brand-orange-rgb: 242, 120, 48;
     --brand-red-rgb: 217, 48, 48;
   }
+
+  /* Prevenir scroll horizontal global */
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
+  }
+
+  body {
+    position: relative;
+  }
 }
 
 @layer utilities {

@@ -1,0 +1,159 @@
+{
+  "id": "subtracao-numeros",
+  "title": "Subtração de Dois Números",
+  "description": "Tutorial mostrando como subtrair dois números (10 - 3 = 7)",
+  "flow": {
+    "nodes": [
+      {
+        "id": "constant_sub_1",
+        "type": "constant",
+        "position": {
+          "x": 84,
+          "y": 349
+        },
+        "data": {
+          "label": "Constant",
+          "valueType": "number",
+          "numberValue": 0,
+          "stringValue": "",
+          "booleanValue": false,
+          "objectValue": "{}",
+          "arrayValue": "[]"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "constant_sub_2",
+        "type": "constant",
+        "position": {
+          "x": 84,
+          "y": 483
+        },
+        "data": {
+          "label": "Constant",
+          "valueType": "number",
+          "numberValue": 0,
+          "stringValue": "",
+          "booleanValue": false,
+          "objectValue": "{}",
+          "arrayValue": "[]"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "subtract_node",
+        "type": "subtract",
+        "position": {
+          "x": 349,
+          "y": 388
+        },
+        "data": {
+          "label": "Subtract",
+          "operation": "subtract"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug-viewer_sub",
+        "type": "debug-viewer",
+        "position": {
+          "x": 616,
+          "y": 387
+        },
+        "data": {
+          "label": "Debug-viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge_sub_1",
+        "source": "constant_sub_1",
+        "target": "subtract_node",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-a",
+        "edgeType": "data",
+        "dataType": "any",
+        "animated": false,
+        "style": {
+          "stroke": "#3b82f6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#3b82f6"
+        }
+      },
+      {
+        "id": "edge_sub_2",
+        "source": "constant_sub_2",
+        "target": "subtract_node",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-b",
+        "edgeType": "data",
+        "dataType": "any",
+        "animated": false,
+        "style": {
+          "stroke": "#3b82f6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#3b82f6"
+        }
+      },
+      {
+        "id": "edge_sub_3",
+        "source": "subtract_node",
+        "target": "debug-viewer_sub",
+        "sourceHandle": "data-out",
+        "targetHandle": "debug-viewer_sub-data-input",
+        "edgeType": "data",
+        "dataType": "number",
+        "animated": false,
+        "style": {
+          "stroke": "#f59e0b",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#f59e0b"
+        }
+      }
+    ],
+    "nodeData": {
+      "constant_sub_1": {
+        "valueType": "number",
+        "numberValue": 10
+      },
+      "constant_sub_2": {
+        "valueType": "number",
+        "numberValue": 3
+      }
+    },
+    "detectedTypes": {
+      "constant_sub_1": {
+        "data-out": "integer"
+      },
+      "constant_sub_2": {
+        "data-out": "integer"
+      },
+      "subtract_node": {
+        "data-out": "integer"
+      }
+    },
+    "variables": {}
+  },
+  "exportedAt": "2025-11-01T14:00:00.000Z"
+}

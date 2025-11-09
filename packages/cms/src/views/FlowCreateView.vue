@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import AppLayout from '../components/AppLayout.vue'
+import PlanLimitAlert from '../components/PlanLimitAlert.vue'
 import { useFlows } from '../composables/useFlows.js'
 
 const router = useRouter()
@@ -22,6 +23,8 @@ const flowData = ref({
 
 const tagInput = ref('')
 const saving = ref(false)
+const errorMessage = ref('')
+const isLimitError = ref(false)
 
 const categories = [
   { value: 'automation', label: 'Automação', icon: 'lucide:workflow' },
@@ -48,6 +51,8 @@ async function saveFlow() {
   if (!canSave.value) return
 
   saving.value = true
+  errorMessage.value = ''
+  isLimitError.value = false
 
   const flowPayload = {
     name: flowData.value.name,
@@ -63,9 +68,20 @@ async function saveFlow() {
 
   if (result.success) {
     router.push('/flows')
+  } else {
+    // Detectar erro de limite
+    const error = result.error || ''
+    if (error.toLowerCase().includes('limite') || error.toLowerCase().includes('limit')) {
+      isLimitError.value = true
+    }
+    errorMessage.value = error
   }
 
   saving.value = false
+}
+
+function goToUpgrade() {
+  router.push('/profile?tab=plan')
 }
 
 function cancelFlow() {
@@ -102,6 +118,30 @@ function cancelFlow() {
           <span>{{ saving ? 'Salvando...' : 'Salvar Fluxo' }}</span>
         </button>
       </div>
+    </div>
+
+    <!-- Limit Error Alert -->
+    <PlanLimitAlert
+      v-if="isLimitError"
+      :show="isLimitError"
+      :error-message="errorMessage"
+      limit-type="flows"
+      @close="errorMessage = ''; isLimitError = false"
+      class="mb-6"
+    />
+
+    <!-- Generic Error -->
+    <div v-else-if="errorMessage" class="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3 mb-6">
+      <Icon icon="lucide:alert-circle" class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+      <div class="flex-1">
+        <p class="text-sm font-medium text-red-900">{{ errorMessage }}</p>
+      </div>
+      <button
+        @click="errorMessage = ''"
+        class="flex-shrink-0 text-red-400 hover:text-red-600"
+      >
+        <Icon icon="lucide:x" class="w-4 h-4" />
+      </button>
     </div>
 
     <!-- Flow details form -->

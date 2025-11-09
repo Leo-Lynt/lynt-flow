@@ -1,0 +1,162 @@
+{
+  "id": "condition-logic",
+  "title": "Operações Lógicas",
+  "description": "Tutorial mostrando operações lógicas entre valores booleanos (true AND false = false)",
+  "flow": {
+    "nodes": [
+      {
+        "id": "constant_logic_1",
+        "type": "constant",
+        "position": {
+          "x": 84,
+          "y": 349
+        },
+        "data": {
+          "label": "Constant",
+          "valueType": "boolean",
+          "numberValue": 0,
+          "stringValue": "",
+          "booleanValue": true,
+          "objectValue": "{}",
+          "arrayValue": "[]"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "constant_logic_2",
+        "type": "constant",
+        "position": {
+          "x": 84,
+          "y": 483
+        },
+        "data": {
+          "label": "Constant",
+          "valueType": "boolean",
+          "numberValue": 0,
+          "stringValue": "",
+          "booleanValue": false,
+          "objectValue": "{}",
+          "arrayValue": "[]"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "logic_node",
+        "type": "logic",
+        "position": {
+          "x": 349,
+          "y": 388
+        },
+        "data": {
+          "label": "Logic",
+          "operator": "AND"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug-viewer_logic",
+        "type": "debug-viewer",
+        "position": {
+          "x": 616,
+          "y": 387
+        },
+        "data": {
+          "label": "Debug-viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge_logic_1",
+        "source": "constant_logic_1",
+        "target": "logic_node",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-a",
+        "edgeType": "data",
+        "dataType": "boolean",
+        "animated": false,
+        "style": {
+          "stroke": "#8b5cf6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#8b5cf6"
+        }
+      },
+      {
+        "id": "edge_logic_2",
+        "source": "constant_logic_2",
+        "target": "logic_node",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-b",
+        "edgeType": "data",
+        "dataType": "boolean",
+        "animated": false,
+        "style": {
+          "stroke": "#8b5cf6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#8b5cf6"
+        }
+      },
+      {
+        "id": "edge_logic_3",
+        "source": "logic_node",
+        "target": "debug-viewer_logic",
+        "sourceHandle": "data-out",
+        "targetHandle": "debug-viewer_logic-data-input",
+        "edgeType": "data",
+        "dataType": "boolean",
+        "animated": false,
+        "style": {
+          "stroke": "#8b5cf6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#8b5cf6"
+        }
+      }
+    ],
+    "nodeData": {
+      "constant_logic_1": {
+        "valueType": "boolean",
+        "booleanValue": true
+      },
+      "constant_logic_2": {
+        "valueType": "boolean",
+        "booleanValue": false
+      },
+      "logic_node": {
+        "operator": "AND"
+      }
+    },
+    "detectedTypes": {
+      "constant_logic_1": {
+        "data-out": "boolean"
+      },
+      "constant_logic_2": {
+        "data-out": "boolean"
+      },
+      "logic_node": {
+        "data-out": "boolean"
+      }
+    },
+    "variables": {}
+  },
+  "exportedAt": "2025-11-01T14:00:00.000Z"
+}

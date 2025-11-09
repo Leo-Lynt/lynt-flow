@@ -9,6 +9,7 @@ export function useProfileTabs() {
     { id: 'profile', name: 'Perfil', icon: 'lucide:user' },
     { id: 'security', name: 'Segurança', icon: 'lucide:shield' },
     { id: 'preferences', name: 'Preferências', icon: 'lucide:settings' },
+    { id: 'plan', name: 'Plano', icon: 'lucide:sparkles' },
     { id: 'sessions', name: 'Sessões', icon: 'lucide:monitor' },
     { id: 'account', name: 'Conta', icon: 'lucide:trash-2' }
   ]

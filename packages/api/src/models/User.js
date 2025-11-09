@@ -54,9 +54,29 @@ const userSchema = new mongoose.Schema({
     type: Number,  // bytes
     default: 0
   },
-  executionStorageQuota: {
-    type: Number,  // bytes
-    default: 5 * 1024 * 1024  // 5MB
+  // Plan and billing
+  currentPlanId: {
+    type: String,
+    enum: ['free', 'starter', 'pro'],
+    default: 'free'
+  },
+  planLimits: {
+    executions: {
+      type: Number,
+      default: 200  // FREE plan default
+    },
+    flows: {
+      type: Number,
+      default: 5  // FREE plan default
+    },
+    dataPerMonth: {
+      type: Number,
+      default: 50 * 1024 * 1024  // 50MB for FREE
+    },
+    dataRetentionDays: {
+      type: Number,
+      default: 7  // 7 days for FREE
+    }
   },
   // Verificação de email
   verificationToken: {
@@ -378,6 +398,102 @@ userSchema.methods.canPromoteToRole = function(targetRole) {
 
   // Administrador pode promover para qualquer role abaixo dele
   return targetLevel < userLevel;
+};
+
+// ==================== MÉTODOS DE PLANOS ====================
+
+// Plan limits configuration
+const PLAN_CONFIGS = {
+  free: {
+    executions: 200,
+    flows: 5,
+    dataPerMonth: 50 * 1024 * 1024, // 50MB
+    dataRetentionDays: 7
+  },
+  starter: {
+    executions: 2000,
+    flows: 25,
+    dataPerMonth: 1 * 1024 * 1024 * 1024, // 1GB
+    dataRetentionDays: 30
+  },
+  pro: {
+    executions: 10000,
+    flows: 100,
+    dataPerMonth: 10 * 1024 * 1024 * 1024, // 10GB
+    dataRetentionDays: 90
+  }
+};
+
+/**
+ * Atualiza os limites do plano do usuário
+ * @param {String} planId - ID do plano (free, starter, pro)
+ */
+userSchema.methods.updatePlanLimits = async function(planId) {
+  if (!PLAN_CONFIGS[planId]) {
+    throw new Error(`Plano inválido: ${planId}`);
+  }
+
+  this.currentPlanId = planId;
+  this.planLimits = PLAN_CONFIGS[planId];
+
+  return await this.save();
+};
+
+/**
+ * Verifica se o usuário pode executar um flow
+ * @param {Object} currentUsage - Objeto com uso atual do período
+ * @returns {Boolean}
+ */
+userSchema.methods.canExecuteFlow = function(currentUsage) {
+  if (!currentUsage) return false;
+  return currentUsage.executions < this.planLimits.executions;
+};
+
+/**
+ * Verifica se o usuário pode criar mais flows
+ * @param {Number} currentFlowCount - Número atual de flows ativos
+ * @returns {Boolean}
+ */
+userSchema.methods.canCreateFlow = function(currentFlowCount) {
+  return currentFlowCount < this.planLimits.flows;
+};
+
+/**
+ * Verifica se há espaço de armazenamento disponível
+ * @param {Number} bytes - Bytes necessários
+ * @returns {Boolean}
+ */
+userSchema.methods.hasStorageAvailable = function(bytes) {
+  return (this.executionStorageUsed + bytes) <= this.planLimits.dataPerMonth;
+};
+
+/**
+ * Retorna informações do plano atual
+ * @returns {Object}
+ */
+userSchema.methods.getPlanInfo = function() {
+  return {
+    planId: this.currentPlanId,
+    limits: this.planLimits,
+    isPaid: this.currentPlanId !== 'free'
+  };
+};
+
+/**
+ * Statics - Retorna configuração de um plano
+ * @param {String} planId
+ * @returns {Object}
+ */
+userSchema.statics.getPlanConfig = function(planId) {
+  return PLAN_CONFIGS[planId] || null;
+};
+
+/**
+ * Statics - Lista todos os planos disponíveis
+ * @returns {Object}
+ */
+userSchema.statics.getAllPlans = function() {
+  return PLAN_CONFIGS;
 };
 
 // Nota: índice de email já definido como unique: true acima

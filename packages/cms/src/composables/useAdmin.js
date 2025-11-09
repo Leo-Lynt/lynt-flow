@@ -154,6 +154,30 @@ export function useAdmin() {
     }
   }
 
+  /**
+   * Atualiza o plano de um usuário
+   */
+  async function updateUserPlan(userId, planId) {
+    loading.value = true
+    error.value = null
+
+    try {
+      const token = localStorage.getItem('accessToken')
+      const response = await axios.put(
+        `${API_URL}/api/admin/users/${userId}/plan`,
+        { planId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+
+      return { success: true, ...response.data }
+    } catch (err) {
+      error.value = err.response?.data?.error?.message || 'Erro ao atualizar plano'
+      return { success: false, error: error.value }
+    } finally {
+      loading.value = false
+    }
+  }
+
   // ==================== FLOW MODERATION ====================
 
   /**
@@ -418,6 +442,7 @@ export function useAdmin() {
     updateUserRole,
     toggleUserStatus,
     toggleVerifiedCreator,
+    updateUserPlan,
 
     // Flow moderation
     listPendingFlows,

@@ -1,11 +1,28 @@
 <template>
-  <div class="h-screen flex flex-col bg-flow-bg dark:bg-flow-bg-dark">
+  <div class="h-screen flex flex-col relative overflow-hidden">
+    <!-- Background base branco -->
+    <div class="fixed inset-0 bg-white -z-10"></div>
+
+    <!-- Background Gradient Orbs (sutis, estáticos) -->
+    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none bg-[#f2f7ff]">
+      <div class="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-blue-300/20 rounded-full blur-3xl"></div>
+      <div class="absolute top-1/3 left-1/4 w-[450px] h-[450px] bg-cyan-300/15 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] bg-purple-300/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- Grid pattern sutil -->
+    <div class="fixed inset-0 opacity-[0.02] -z-5 pointer-events-none">
+      <div class="absolute inset-0" style="background-image: radial-gradient(circle, #3B82F6 1px, transparent 1px); background-size: 40px 40px;"></div>
+    </div>
+
     <!-- Top Toolbar -->
     <TopToolbar
       :can-undo="flowStore.canUndo"
       :can-redo="flowStore.canRedo"
       :execution-status="executionStatus"
       :has-unsaved-changes="flowStore.hasUnsavedChanges"
+      :hide-save-button="props.hideSaveButton"
+      :playground-mode="props.demoMode"
       @execute="executeFlow"
       @clear="clearFlow"
       @undo="flowStore.undo"
@@ -15,7 +32,7 @@
 
     <div class="flex flex-1 overflow-hidden">
       <!-- Left Sidebar - Node List -->
-      <NodeSidebar />
+      <NodeSidebar v-if="!props.hideSidebar" />
 
       <!-- Center - Canvas -->
       <div class="flex-1 relative outline-none focus:outline-none" @drop="handleDrop" @dragover.prevent
@@ -28,12 +45,12 @@
           :default-edge-options="defaultEdgeOptions" :is-valid-connection="isValidConnection" :fit-view-on-init="false"
           :connection-mode="ConnectionMode.Loose"
           :zoom-on-scroll="true" :pan-on-scroll="false" :pan-on-drag="[1, 2]" :node-draggable="true"
-          :nodes-deletable="true" :edges-deletable="true" :delete-key-code="'Delete'"
+          :nodes-deletable="props.allowDelete" :edges-deletable="props.allowDelete" :delete-key-code="'Delete'"
           :multi-selection-key-code="'Control'" :selection-mode="'partial'"
-          class="w-full h-full bg-flow-bg dark:bg-flow-bg-dark">
+          class="w-full h-full bg-transparent">
           <Background :variant="BackgroundVariant.Dots" pattern-color="#94a3b8" />
-          <MiniMap pannable zoomable />
-          <Controls />
+          <MiniMap v-if="!props.hideMinimap" pannable zoomable />
+          <Controls v-if="!props.hideControls" />
 
           <!-- Generic Node Templates -->
           <template #node-connector="props">
@@ -162,7 +179,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue'
 import { VueFlow, useVueFlow, ConnectionMode } from '@vue-flow/core'
 import { Background, BackgroundVariant } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
@@ -173,6 +190,34 @@ import '@vue-flow/controls/dist/style.css'
 import '@vue-flow/minimap/dist/style.css'
 
 import { useFlowStore } from '../stores/flowStore'
+
+// Props para modo demo/playground
+const props = defineProps({
+  demoMode: {
+    type: Boolean,
+    default: false
+  },
+  hideSidebar: {
+    type: Boolean,
+    default: false
+  },
+  hideSaveButton: {
+    type: Boolean,
+    default: false
+  },
+  hideMinimap: {
+    type: Boolean,
+    default: false
+  },
+  hideControls: {
+    type: Boolean,
+    default: false
+  },
+  allowDelete: {
+    type: Boolean,
+    default: true
+  }
+})
 import { useContextMenu as useContextMenuComposable } from '../composables/flow/useContextMenu'
 import { deepClone } from '@leo-lynt/lynt-flow-core'
 import { getTypeColor } from '@leo-lynt/lynt-flow-core/engine/dataTypes.js'
@@ -193,7 +238,7 @@ import MarkerNode from './nodes/MarkerNode.vue'
 import FlowIcon from './Icon.vue'
 
 const flowStore = useFlowStore()
-const { addNodes, addEdges, project, viewportRef, updateNode, getSelectedEdges } = useVueFlow()
+const { addNodes, addEdges, project, viewportRef, updateNode, getSelectedEdges, fitView } = useVueFlow()
 const canvasRef = ref(null)
 
 // Quick Add menu state
@@ -219,8 +264,28 @@ const connectionJustMade = ref(false)
 // Prevenir fechamento imediato do menu após abrir
 const justOpenedMenu = ref(false)
 
+// Auto-centralizar view quando nodes carregarem (tanto editor quanto playground)
+const hasInitiallyFitted = ref(false)
+
+watch(
+  () => flowStore.nodes,
+  async (newNodes) => {
+    if (newNodes && newNodes.length > 0 && !hasInitiallyFitted.value) {
+      // Aguardar o próximo tick para garantir que o DOM foi atualizado
+      await nextTick()
+      // Pequeno delay adicional para garantir que os nodes foram renderizados
+      setTimeout(() => {
+        fitView({ padding: 2, duration: 0 })
+        hasInitiallyFitted.value = true
+      }, 100)
+    }
+  },
+  { immediate: true }
+)
+
+// 🚀 PERFORMANCE: Computed simples que sempre retorna nodes atualizados
 const nodes = computed(() => {
-  // 🚀 Adicionar deletable: false para Input e Output nodes
+  // Adicionar deletable: false para Input e Output nodes
   return flowStore.nodes.map(node => {
     if (node.type === 'input' || node.type === 'output') {
       return { ...node, deletable: false }
@@ -228,16 +293,38 @@ const nodes = computed(() => {
     return node
   })
 })
+
+// 🚀 PERFORMANCE: Map para lookup rápido O(1) ao invés de .find() O(n)
+// Criado APÓS nodes para garantir que usa nodes processados
+const nodesMap = computed(() => {
+  const map = new Map()
+  nodes.value.forEach(node => map.set(node.id, node))
+  return map
+})
+
 const edges = computed(() => {
   return flowStore.edges
 })
 
 // 🚀 OTIMIZAÇÃO: Cache de edges processadas para evitar recálculo desnecessário
-// quando apenas posições de nodes mudam
 const edgesCache = new Map() // edgeId -> { edge, sourceNodeType, executionResultsHash }
+let isDraggingNode = false // Flag para pular recálculo durante drag
+
+// 🚀 PERFORMANCE: Hash leve ao invés de JSON.stringify
+const getExecutionResultsHash = (nodeId) => {
+  const result = flowStore.executionResults[nodeId]
+  if (!result) return 'null'
+  // Hash simples baseado em tipo e length (muito mais rápido que JSON.stringify)
+  return `${typeof result}-${Array.isArray(result) ? result.length : Object.keys(result).length}`
+}
 
 // Adicionar atributo data-edge-type para estilização CSS
 const edgesWithAttributes = computed(() => {
+  // 🚀 PERFORMANCE: Se está arrastando node, retornar cache sem recalcular
+  if (isDraggingNode && edgesCache.size > 0) {
+    return Array.from(edgesCache.values()).map(cached => cached.edge)
+  }
+
   const result = edges.value.map(edge => {
     // Garantir que edge tem todas as propriedades necessárias
     if (!edge.source || !edge.target) {
@@ -247,17 +334,15 @@ const edgesWithAttributes = computed(() => {
     // Criar chave de cache baseada em propriedades relevantes
     const cacheKey = `${edge.id}-${edge.source}-${edge.target}-${edge.sourceHandle}-${edge.edgeType}`
 
-    // Hash dos execution results para detectar mudanças de tipo
-    const executionResultsHash = flowStore.executionResults[edge.source]
-      ? JSON.stringify(flowStore.executionResults[edge.source])
-      : 'null'
+    // Hash leve dos execution results
+    const executionResultsHash = getExecutionResultsHash(edge.source)
 
     // Verificar se edge está em cache e se nada mudou
     if (edgesCache.has(cacheKey)) {
       const cached = edgesCache.get(cacheKey)
 
-      // Verificar se source node ainda existe e mantém mesmo tipo
-      const sourceNode = flowStore.nodes.find(n => n.id === edge.source)
+      // 🚀 PERFORMANCE: Usar nodesMap ao invés de .find()
+      const sourceNode = nodesMap.value.get(edge.source)
 
       if (sourceNode &&
           cached.sourceNodeType === sourceNode.type &&
@@ -285,8 +370,8 @@ const edgesWithAttributes = computed(() => {
         color: '#9ca3af'
       }
     } else {
-      // Para edges de dados, sempre recalcular cor baseada no tipo
-      const sourceNode = flowStore.nodes.find(n => n.id === edge.source)
+      // 🚀 PERFORMANCE: Usar nodesMap ao invés de .find()
+      const sourceNode = nodesMap.value.get(edge.source)
       if (sourceNode) {
         dataType = getHandleType(sourceNode, edge.sourceHandle, 'source')
         const typeColor = getTypeColor(dataType)
@@ -332,7 +417,7 @@ const edgesWithAttributes = computed(() => {
     }
 
     // Armazenar em cache
-    const sourceNode = flowStore.nodes.find(n => n.id === edge.source)
+    const sourceNode = nodesMap.value.get(edge.source)
     edgesCache.set(cacheKey, {
       edge: edgeWithAttrs,
       sourceNodeType: sourceNode?.type,
@@ -571,6 +656,8 @@ let lastMarkerPosition = new Map() // markerId -> {x, y}
 
 const handleNodeDragStart = (event) => {
   flowStore.setDragging(true)
+  // 🚀 PERFORMANCE: Ativar flag para pular recálculo de edges durante drag
+  isDraggingNode = true
 
   // Se for um marker, salvar posição inicial
   if (event.node.type === 'marker') {
@@ -637,6 +724,8 @@ const handleNodeDrag = (event) => {
 
 const handleNodeDragStop = (event) => {
   flowStore.setDragging(false)
+  // 🚀 PERFORMANCE: Desativar flag e forçar recálculo de edges após drag
+  isDraggingNode = false
 
   // Salvar posição final no store após drag (usando updateNodePosition para evitar auto-execução)
   if (event.node) {
@@ -660,8 +749,8 @@ const handleNodeDragStop = (event) => {
 const handleNodesChange = (changes) => {
   changes.forEach(change => {
     if (change.type === 'position' && change.position) {
-      // Detectar se é um marker sendo movido
-      const node = nodes.value.find(n => n.id === change.id)
+      // 🚀 PERFORMANCE: Usar nodesMap ao invés de .find()
+      const node = nodesMap.value.get(change.id)
       const isMarker = node?.type === 'marker'
 
       if (isMarker && flowStore.isDragging) {
@@ -698,8 +787,8 @@ const handleNodesChange = (changes) => {
       // updateNode só deve ser usado para mudanças de DADOS, não de posição
       flowStore.updateNodePosition(change.id, change.position)
     } else if (change.type === 'remove') {
-      // 🚀 VALIDAÇÃO: Verificar se é Input/Output antes de remover
-      const node = nodes.value.find(n => n.id === change.id)
+      // 🚀 PERFORMANCE: Usar nodesMap ao invés de .find()
+      const node = nodesMap.value.get(change.id)
       if (node && (node.type === 'input' || node.type === 'output')) {
         console.warn(`❌ Cannot remove ${node.type} node: It is required for the flow`)
         return // Bloquear remoção
@@ -710,11 +799,12 @@ const handleNodesChange = (changes) => {
         selectedNode.value = null
       }
     } else if (change.type === 'select') {
-      const nodeIndex = nodes.value.findIndex(n => n.id === change.id)
-      if (nodeIndex !== -1) {
-        nodes.value[nodeIndex].selected = change.selected
+      // 🚀 PERFORMANCE: Usar nodesMap ao invés de .findIndex()
+      const node = nodesMap.value.get(change.id)
+      if (node) {
+        node.selected = change.selected
         if (change.selected) {
-          selectedNode.value = nodes.value[nodeIndex]
+          selectedNode.value = node
         }
       }
     }

@@ -1,0 +1,229 @@
+{
+  "id": "constant-types",
+  "title": "Constant: Tipos de Dados",
+  "description": "Tutorial mostrando os diferentes tipos de dados que podem ser usados no Constant node",
+  "flow": {
+    "nodes": [
+      {
+        "id": "const_number",
+        "type": "constant",
+        "position": {
+          "x": 100,
+          "y": 100
+        },
+        "data": {
+          "label": "Constant"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "const_string",
+        "type": "constant",
+        "position": {
+          "x": 100,
+          "y": 200
+        },
+        "data": {
+          "label": "Constant"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "const_boolean",
+        "type": "constant",
+        "position": {
+          "x": 100,
+          "y": 300
+        },
+        "data": {
+          "label": "Constant"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "const_array",
+        "type": "constant",
+        "position": {
+          "x": 100,
+          "y": 400
+        },
+        "data": {
+          "label": "Constant"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug_number",
+        "type": "debug-viewer",
+        "position": {
+          "x": 400,
+          "y": 100
+        },
+        "data": {
+          "label": "Debug Viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug_string",
+        "type": "debug-viewer",
+        "position": {
+          "x": 400,
+          "y": 200
+        },
+        "data": {
+          "label": "Debug Viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug_boolean",
+        "type": "debug-viewer",
+        "position": {
+          "x": 400,
+          "y": 300
+        },
+        "data": {
+          "label": "Debug Viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug_array",
+        "type": "debug-viewer",
+        "position": {
+          "x": 400,
+          "y": 400
+        },
+        "data": {
+          "label": "Debug Viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge_number",
+        "source": "const_number",
+        "target": "debug_number",
+        "sourceHandle": "data-out",
+        "targetHandle": "debug_number-data-input",
+        "edgeType": "data",
+        "dataType": "number",
+        "animated": false,
+        "style": {
+          "stroke": "#f59e0b",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#f59e0b"
+        }
+      },
+      {
+        "id": "edge_string",
+        "source": "const_string",
+        "target": "debug_string",
+        "sourceHandle": "data-out",
+        "targetHandle": "debug_string-data-input",
+        "edgeType": "data",
+        "dataType": "string",
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#10b981"
+        }
+      },
+      {
+        "id": "edge_boolean",
+        "source": "const_boolean",
+        "target": "debug_boolean",
+        "sourceHandle": "data-out",
+        "targetHandle": "debug_boolean-data-input",
+        "edgeType": "data",
+        "dataType": "boolean",
+        "animated": false,
+        "style": {
+          "stroke": "#ec4899",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#ec4899"
+        }
+      },
+      {
+        "id": "edge_array",
+        "source": "const_array",
+        "target": "debug_array",
+        "sourceHandle": "data-out",
+        "targetHandle": "debug_array-data-input",
+        "edgeType": "data",
+        "dataType": "array",
+        "animated": false,
+        "style": {
+          "stroke": "#3b82f6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#3b82f6"
+        }
+      }
+    ],
+    "nodeData": {
+      "const_number": {
+        "valueType": "number",
+        "numberValue": 42
+      },
+      "const_string": {
+        "valueType": "string",
+        "stringValue": "Olá Mundo"
+      },
+      "const_boolean": {
+        "valueType": "boolean",
+        "booleanValue": true
+      },
+      "const_array": {
+        "valueType": "array",
+        "arrayValue": "[1, 2, 3, 4, 5]"
+      }
+    },
+    "detectedTypes": {
+      "const_number": {
+        "data-out": "integer"
+      },
+      "const_string": {
+        "data-out": "string"
+      },
+      "const_boolean": {
+        "data-out": "boolean"
+      },
+      "const_array": {
+        "data-out": "array"
+      }
+    },
+    "variables": {}
+  },
+  "exportedAt": "2025-11-01T20:00:00.000Z"
+}

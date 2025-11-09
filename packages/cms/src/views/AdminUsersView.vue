@@ -10,6 +10,7 @@ const {
   updateUserRole,
   toggleUserStatus,
   toggleVerifiedCreator,
+  updateUserPlan,
   loading
 } = useAdmin()
 
@@ -24,7 +25,8 @@ const showEditModal = ref(false)
 const selectedUser = ref(null)
 const editForm = ref({
   role: '',
-  isActive: true
+  isActive: true,
+  currentPlanId: 'free'
 })
 
 onMounted(async () => {
@@ -68,7 +70,8 @@ function openEditModal(user) {
   selectedUser.value = user
   editForm.value = {
     role: user.role,
-    isActive: user.isActive
+    isActive: user.isActive,
+    currentPlanId: user.currentPlanId || 'free'
   }
   showEditModal.value = true
 }
@@ -96,6 +99,15 @@ async function handleSaveUser() {
     }
   }
 
+  // Atualizar plano se mudou
+  if (editForm.value.currentPlanId !== (selectedUser.value.currentPlanId || 'free')) {
+    const result = await updateUserPlan(userId, editForm.value.currentPlanId)
+    if (!result.success) {
+      alert('Erro ao atualizar plano: ' + result.error)
+      return
+    }
+  }
+
   showEditModal.value = false
   await loadUsers()
   await loadStats()
@@ -115,10 +127,19 @@ async function handleToggleVerified(user) {
 function getRoleBadge(role) {
   const badges = {
     user: { color: 'bg-gray-100 text-gray-700 border border-gray-300', label: 'Usuário' },
-    moderator: { color: 'bg-brand-purple/10 text-brand-purple border border-brand-purple/30', label: 'Moderador' },
-    administrator: { color: 'bg-brand-pink/10 text-brand-pink border border-brand-pink/30', label: 'Administrador' }
+    moderator: { color: 'bg-cyan-500/10 text-cyan-700 border border-cyan-500/30', label: 'Moderador' },
+    administrator: { color: 'bg-orange-500/10 text-orange-700 border border-orange-500/30', label: 'Administrador' }
   }
   return badges[role] || badges.user
+}
+
+function getPlanBadge(planId) {
+  const badges = {
+    free: { color: 'bg-gray-100 text-gray-700 border border-gray-300', label: 'FREE' },
+    starter: { color: 'bg-blue-100 text-blue-700 border border-blue-300', label: 'STARTER' },
+    pro: { color: 'bg-purple-100 text-purple-700 border border-purple-300', label: 'PRO' }
+  }
+  return badges[planId] || badges.free
 }
 
 function formatDate(date) {
@@ -155,41 +176,41 @@ function prevPage() {
 
       <!-- Stats Cards -->
       <div v-if="stats" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div class="glass-card backdrop-blur-xl bg-white/30 rounded-lg border border-white/20 p-6 hover:bg-white/40 transition-all">
+        <div class="glass-card backdrop-blur-xl bg-white/70 rounded-xl border border-white/40 shadow-sm p-6 hover:bg-white/80 transition-all">
           <div class="flex items-center justify-between mb-2">
             <span class="text-sm font-medium text-gray-700 tracking-wide">Total de Usuários</span>
-            <Icon icon="lucide:users" class="w-5 h-5 text-brand-purple" />
+            <Icon icon="lucide:users" class="w-5 h-5 text-blue-600" />
           </div>
           <p class="text-3xl font-bold text-gray-900">{{ stats.totalUsers }}</p>
         </div>
 
-        <div class="glass-card backdrop-blur-xl bg-white/30 rounded-lg border border-white/20 p-6 hover:bg-white/40 transition-all">
+        <div class="glass-card backdrop-blur-xl bg-white/70 rounded-xl border border-white/40 shadow-sm p-6 hover:bg-white/80 transition-all">
           <div class="flex items-center justify-between mb-2">
             <span class="text-sm font-medium text-gray-700 tracking-wide">Usuários Ativos</span>
-            <Icon icon="lucide:check-circle" class="w-5 h-5 text-brand-green" />
+            <Icon icon="lucide:check-circle" class="w-5 h-5 text-green-600" />
           </div>
           <p class="text-3xl font-bold text-gray-900">{{ stats.activeUsers }}</p>
         </div>
 
-        <div class="glass-card backdrop-blur-xl bg-white/30 rounded-lg border border-white/20 p-6 hover:bg-white/40 transition-all">
+        <div class="glass-card backdrop-blur-xl bg-white/70 rounded-xl border border-white/40 shadow-sm p-6 hover:bg-white/80 transition-all">
           <div class="flex items-center justify-between mb-2">
             <span class="text-sm font-medium text-gray-700 tracking-wide">Moderadores</span>
-            <Icon icon="lucide:shield" class="w-5 h-5 text-brand-purple" />
+            <Icon icon="lucide:shield" class="w-5 h-5 text-cyan-600" />
           </div>
           <p class="text-3xl font-bold text-gray-900">{{ stats.roleStats.moderator }}</p>
         </div>
 
-        <div class="glass-card backdrop-blur-xl bg-white/30 rounded-lg border border-white/20 p-6 hover:bg-white/40 transition-all">
+        <div class="glass-card backdrop-blur-xl bg-white/70 rounded-xl border border-white/40 shadow-sm p-6 hover:bg-white/80 transition-all">
           <div class="flex items-center justify-between mb-2">
             <span class="text-sm font-medium text-gray-700 tracking-wide">Administradores</span>
-            <Icon icon="lucide:crown" class="w-5 h-5 text-brand-pink" />
+            <Icon icon="lucide:crown" class="w-5 h-5 text-orange-600" />
           </div>
           <p class="text-3xl font-bold text-gray-900">{{ stats.roleStats.administrator }}</p>
         </div>
       </div>
 
       <!-- Filters -->
-      <div class="glass-card backdrop-blur-xl bg-white/30 rounded-lg border border-white/20 p-4 mb-6">
+      <div class="glass-card backdrop-blur-xl bg-white/70 rounded-xl border border-white/40 shadow-sm p-4 mb-6">
         <div class="flex flex-col md:flex-row gap-4">
           <div class="flex-1">
             <div class="relative">
@@ -199,14 +220,14 @@ function prevPage() {
                 @keyup.enter="handleSearch"
                 type="text"
                 placeholder="Buscar por nome ou email..."
-                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent"
+                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
           </div>
           <select
             v-model="roleFilter"
             @change="handleRoleFilterChange"
-            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="all">Todos os roles</option>
             <option value="user">Usuários</option>
@@ -215,7 +236,7 @@ function prevPage() {
           </select>
           <button
             @click="handleSearch"
-            class="px-6 py-2 bg-brand-purple text-white rounded-lg hover:brightness-110 transition-all flex items-center gap-2"
+            class="px-6 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 flex items-center gap-2"
           >
             <Icon icon="lucide:search" class="w-5 h-5" />
             Buscar
@@ -224,7 +245,7 @@ function prevPage() {
       </div>
 
       <!-- Users Table -->
-      <div class="glass-card backdrop-blur-xl bg-white/30 rounded-lg border border-white/20 overflow-hidden">
+      <div class="glass-card backdrop-blur-xl bg-white/70 rounded-xl border border-white/40 shadow-sm overflow-hidden">
         <div class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
@@ -234,6 +255,9 @@ function prevPage() {
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Role
+                </th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Plano
                 </th>
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
@@ -248,12 +272,12 @@ function prevPage() {
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <tr v-if="loading">
-                <td colspan="5" class="px-6 py-12 text-center">
+                <td colspan="6" class="px-6 py-12 text-center">
                   <Icon icon="lucide:loader-2" class="w-8 h-8 text-blue-600 animate-spin mx-auto" />
                 </td>
               </tr>
               <tr v-else-if="users.length === 0">
-                <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                <td colspan="6" class="px-6 py-12 text-center text-gray-500">
                   Nenhum usuário encontrado
                 </td>
               </tr>
@@ -280,6 +304,11 @@ function prevPage() {
                 <td class="px-6 py-4 whitespace-nowrap">
                   <span :class="['px-2 py-1 text-xs font-medium rounded-full', getRoleBadge(user.role).color]">
                     {{ getRoleBadge(user.role).label }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span :class="['px-2 py-1 text-xs font-medium rounded-full', getPlanBadge(user.currentPlanId || 'free').color]">
+                    {{ getPlanBadge(user.currentPlanId || 'free').label }}
                   </span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
@@ -346,7 +375,7 @@ function prevPage() {
       <div class="flex items-center justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:p-0">
         <div class="fixed inset-0 transition-opacity bg-gray-500 bg-opacity-75" @click="showEditModal = false"></div>
 
-        <div class="relative inline-block w-full max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+        <div class="relative inline-block w-full max-w-lg p-6 my-8 overflow-hidden text-left align-middle transition-all transform glass-card backdrop-blur-xl bg-white/90 border border-white/40 shadow-xl rounded-2xl">
           <div class="flex items-start justify-between mb-6">
             <div>
               <h3 class="text-xl font-bold text-gray-900">Editar Usuário</h3>
@@ -362,7 +391,7 @@ function prevPage() {
               <label class="block text-sm font-medium text-gray-700 mb-2">Role</label>
               <select
                 v-model="editForm.role"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="user">Usuário</option>
                 <option value="moderator">Moderador</option>
@@ -371,11 +400,26 @@ function prevPage() {
             </div>
 
             <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Plano</label>
+              <select
+                v-model="editForm.currentPlanId"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="free">FREE</option>
+                <option value="starter">STARTER (R$ 35,90/mês)</option>
+                <option value="pro">PRO (R$ 130/mês)</option>
+              </select>
+              <p class="text-xs text-gray-500 mt-1">
+                Alterar o plano atualiza automaticamente os limites do usuário
+              </p>
+            </div>
+
+            <div>
               <label class="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   v-model="editForm.isActive"
-                  class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-brand-purple focus:border-transparent"
+                  class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:border-transparent"
                 />
                 <span class="text-sm font-medium text-gray-700">Usuário ativo</span>
               </label>
@@ -392,7 +436,7 @@ function prevPage() {
             <button
               @click="handleSaveUser"
               :disabled="loading"
-              class="px-4 py-2 bg-brand-purple text-white rounded-lg hover:brightness-110 transition-all disabled:opacity-50 flex items-center gap-2"
+              class="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 disabled:opacity-50 flex items-center gap-2"
             >
               <Icon :icon="loading ? 'lucide:loader-2' : 'lucide:save'" :class="['w-4 h-4', { 'animate-spin': loading }]" />
               Salvar

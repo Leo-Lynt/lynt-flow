@@ -1,11 +1,12 @@
 <script setup>
-import { ref } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
+import { RouterLink, useRouter, useRoute } from 'vue-router'
 import { Icon } from '@iconify/vue'
 import { useAuth } from '../composables/useAuth.js'
 
-const { login, loading } = useAuth()
+const { login, loginWithGoogle, loading } = useAuth()
 const router = useRouter()
+const route = useRoute()
 
 const form = ref({
   email: '',
@@ -15,6 +16,10 @@ const form = ref({
 const error = ref('')
 const showPassword = ref(false)
 const attemptsInfo = ref(null)
+const googleLoading = ref(false)
+
+// Capturar returnUrl da query string
+const returnUrl = computed(() => route.query.returnUrl || null)
 
 async function handleSubmit() {
   error.value = ''
@@ -25,7 +30,7 @@ async function handleSubmit() {
     return
   }
 
-  const result = await login(form.value.email, form.value.password)
+  const result = await login(form.value.email, form.value.password, returnUrl.value)
 
   if (!result.success) {
     error.value = result.error
@@ -37,32 +42,57 @@ async function handleSubmit() {
   if (result.requires2FA) {
     router.push({
       name: 'verify-2fa',
-      query: { tempToken: result.tempToken }
+      query: {
+        tempToken: result.tempToken,
+        ...(returnUrl.value && { returnUrl: returnUrl.value })
+      }
     })
   }
-  // Se não requer 2FA, o login já redirecionou para dashboard
+  // Se não requer 2FA, o login já redirecionou
 }
 
 function togglePasswordVisibility() {
   showPassword.value = !showPassword.value
 }
+
+async function handleGoogleLogin() {
+  error.value = ''
+  googleLoading.value = true
+
+  const result = await loginWithGoogle()
+
+  if (!result.success) {
+    error.value = result.error
+    googleLoading.value = false
+  }
+  // No need to set loading to false on success because we're redirecting
+}
 </script>
 
 <template>
   <div class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
-    <!-- Animated gradient background -->
-    <div class="absolute inset-0 bg-gradient-animated"></div>
+    <!-- Background base -->
+    <div class="fixed inset-0 bg-[#f2f7ff] -z-10"></div>
 
-    <!-- Subtle animated shapes -->
-    <div class="absolute top-20 left-20 w-96 h-96 bg-gradient-to-br from-blue-200/40 to-purple-200/40 rounded-full blur-3xl animate-float-slow"></div>
-    <div class="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-br from-purple-200/40 to-pink-200/40 rounded-full blur-3xl animate-float-slow animation-delay-2000"></div>
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-indigo-200/30 to-blue-200/30 rounded-full blur-3xl animate-float-slow animation-delay-4000"></div>
+    <!-- Gradient Orbs (sutis, estáticos) -->
+    <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+      <div class="absolute top-1/4 right-1/4 w-[500px] h-[500px] bg-blue-300/20 rounded-full blur-3xl"></div>
+      <div class="absolute top-1/3 left-1/4 w-[450px] h-[450px] bg-cyan-300/15 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-1/4 right-1/3 w-[400px] h-[400px] bg-purple-300/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <!-- Grid pattern sutil -->
+    <div class="fixed inset-0 opacity-[0.02] -z-5 pointer-events-none">
+      <div class="absolute inset-0" style="background-image: radial-gradient(circle, #3B82F6 1px, transparent 1px); background-size: 40px 40px;"></div>
+    </div>
 
     <!-- Main container -->
     <div class="relative w-full max-w-md">
       <!-- Logo - fora do card -->
       <div class="flex justify-center mb-6">
-        <img src="/Logo.svg" alt="LyntFlow" class="h-16 object-contain" />
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-xl shadow-blue-500/30">
+          <Icon icon="lucide:workflow" class="w-8 h-8 text-white" />
+        </div>
       </div>
 
       <!-- Welcome message -->
@@ -72,7 +102,7 @@ function togglePasswordVisibility() {
       </div>
 
       <!-- Glass card -->
-      <div class="glass-card backdrop-blur-xl bg-white/30 px-10 py-12 rounded-lg shadow-lg border border-white/20">
+      <div class="glass-card backdrop-blur-xl bg-white/70 px-10 py-12 rounded-2xl shadow-xl border border-white/40">
 
         <!-- Error message -->
         <div
@@ -113,7 +143,7 @@ function togglePasswordVisibility() {
                 type="email"
                 autocomplete="email"
                 required
-                class="w-full px-4 py-2.5 pr-10 bg-white/50 backdrop-blur-sm border border-gray-300 rounded text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand-purple focus:bg-white/70 transition-all text-sm tracking-wide"
+                class="w-full px-4 py-2.5 pr-10 bg-white/50 backdrop-blur-sm border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-sm tracking-wide"
                 placeholder="seu@email.com"
               />
               <Icon icon="lucide:mail" class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 opacity-60" />
@@ -128,7 +158,7 @@ function togglePasswordVisibility() {
               </label>
               <RouterLink
                 to="/forgot-password"
-                class="text-xs font-medium text-brand-purple/80 hover:text-brand-purple transition-colors"
+                class="text-xs font-medium text-blue-600/80 hover:text-blue-600 transition-colors"
               >
                 Esqueceu?
               </RouterLink>
@@ -140,7 +170,7 @@ function togglePasswordVisibility() {
                 :type="showPassword ? 'text' : 'password'"
                 autocomplete="current-password"
                 required
-                class="w-full px-4 py-2.5 pr-10 bg-white/50 backdrop-blur-sm border border-gray-300 rounded text-gray-900 placeholder-gray-400 focus:outline-none focus:border-brand-purple focus:bg-white/70 transition-all text-sm tracking-wide"
+                class="w-full px-4 py-2.5 pr-10 bg-white/50 backdrop-blur-sm border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white transition-all text-sm tracking-wide"
                 placeholder="••••••••"
               />
               <button
@@ -160,7 +190,7 @@ function togglePasswordVisibility() {
           <button
             type="submit"
             :disabled="loading"
-            class="w-full mt-8 px-6 py-3.5 bg-brand-purple hover:brightness-110 rounded text-white text-sm font-medium tracking-wide transition-all duration-300 hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center"
+            class="w-full mt-8 px-6 py-3.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl text-white text-sm font-medium tracking-wide transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/30 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center"
           >
             <span v-if="!loading" class="flex items-center">
               <Icon icon="lucide:log-in" class="w-4 h-4 mr-2" />
@@ -172,6 +202,28 @@ function togglePasswordVisibility() {
             </span>
           </button>
         </form>
+
+        <!-- Google Sign-In -->
+        <button
+          @click="handleGoogleLogin"
+          :disabled="googleLoading || loading"
+          type="button"
+          class="w-full mt-4 px-6 py-3 bg-white hover:bg-gray-50 border border-gray-300 rounded text-gray-700 text-sm font-medium tracking-wide transition-all duration-300 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 flex items-center justify-center"
+        >
+          <span v-if="!googleLoading" class="flex items-center">
+            <svg class="w-5 h-5 mr-2" viewBox="0 0 24 24">
+              <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Entrar com Google
+          </span>
+          <span v-else class="flex items-center">
+            <Icon icon="lucide:loader-2" class="w-4 h-4 mr-2 animate-spin" />
+            Conectando...
+          </span>
+        </button>
 
         <!-- Divider -->
         <div class="relative my-10">
@@ -189,7 +241,7 @@ function togglePasswordVisibility() {
             Não tem uma conta?
             <RouterLink
               to="/register"
-              class="font-medium text-brand-purple hover:text-brand-purple/80 transition-colors ml-1 underline decoration-brand-purple/30 hover:decoration-brand-purple/60 underline-offset-2"
+              class="font-medium text-blue-600 hover:text-blue-700 transition-colors ml-1 underline decoration-blue-600/30 hover:decoration-blue-600/60 underline-offset-2"
             >
               Criar conta
             </RouterLink>
@@ -207,56 +259,5 @@ function togglePasswordVisibility() {
   box-shadow:
     0 4px 24px rgba(0, 0, 0, 0.06),
     inset 0 1px 0 rgba(255, 255, 255, 0.8);
-}
-
-/* Animated gradient background */
-.bg-gradient-animated {
-  background: linear-gradient(
-    -45deg,
-    #f8e8f3,
-    #ede8f5,
-    #f0f4e8,
-    #fef3ed,
-    #fef0f0
-  );
-  background-size: 400% 400%;
-  animation: gradient-shift 15s ease infinite;
-}
-
-@keyframes gradient-shift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-/* Floating animation for blobs */
-@keyframes float-slow {
-  0%, 100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(30px, -30px) scale(1.1);
-  }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
-}
-
-.animate-float-slow {
-  animation: float-slow 20s ease-in-out infinite;
-}
-
-.animation-delay-2000 {
-  animation-delay: 2s;
-}
-
-.animation-delay-4000 {
-  animation-delay: 4s;
 }
 </style>

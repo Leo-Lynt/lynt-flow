@@ -130,6 +130,54 @@
         />
       </div>
 
+      <!-- Property Select (GA4 Properties) -->
+      <div v-else-if="field.type === 'property-select'" class="space-y-1">
+        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300">
+          {{ field.label }}
+          <span v-if="field.required" class="text-red-500">*</span>
+        </label>
+        <p v-if="field.description" class="text-xs text-gray-500 dark:text-gray-400 mb-2">
+          {{ field.description }}
+        </p>
+        <PropertySelect
+          :connection-id="localData[field.dependsOn] || ''"
+          v-model="localData[key]"
+          @update:modelValue="updateData"
+        />
+      </div>
+
+      <!-- Metrics Select (GA4 Metrics) -->
+      <div v-else-if="field.type === 'metrics-select'" class="space-y-1">
+        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300">
+          {{ field.label }}
+          <span v-if="field.required" class="text-red-500">*</span>
+        </label>
+        <p v-if="field.description" class="text-xs text-gray-500 dark:text-gray-400 mb-2">
+          {{ field.description }}
+        </p>
+        <MetricsDimensionsSelect
+          type="metrics"
+          v-model="localData[key]"
+          @update:modelValue="updateData"
+        />
+      </div>
+
+      <!-- Dimensions Select (GA4 Dimensions) -->
+      <div v-else-if="field.type === 'dimensions-select'" class="space-y-1">
+        <label class="block text-xs font-medium text-gray-700 dark:text-gray-300">
+          {{ field.label }}
+          <span v-if="field.required" class="text-red-500">*</span>
+        </label>
+        <p v-if="field.description" class="text-xs text-gray-500 dark:text-gray-400 mb-2">
+          {{ field.description }}
+        </p>
+        <MetricsDimensionsSelect
+          type="dimensions"
+          v-model="localData[key]"
+          @update:modelValue="updateData"
+        />
+      </div>
+
       <!-- Number Input -->
       <div v-else-if="field.type === 'number'" class="space-y-1">
         <div class="flex items-center justify-between">
@@ -512,6 +560,8 @@ import { detectValueType } from '@leo-lynt/lynt-flow-core/engine/dataTypes.js'
 import { getFieldValue } from '@leo-lynt/lynt-flow-core/utils'
 import FlowIcon from '../../Icon.vue'
 import ConnectionSelect from '../../form/ConnectionSelect.vue'
+import PropertySelect from '../../form/PropertySelect.vue'
+import MetricsDimensionsSelect from '../../form/MetricsDimensionsSelect.vue'
 
 const props = defineProps({
   nodeId: {

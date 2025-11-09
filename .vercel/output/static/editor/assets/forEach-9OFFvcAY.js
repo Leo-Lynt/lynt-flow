@@ -1,0 +1,1 @@
+import{u as o}from"./dataUtils-XrCV_Bny.js";function n({nodeData:a,inputs:t}){const r=o(t.array);if(!Array.isArray(r))throw new Error("Input must be an array");return{__forEachLoop:!0,array:r,totalCount:r.length}}function u(a){return{valid:!0,errors:[]}}export{n as execute,u as validate};

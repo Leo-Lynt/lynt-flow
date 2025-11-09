@@ -38,6 +38,12 @@ export default defineConfig({
         changeOrigin: true,
         ws: true,
       },
+      // Proxy para docs (SEM rewrite - mantém /docs no path)
+      '^/docs': {
+        target: 'http://localhost:5177',
+        changeOrigin: true,
+        ws: true,
+      },
       // Proxy para API
       '/api': {
         target: 'http://localhost:3001',

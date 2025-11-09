@@ -27,7 +27,7 @@ class UserManagementController {
 
       const [users, total] = await Promise.all([
         User.find(query)
-          .select('name email role isVerified isActive createdAt publicProfile.isVerifiedCreator')
+          .select('name email role isVerified isActive createdAt publicProfile.isVerifiedCreator currentPlanId')
           .sort({ createdAt: -1 })
           .skip(skip)
           .limit(parseInt(limit))
@@ -198,6 +198,46 @@ class UserManagementController {
     } catch (error) {
       logger.error('Error toggling verified creator:', error);
       res.status(500).json(formatError('Erro ao alterar status de criador verificado', 'INTERNAL_ERROR'));
+    }
+  }
+
+  /**
+   * Atualiza o plano de um usuário
+   */
+  async updateUserPlan(req, res) {
+    try {
+      const { userId } = req.params;
+      const { planId } = req.body;
+
+      // Validar planId
+      if (!['free', 'starter', 'pro'].includes(planId)) {
+        return res.status(400).json(formatError('Plano inválido. Use: free, starter ou pro', 'INVALID_PLAN'));
+      }
+
+      const user = await User.findById(userId);
+      if (!user) {
+        return res.status(404).json(formatError('Usuário não encontrado', 'USER_NOT_FOUND'));
+      }
+
+      const oldPlan = user.currentPlanId;
+
+      // Atualizar plano e limites
+      await user.updatePlanLimits(planId);
+
+      logger.info(`Admin changed user ${userId} plan from ${oldPlan} to ${planId}`);
+
+      res.json(formatSuccess({
+        user: {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          currentPlanId: user.currentPlanId,
+          planLimits: user.planLimits
+        }
+      }, `Plano atualizado de ${oldPlan.toUpperCase()} para ${planId.toUpperCase()}`));
+    } catch (error) {
+      logger.error('Error updating user plan:', error);
+      res.status(500).json(formatError('Erro ao atualizar plano do usuário', 'INTERNAL_ERROR'));
     }
   }
 

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LyntFlow - Preview Email</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #F3F4F6;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    }
+    .header {
+      background: linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%);
+      padding: 32px 24px;
+      text-align: center;
+      color: white;
+    }
+    .logo-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 22px;
+      font-weight: 600;
+    }
+    .header p {
+      margin: 8px 0 0 0;
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    .content {
+      padding: 32px 24px;
+    }
+    .intro-text {
+      margin: 0 0 24px 0;
+      color: #4B5563;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .table-container {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #E5E7EB;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .data-table thead tr {
+      background: linear-gradient(135deg, #3B82F6 0%, #06B6D4 100%);
+    }
+    .data-table th {
+      padding: 14px 16px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: #FFFFFF;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+    .data-table th.right {
+      text-align: right;
+    }
+    .data-table tbody tr {
+      background: #FFFFFF;
+      transition: background 0.2s;
+    }
+    .data-table tbody tr:nth-child(even) {
+      background: #F9FAFB;
+    }
+    .data-table tbody tr:hover {
+      background: #F3F4F6;
+    }
+    .data-table td {
+      padding: 14px 16px;
+      color: #374151;
+      font-size: 14px;
+      border-bottom: 1px solid #F3F4F6;
+    }
+    .data-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .data-table td.label {
+      font-weight: 500;
+      color: #111827;
+    }
+    .data-table td.value {
+      text-align: right;
+      color: #2563EB;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+    .footer {
+      padding: 24px;
+      text-align: center;
+      background: #F9FAFB;
+      border-top: 1px solid #E5E7EB;
+    }
+    .footer-text {
+      margin: 0 0 8px 0;
+      color: #6B7280;
+      font-size: 12px;
+    }
+    .footer-meta {
+      margin: 0;
+      color: #9CA3AF;
+      font-size: 11px;
+    }
+    .footer a {
+      color: #2563EB;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="8" height="8" x="3" y="3" rx="2"/>
+          <path d="M7 11v4a2 2 0 0 0 2 2h4"/>
+          <rect width="8" height="8" x="13" y="13" rx="2"/>
+        </svg>
+      </div>
+      <h1>Lynt Flow</h1>
+      <p>Dados do seu fluxo</p>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+      <p class="intro-text">
+        Olá! Seu fluxo <strong>Analytics Report</strong> foi executado com sucesso. Veja os dados abaixo:
+      </p>
+
+      <!-- Table -->
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Campo</th>
+              <th class="right">Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="label">Usuários Ativos</td>
+              <td class="value">1,234</td>
+            </tr>
+            <tr>
+              <td class="label">Sessões</td>
+              <td class="value">5,678</td>
+            </tr>
+            <tr>
+              <td class="label">Pageviews</td>
+              <td class="value">12,345</td>
+            </tr>
+            <tr>
+              <td class="label">Taxa de Conversão</td>
+              <td class="value">4.2%</td>
+            </tr>
+            <tr>
+              <td class="label">Bounce Rate</td>
+              <td class="value">45.3%</td>
+            </tr>
+            <tr>
+              <td class="label">Duração Média</td>
+              <td class="value">3m 24s</td>
+            </tr>
+            <tr>
+              <td class="label">Novas Sessões</td>
+              <td class="value">2,145</td>
+            </tr>
+            <tr>
+              <td class="label">Páginas por Sessão</td>
+              <td class="value">3.2</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p class="footer-text">
+        <strong>Lynt Flow</strong> • Automação de fluxos de dados
+      </p>
+      <p class="footer-meta">
+        Executado em 09/01/2025 às 14:30
+      </p>
+    </div>
+  </div>
+</body>
+</html>

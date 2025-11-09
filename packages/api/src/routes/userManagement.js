@@ -169,4 +169,36 @@ router.put('/users/:userId/status', isAdministrator, userManagementController.to
  */
 router.put('/users/:userId/verified-creator', isModerator, userManagementController.toggleVerifiedCreator);
 
+/**
+ * @swagger
+ * /api/admin/users/{userId}/plan:
+ *   put:
+ *     summary: Atualiza o plano de um usuário (admin)
+ *     tags: [Admin - Users]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - planId
+ *             properties:
+ *               planId:
+ *                 type: string
+ *                 enum: [free, starter, pro]
+ *     responses:
+ *       200:
+ *         description: Plano atualizado
+ */
+router.put('/users/:userId/plan', isAdministrator, userManagementController.updateUserPlan);
+
 module.exports = router;

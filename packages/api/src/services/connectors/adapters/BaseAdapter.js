@@ -1,6 +1,7 @@
+const logger = require('../../../utils/logger');
+
 class BaseAdapter {
   constructor() {
-const logger = require('../../../utils/logger');
     this.retryAttempts = 3;
     this.retryDelay = 1000; // 1 segundo
   }
@@ -11,9 +12,22 @@ const logger = require('../../../utils/logger');
 
   async fetchWithRetry(fetchFn, attempt = 1) {
     try {
-      return await fetchFn();
+      logger.info(`🔄 fetchWithRetry attempt ${attempt}`);
+      const result = await fetchFn();
+      logger.info(`✅ fetchWithRetry attempt ${attempt} succeeded`);
+      return result;
     } catch (error) {
+      logger.error(`❌ fetchWithRetry attempt ${attempt} failed:`, {
+        error: error.message,
+        stack: error.stack,
+        name: error.name,
+        attempt: attempt,
+        maxAttempts: this.retryAttempts
+      });
+      console.error('🔴 FETCH RETRY ERROR:', error);
+
       if (attempt >= this.retryAttempts) {
+        logger.error('❌ Max retry attempts reached, throwing error');
         throw error;
       }
 

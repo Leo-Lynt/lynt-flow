@@ -135,9 +135,9 @@ function getTriggeredByLabel(triggeredBy) {
 
 function getTriggeredByColor(triggeredBy) {
   const colors = {
-    manual: 'bg-brand-pink/20 text-brand-pink border-brand-pink/30',
-    api: 'bg-brand-purple/20 text-brand-purple border-brand-purple/30',
-    schedule: 'bg-brand-orange/20 text-brand-orange border-brand-orange/30'
+    manual: 'bg-cyan-500/20 text-cyan-700 border-cyan-500/30',
+    api: 'bg-blue-500/20 text-blue-700 border-blue-500/30',
+    schedule: 'bg-orange-500/20 text-orange-700 border-orange-500/30'
   }
   return colors[triggeredBy] || 'bg-gray-100/50 text-gray-700 border-gray-300'
 }
@@ -156,14 +156,14 @@ const hasActiveFilters = computed(() => {
     </div>
 
     <!-- Filters -->
-    <div class="glass-card backdrop-blur-xl bg-white/30 rounded-lg border border-white/20 p-6 mb-6">
+    <div class="glass-card backdrop-blur-xl bg-white/70 rounded-xl border border-white/40 shadow-sm p-6 mb-6">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <!-- Flow Filter -->
         <div>
           <label class="block text-xs font-medium text-gray-600 mb-2 uppercase tracking-wider">Fluxo</label>
           <select
             v-model="filters.flowId"
-            class="w-full px-3 py-2.5 bg-white/50 backdrop-blur-sm border border-gray-300 rounded text-gray-900 focus:outline-none focus:border-brand-purple focus:bg-white/70 transition-all text-sm"
+            class="w-full px-3 py-2.5 bg-white/50 backdrop-blur-sm border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-blue-500 focus:bg-white/70 transition-all text-sm"
           >
             <option value="">Todos os Fluxos</option>
             <option
@@ -181,7 +181,7 @@ const hasActiveFilters = computed(() => {
           <label class="block text-xs font-medium text-gray-600 mb-2 uppercase tracking-wider">Status</label>
           <select
             v-model="filters.status"
-            class="w-full px-3 py-2.5 bg-white/50 backdrop-blur-sm border border-gray-300 rounded text-gray-900 focus:outline-none focus:border-brand-purple focus:bg-white/70 transition-all text-sm"
+            class="w-full px-3 py-2.5 bg-white/50 backdrop-blur-sm border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-blue-500 focus:bg-white/70 transition-all text-sm"
           >
             <option value="">Todos os Status</option>
             <option value="success">Sucesso</option>
@@ -196,7 +196,7 @@ const hasActiveFilters = computed(() => {
           <input
             v-model="filters.startDate"
             type="date"
-            class="w-full px-3 py-2.5 bg-white/50 backdrop-blur-sm border border-gray-300 rounded text-gray-900 focus:outline-none focus:border-brand-purple focus:bg-white/70 transition-all text-sm"
+            class="w-full px-3 py-2.5 bg-white/50 backdrop-blur-sm border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-blue-500 focus:bg-white/70 transition-all text-sm"
           />
         </div>
 
@@ -206,7 +206,7 @@ const hasActiveFilters = computed(() => {
           <input
             v-model="filters.endDate"
             type="date"
-            class="w-full px-3 py-2.5 bg-white/50 backdrop-blur-sm border border-gray-300 rounded text-gray-900 focus:outline-none focus:border-brand-purple focus:bg-white/70 transition-all text-sm"
+            class="w-full px-3 py-2.5 bg-white/50 backdrop-blur-sm border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-blue-500 focus:bg-white/70 transition-all text-sm"
           />
         </div>
       </div>
@@ -215,7 +215,7 @@ const hasActiveFilters = computed(() => {
       <div class="flex items-center space-x-3 mt-4">
         <button
           @click="applyFilters"
-          class="bg-brand-purple hover:brightness-110 text-white px-4 py-2.5 rounded flex items-center space-x-2 transition-all text-sm font-medium tracking-wide"
+          class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-4 py-2.5 rounded-lg flex items-center space-x-2 transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 text-sm font-medium tracking-wide"
         >
           <Icon icon="lucide:filter" class="w-4 h-4" />
           <span>Aplicar Filtros</span>
@@ -223,7 +223,7 @@ const hasActiveFilters = computed(() => {
         <button
           v-if="hasActiveFilters"
           @click="clearFilters"
-          class="bg-white/50 backdrop-blur-sm border border-gray-300 text-gray-700 px-4 py-2.5 rounded hover:bg-white/70 hover:brightness-95 transition-all flex items-center space-x-2 text-sm font-medium tracking-wide"
+          class="bg-white/70 backdrop-blur-sm border border-gray-300 text-gray-700 px-4 py-2.5 rounded-lg hover:bg-white/90 hover:brightness-95 transition-all flex items-center space-x-2 text-sm font-medium tracking-wide"
         >
           <Icon icon="lucide:x" class="w-4 h-4" />
           <span>Limpar</span>
@@ -232,9 +232,9 @@ const hasActiveFilters = computed(() => {
     </div>
 
     <!-- Executions Table -->
-    <div class="glass-card backdrop-blur-xl bg-white/30 rounded-lg border border-white/20 overflow-hidden">
+    <div class="glass-card backdrop-blur-xl bg-white/70 rounded-xl border border-white/40 shadow-sm overflow-hidden">
       <div v-if="loading" class="flex justify-center py-12">
-        <Icon icon="lucide:loader-2" class="w-8 h-8 animate-spin text-brand-purple" />
+        <Icon icon="lucide:loader-2" class="w-8 h-8 animate-spin text-blue-600" />
       </div>
 
       <div v-else-if="executions.length === 0" class="text-center py-12">
@@ -267,12 +267,12 @@ const hasActiveFilters = computed(() => {
             >
               <td class="px-4 py-4 rounded-l-lg">
                 <div class="flex items-center min-w-0">
-                  <Icon icon="lucide:workflow" class="w-4 h-4 text-brand-purple mr-2 flex-shrink-0" />
+                  <Icon icon="lucide:workflow" class="w-4 h-4 text-blue-600 mr-2 flex-shrink-0" />
                   <div class="min-w-0">
                     <div class="text-sm font-medium text-gray-900 truncate">
                       {{ execution.flowName || 'Fluxo sem nome' }}
                     </div>
-                    <div v-if="execution.flowDeleted" class="text-xs text-brand-red">
+                    <div v-if="execution.flowDeleted" class="text-xs text-red-600">
                       Excluído
                     </div>
                   </div>
@@ -301,7 +301,7 @@ const hasActiveFilters = computed(() => {
               <td class="px-4 py-4 text-right text-sm font-medium rounded-r-lg">
                 <button
                   @click.stop="viewExecution(execution)"
-                  class="text-brand-purple hover:text-brand-purple/80 transition-colors"
+                  class="text-blue-600 hover:text-blue-700 transition-colors"
                 >
                   <span class="hidden sm:inline">Ver Detalhes</span>
                   <Icon icon="lucide:eye" class="w-4 h-4 inline sm:hidden" />
@@ -323,7 +323,7 @@ const hasActiveFilters = computed(() => {
             <button
               @click="changePage(pagination.page - 1)"
               :disabled="pagination.page === 1"
-              class="px-3 py-2 bg-white/50 backdrop-blur-sm border border-gray-300 rounded hover:bg-white/70 hover:brightness-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium text-gray-700"
+              class="px-3 py-2 bg-white/70 backdrop-blur-sm border border-gray-300 rounded-lg hover:bg-white/90 hover:brightness-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium text-gray-700"
             >
               Anterior
             </button>
@@ -333,7 +333,7 @@ const hasActiveFilters = computed(() => {
             <button
               @click="changePage(pagination.page + 1)"
               :disabled="pagination.page === pagination.pages"
-              class="px-3 py-2 bg-white/50 backdrop-blur-sm border border-gray-300 rounded hover:bg-white/70 hover:brightness-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium text-gray-700"
+              class="px-3 py-2 bg-white/70 backdrop-blur-sm border border-gray-300 rounded-lg hover:bg-white/90 hover:brightness-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium text-gray-700"
             >
               Próximo
             </button>

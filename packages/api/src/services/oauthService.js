@@ -147,10 +147,10 @@ class OAuthService {
   }
 
   // Trocar code por tokens
-  async exchangeCodeForTokens(provider, code, userId, stateData = {}) {
+  async exchangeCodeForTokens(provider, code, userId, stateData = {}, ip = null, userAgent = null) {
     // Novo formato v2
     if (provider === 'google' || stateData.purpose) {
-      return this.exchangeGoogleCodeV2(code, userId, stateData);
+      return this.exchangeGoogleCodeV2(code, userId, stateData, ip, userAgent);
     }
 
     // Retrocompatibilidade (DEPRECATED)
@@ -163,7 +163,7 @@ class OAuthService {
   }
 
   // Novo método v2 que trata purpose
-  async exchangeGoogleCodeV2(code, userId, stateData = {}) {
+  async exchangeGoogleCodeV2(code, userId, stateData = {}, ip = null, userAgent = null) {
     const config = this.providers.google;
     const { purpose = 'connection', serviceType = null } = stateData;
 
@@ -202,7 +202,7 @@ class OAuthService {
       // Tratar conforme purpose
       if (purpose === 'authentication') {
         // Login social - criar/atualizar User e retornar JWT
-        return this.handleAuthenticationFlow(userId, userData, tokens, expiresAt);
+        return this.handleAuthenticationFlow(userId, userData, tokens, expiresAt, ip, userAgent);
       } else {
         // Connection - criar conexão API
         return this.handleConnectionFlow(userId, userData, tokens, expiresAt, serviceType);
@@ -242,9 +242,11 @@ class OAuthService {
   }
 
   // Fluxo de autenticação (login social)
-  async handleAuthenticationFlow(userId, userData, tokens, expiresAt) {
+  async handleAuthenticationFlow(userId, userData, tokens, expiresAt, ip = null, userAgent = null) {
     const User = require('../models/User');
     const jwt = require('jsonwebtoken');
+    const crypto = require('crypto');
+    const UAParser = require('ua-parser-js');
 
     // Buscar ou criar usuário
     let user = await User.findOne({ email: userData.email });
@@ -266,19 +268,46 @@ class OAuthService {
       user.lastLoginAt = new Date();
       if (!user.googleId) user.googleId = userData.googleId;
       if (!user.picture) user.picture = userData.picture;
-      await user.save();
       logger.info('✅ Usuário existente atualizado:', userData.email);
     }
 
-    // Gerar JWT
-    const token = jwt.sign(
-      { userId: user._id, email: user.email },
+    // Gerar tokens (igual ao authService)
+    const payload = { userId: user._id, email: user.email, role: user.role };
+
+    const accessToken = jwt.sign(
+      payload,
       process.env.JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: process.env.JWT_EXPIRES_IN || '1h' }
     );
 
+    const refreshToken = jwt.sign(
+      payload,
+      process.env.JWT_REFRESH_SECRET,
+      { expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d' }
+    );
+
+    // Salvar refresh token
+    user.refreshToken = refreshToken;
+
+    // Adicionar sessão ativa
+    const sessionId = crypto.randomBytes(16).toString('hex');
+    const device = this.parseDeviceInfo(userAgent);
+
+    user.activeSessions.push({
+      sessionId,
+      token: refreshToken,
+      device,
+      ip,
+      userAgent,
+      createdAt: new Date(),
+      lastActivity: new Date()
+    });
+
+    await user.save();
+
     return {
-      token,
+      accessToken,
+      refreshToken,
       user: {
         id: user._id,
         email: user.email,
@@ -287,6 +316,30 @@ class OAuthService {
       },
       email: userData.email
     };
+  }
+
+  // Detectar informações do dispositivo a partir do User-Agent
+  parseDeviceInfo(userAgent) {
+    if (!userAgent) {
+      return 'Unknown Device';
+    }
+
+    const UAParser = require('ua-parser-js');
+    const parser = new UAParser(userAgent);
+    const result = parser.getResult();
+
+    const browser = result.browser.name || 'Unknown Browser';
+    const os = result.os.name || 'Unknown OS';
+    const deviceType = result.device.type || 'desktop';
+
+    // Formatar: "Chrome on Windows", "Safari on iPhone", etc.
+    if (deviceType === 'mobile') {
+      return `${browser} on ${result.device.model || os}`;
+    } else if (deviceType === 'tablet') {
+      return `${browser} on ${result.device.model || os} (Tablet)`;
+    } else {
+      return `${browser} on ${os}`;
+    }
   }
 
   // Fluxo de conexão (API access)
@@ -503,7 +556,7 @@ class OAuthService {
       throw new Error('Conexão não encontrada');
     }
 
-    if (connection.provider === 'google_analytics' || connection.provider === 'google_sheets') {
+    if (connection.provider === 'google' || connection.provider === 'google_analytics' || connection.provider === 'google_sheets') {
       return this.refreshGoogleToken(connection);
     }
 
@@ -621,9 +674,15 @@ class OAuthService {
       query.provider = provider;
     }
 
-    return Connection.find(query)
+    const connections = await Connection.find(query)
       .sort({ lastUsedAt: -1, createdAt: -1 })
       .lean();
+
+    // Adicionar campo 'id' baseado em '_id' (pois .lean() não inclui virtuals)
+    return connections.map(conn => ({
+      ...conn,
+      id: conn._id.toString()
+    }));
   }
 
   // Verificar estado (segurança)

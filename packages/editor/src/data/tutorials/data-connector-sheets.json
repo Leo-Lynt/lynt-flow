@@ -1,0 +1,108 @@
+{
+  "id": "data-connector-sheets",
+  "title": "Conectando Google Sheets",
+  "description": "Tutorial mostrando como buscar dados de uma planilha do Google Sheets",
+  "flow": {
+    "nodes": [
+      {
+        "id": "input_sheets",
+        "type": "input",
+        "position": {
+          "x": 50,
+          "y": 388
+        },
+        "data": {
+          "label": "Input"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "sheets_node",
+        "type": "connector",
+        "position": {
+          "x": 250,
+          "y": 388
+        },
+        "data": {
+          "label": "Data Connector",
+          "sourceType": "google_sheets"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug-viewer_sheets",
+        "type": "debug-viewer",
+        "position": {
+          "x": 550,
+          "y": 387
+        },
+        "data": {
+          "label": "Debug-viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge_input_sheets",
+        "source": "input_sheets",
+        "target": "sheets_node",
+        "sourceHandle": "exec-out",
+        "targetHandle": "exec-in",
+        "edgeType": "flow",
+        "dataType": "any",
+        "animated": true,
+        "style": {
+          "stroke": "#9ca3af",
+          "strokeWidth": 3
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 10,
+          "height": 10,
+          "color": "#9ca3af"
+        }
+      },
+      {
+        "id": "edge_sheets",
+        "source": "sheets_node",
+        "target": "debug-viewer_sheets",
+        "sourceHandle": "data-out",
+        "targetHandle": "debug-viewer_sheets-data-input",
+        "edgeType": "data",
+        "dataType": "array",
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#10b981"
+        }
+      }
+    ],
+    "nodeData": {
+      "input_sheets": {
+        "parameters": []
+      },
+      "sheets_node": {
+        "sourceType": "google_sheets",
+        "sheetsUrl": "https://docs.google.com/spreadsheets/d/1J-1N0p9b318sOrXeQ-YxDidG8tn_hwFPb032tKz7GYw/edit?gid=0#gid=0"
+      },
+      "debug-viewer_sheets": {}
+    },
+    "detectedTypes": {
+      "sheets_node": {
+        "data-out": "array"
+      }
+    },
+    "variables": {}
+  },
+  "exportedAt": "2025-11-01T14:00:00.000Z"
+}

@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from 'vue'
 import { Icon } from '@iconify/vue'
 import AppLayout from '../components/AppLayout.vue'
 import BaseCard from '../components/BaseCard.vue'
+import PlanManagement from '../components/PlanManagement.vue'
 import { useAuth } from '../composables/useAuth.js'
 import { useProfileTabs } from '../composables/useProfileTabs.js'
 
@@ -319,12 +320,12 @@ async function onTabChange(tabId) {
     </div>
 
     <!-- Messages -->
-    <div v-if="message" class="mb-6 bg-brand-green/10 border border-brand-green/30 text-brand-green px-4 py-3 rounded-lg flex items-center backdrop-blur-sm">
+    <div v-if="message" class="mb-6 bg-green-500/10 border border-green-500/30 text-green-600 px-4 py-3 rounded-lg flex items-center backdrop-blur-sm">
       <Icon icon="lucide:check-circle" class="w-5 h-5 mr-2" />
       {{ message }}
     </div>
 
-    <div v-if="error" class="mb-6 bg-brand-red/10 border border-brand-red/30 text-brand-red px-4 py-3 rounded-lg flex items-center backdrop-blur-sm">
+    <div v-if="error" class="mb-6 bg-red-500/10 border border-red-500/30 text-red-600 px-4 py-3 rounded-lg flex items-center backdrop-blur-sm">
       <Icon icon="lucide:alert-circle" class="w-5 h-5 mr-2" />
       {{ error }}
     </div>
@@ -340,7 +341,7 @@ async function onTabChange(tabId) {
             :class="[
               'w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg text-left transition-all',
               activeTab === tab.id
-                ? 'bg-brand-purple/10 text-brand-purple border-l-2 border-brand-purple'
+                ? 'bg-blue-500/10 text-blue-600 border-l-2 border-blue-500'
                 : 'text-gray-700 hover:bg-white/50'
             ]"
           >
@@ -350,7 +351,7 @@ async function onTabChange(tabId) {
         </nav>
 
         <!-- Stats Card -->
-        <div v-if="stats" class="mt-6 glass-card backdrop-blur-xl bg-white/30 border border-white/20 rounded-lg p-4">
+        <div v-if="stats" class="mt-6 glass-card backdrop-blur-xl bg-white/70 border border-white/40 shadow-sm rounded-xl p-4">
           <h4 class="text-sm font-semibold text-gray-800 mb-3 tracking-wide">Visão Geral</h4>
           <div class="space-y-2 text-sm">
             <div class="flex justify-between">
@@ -384,7 +385,7 @@ async function onTabChange(tabId) {
                   v-model="profileForm.name"
                   type="text"
                   required
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent focus:border-transparent"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -424,7 +425,7 @@ async function onTabChange(tabId) {
                 <button
                   type="submit"
                   :disabled="saving"
-                  class="bg-brand-purple text-white px-4 py-2 rounded-lg hover:brightness-110 transition-all disabled:opacity-50 flex items-center space-x-2"
+                  class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-4 py-2.5 rounded-lg transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 disabled:opacity-50 flex items-center space-x-2"
                 >
                   <Icon
                     :icon="saving ? 'lucide:loader-2' : 'lucide:save'"
@@ -475,7 +476,7 @@ async function onTabChange(tabId) {
                   v-model="passwordForm.currentPassword"
                   type="password"
                   required
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent focus:border-transparent"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -488,7 +489,7 @@ async function onTabChange(tabId) {
                   v-model="passwordForm.newPassword"
                   type="password"
                   required
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent focus:border-transparent"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <p class="mt-1 text-xs text-gray-500">Must be at least 6 characters</p>
               </div>
@@ -502,7 +503,7 @@ async function onTabChange(tabId) {
                   v-model="passwordForm.confirmPassword"
                   type="password"
                   required
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent focus:border-transparent"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
@@ -510,7 +511,7 @@ async function onTabChange(tabId) {
                 <button
                   type="submit"
                   :disabled="saving"
-                  class="bg-brand-purple text-white px-4 py-2 rounded-lg hover:brightness-110 transition-all disabled:opacity-50 flex items-center space-x-2"
+                  class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-4 py-2.5 rounded-lg transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 disabled:opacity-50 flex items-center space-x-2"
                 >
                   <Icon
                     :icon="saving ? 'lucide:loader-2' : 'lucide:shield-check'"
@@ -536,7 +537,7 @@ async function onTabChange(tabId) {
                   id="2fa-password"
                   v-model="twoFactorForm.password"
                   type="password"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent focus:border-transparent"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
               <button
@@ -573,7 +574,7 @@ async function onTabChange(tabId) {
                 <button
                   @click="handleVerify2FA"
                   :disabled="saving || twoFactorForm.token.length !== 6"
-                  class="flex-1 bg-brand-purple text-white px-4 py-2 rounded-lg hover:brightness-110 transition-all disabled:opacity-50 flex items-center justify-center space-x-2"
+                  class="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-4 py-2.5 rounded-lg transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 disabled:opacity-50 flex items-center justify-center space-x-2"
                 >
                   <Icon :icon="saving ? 'lucide:loader-2' : 'lucide:check'" :class="['w-4 h-4', { 'animate-spin': saving }]" />
                   <span>Verify & Enable</span>
@@ -594,7 +595,7 @@ async function onTabChange(tabId) {
               </div>
               <button
                 @click="show2FADisable = true"
-                class="bg-brand-red text-white px-4 py-2 rounded-lg hover:brightness-110 transition-all flex items-center space-x-2"
+                class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-all shadow-lg shadow-red-500/30 flex items-center space-x-2"
               >
                 <Icon icon="lucide:shield-off" class="w-4 h-4" />
                 <span>Disable 2FA</span>
@@ -607,7 +608,7 @@ async function onTabChange(tabId) {
                 <input
                   v-model="twoFactorForm.password"
                   type="password"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent focus:border-transparent"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
               <div>
@@ -616,7 +617,7 @@ async function onTabChange(tabId) {
                   v-model="twoFactorForm.token"
                   type="text"
                   maxlength="6"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent focus:border-transparent"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
               <div class="flex space-x-3">
@@ -663,7 +664,7 @@ async function onTabChange(tabId) {
                 <label class="block text-sm font-medium text-gray-700 mb-2">Theme</label>
                 <select
                   v-model="preferencesForm.theme"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent focus:border-transparent"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="light">Light</option>
                   <option value="dark">Dark</option>
@@ -674,7 +675,7 @@ async function onTabChange(tabId) {
                 <label class="block text-sm font-medium text-gray-700 mb-2">Language</label>
                 <select
                   v-model="preferencesForm.language"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent focus:border-transparent"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="pt-BR">Português (Brasil)</option>
                   <option value="en-US">English (US)</option>
@@ -686,7 +687,7 @@ async function onTabChange(tabId) {
                 <input
                   v-model="preferencesForm.timezone"
                   type="text"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent focus:border-transparent"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <p class="mt-1 text-xs text-gray-500">e.g., America/Sao_Paulo, America/New_York</p>
               </div>
@@ -696,7 +697,7 @@ async function onTabChange(tabId) {
                   <input
                     v-model="preferencesForm.emailNotifications"
                     type="checkbox"
-                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-brand-purple focus:border-transparent"
+                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500 focus:border-transparent"
                   />
                   <span class="text-sm font-medium text-gray-700">Email Notifications</span>
                 </label>
@@ -707,7 +708,7 @@ async function onTabChange(tabId) {
                 <button
                   type="submit"
                   :disabled="saving"
-                  class="bg-brand-purple text-white px-4 py-2 rounded-lg hover:brightness-110 transition-all disabled:opacity-50 flex items-center space-x-2"
+                  class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white px-4 py-2.5 rounded-lg transition-all shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 disabled:opacity-50 flex items-center space-x-2"
                 >
                   <Icon :icon="saving ? 'lucide:loader-2' : 'lucide:save'" :class="['w-4 h-4', { 'animate-spin': saving }]" />
                   <span>{{ saving ? 'Saving...' : 'Save Preferences' }}</span>
@@ -715,6 +716,12 @@ async function onTabChange(tabId) {
               </div>
             </form>
           </BaseCard>
+        </div>
+
+
+        <!-- Plan Tab -->
+        <div v-if="activeTab === 'plan'">
+          <PlanManagement />
         </div>
 
         <!-- Sessions Tab -->

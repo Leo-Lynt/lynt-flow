@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { authenticate } = require('../middleware/auth');
+const { checkScheduleLimit } = require('../middleware/checkPlanLimits');
 const {
   createSchedule,
   listSchedules,
@@ -15,7 +16,7 @@ const {
 router.use(authenticate);
 
 // CRUD de schedules
-router.post('/', createSchedule);
+router.post('/', checkScheduleLimit, createSchedule);
 router.get('/', listSchedules);
 router.get('/:id', getSchedule);
 router.put('/:id', updateSchedule);

@@ -329,7 +329,7 @@ const previewText = computed(() => {
           :class="[
             'w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all',
             currentStep >= step
-              ? 'bg-brand-purple text-white'
+              ? 'bg-gradient-to-br from-blue-600 to-cyan-600 text-white shadow-lg shadow-blue-500/30'
               : 'bg-gray-100 text-gray-600 border border-gray-200'
           ]"
         >
@@ -340,7 +340,7 @@ const previewText = computed(() => {
           v-if="step < totalSteps"
           :class="[
             'h-1 flex-1 mx-2 transition-all rounded',
-            currentStep > step ? 'bg-brand-purple' : 'bg-gray-200'
+            currentStep > step ? 'bg-gradient-to-r from-blue-600 to-cyan-600' : 'bg-gray-200'
           ]"
         ></div>
       </div>
@@ -361,7 +361,7 @@ const previewText = computed(() => {
           :class="[
             'p-4 rounded-lg border-2 text-left transition-all',
             formData.flowId === getFlowId(flow)
-              ? 'border-brand-purple bg-brand-purple/5'
+              ? 'border-blue-500 bg-blue-50'
               : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
           ]"
         >
@@ -373,12 +373,12 @@ const previewText = computed(() => {
             <Icon
               v-if="formData.flowId === getFlowId(flow)"
               icon="lucide:check-circle"
-              class="w-6 h-6 text-brand-purple"
+              class="w-6 h-6 text-blue-600"
             />
           </div>
         </button>
       </div>
-      <p v-if="errors.flowId" class="text-brand-red text-sm tracking-wide">{{ errors.flowId }}</p>
+      <p v-if="errors.flowId" class="text-red-600 text-sm tracking-wide">{{ errors.flowId }}</p>
     </div>
 
     <!-- Step 2: Configure Schedule -->
@@ -399,14 +399,14 @@ const previewText = computed(() => {
             :class="[
               'p-4 rounded-lg border-2 text-left transition-all',
               formData.scheduleType === type.value
-                ? 'border-brand-purple bg-brand-purple/5'
+                ? 'border-blue-500 bg-blue-50'
                 : 'border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50'
             ]"
           >
             <div class="flex items-center space-x-3">
               <Icon
                 :icon="type.icon"
-                :class="['w-6 h-6', formData.scheduleType === type.value ? 'text-brand-purple' : 'text-gray-400']"
+                :class="['w-6 h-6', formData.scheduleType === type.value ? 'text-blue-600' : 'text-gray-400']"
               />
               <div>
                 <div class="font-medium text-gray-900">{{ type.label }}</div>
@@ -425,16 +425,16 @@ const previewText = computed(() => {
             v-model.number="formData.intervalValue"
             type="number"
             min="1"
-            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
-            :class="{ 'border-brand-red': errors.intervalValue }"
+            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            :class="{ 'border-red-600': errors.intervalValue }"
           />
-          <p v-if="errors.intervalValue" class="text-brand-red text-xs mt-1">{{ errors.intervalValue }}</p>
+          <p v-if="errors.intervalValue" class="text-red-600 text-xs mt-1">{{ errors.intervalValue }}</p>
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Unidade</label>
           <select
             v-model="formData.intervalUnit"
-            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
+            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
           >
             <option v-for="unit in intervalUnits" :key="unit.value" :value="unit.value">
               {{ unit.label }}
@@ -450,8 +450,8 @@ const previewText = computed(() => {
           <input
             v-model="formData.time"
             type="time"
-            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
-            :class="{ 'border-red-500': errors.time }"
+            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            :class="{ 'border-red-600': errors.time }"
           />
           <p v-if="errors.time" class="text-red-600 text-xs mt-1">{{ errors.time }}</p>
         </div>
@@ -459,7 +459,7 @@ const previewText = computed(() => {
           <label class="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
           <select
             v-model="formData.timezone"
-            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
+            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
           >
             <option v-for="tz in timezones" :key="tz" :value="tz">{{ tz }}</option>
           </select>
@@ -493,15 +493,15 @@ const previewText = computed(() => {
             <input
               v-model="formData.time"
               type="time"
-              class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
-              :class="{ 'border-red-500': errors.time }"
+              class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              :class="{ 'border-red-600': errors.time }"
             />
           </div>
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
             <select
               v-model="formData.timezone"
-              class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
+              class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             >
               <option v-for="tz in timezones" :key="tz" :value="tz">{{ tz }}</option>
             </select>
@@ -518,8 +518,8 @@ const previewText = computed(() => {
             type="number"
             min="1"
             max="31"
-            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
-            :class="{ 'border-red-500': errors.dayOfMonth }"
+            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            :class="{ 'border-red-600': errors.dayOfMonth }"
           />
           <p v-if="errors.dayOfMonth" class="text-red-600 text-xs mt-1">{{ errors.dayOfMonth }}</p>
         </div>
@@ -528,15 +528,15 @@ const previewText = computed(() => {
           <input
             v-model="formData.time"
             type="time"
-            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
-            :class="{ 'border-red-500': errors.time }"
+            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+            :class="{ 'border-red-600': errors.time }"
           />
         </div>
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
           <select
             v-model="formData.timezone"
-            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
+            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
           >
             <option v-for="tz in timezones" :key="tz" :value="tz">{{ tz }}</option>
           </select>
@@ -560,12 +560,12 @@ const previewText = computed(() => {
           <label class="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
           <select
             v-model="formData.timezone"
-            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
+            class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
           >
             <option v-for="tz in timezones" :key="tz" :value="tz">{{ tz }}</option>
           </select>
         </div>
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div class="bg-blue-50/50 border border-blue-200 rounded-lg p-4">
           <p class="text-sm font-medium text-blue-900 mb-2">Common Examples:</p>
           <div class="space-y-1">
             <div
@@ -652,7 +652,7 @@ const previewText = computed(() => {
               :type="getInputType(input.type)"
               :required="input.required"
               :placeholder="input.defaultValue !== undefined ? String(input.defaultValue) : ''"
-              class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
+              class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             />
 
             <!-- Boolean/Checkbox -->
@@ -715,7 +715,7 @@ const previewText = computed(() => {
               type="number"
               min="1"
               placeholder="Unlimited"
-              class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
+              class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             />
             <p class="text-xs text-gray-600 mt-1">Leave empty for unlimited executions</p>
           </div>
@@ -724,7 +724,7 @@ const previewText = computed(() => {
             <input
               v-model="formData.expiresAt"
               type="datetime-local"
-              class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-purple focus:border-transparent transition-all"
+              class="w-full px-3 py-2 border border-gray-300 bg-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             />
             <p class="text-xs text-gray-600 mt-1">Schedule will stop after this date</p>
           </div>
@@ -756,7 +756,7 @@ const previewText = computed(() => {
         v-if="currentStep < totalSteps"
         @click="nextStep"
         type="button"
-        class="px-4 py-2 bg-brand-purple text-white rounded-lg hover:brightness-110 transition-all flex items-center space-x-2 font-medium"
+        class="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg transition-all flex items-center space-x-2 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 font-medium"
       >
         <span>Próximo</span>
         <Icon icon="lucide:arrow-right" class="w-4 h-4" />
@@ -765,7 +765,7 @@ const previewText = computed(() => {
         v-else
         @click="handleSubmit"
         type="button"
-        class="px-4 py-2 bg-brand-green text-white rounded-lg hover:brightness-110 transition-all flex items-center space-x-2 font-medium"
+        class="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white rounded-lg transition-all flex items-center space-x-2 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 font-medium"
       >
         <Icon icon="lucide:check" class="w-4 h-4" />
         <span>Criar Agendamento</span>

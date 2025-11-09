@@ -1,0 +1,116 @@
+{
+  "id": "input-parameters",
+  "title": "Input: Parâmetros",
+  "description": "Tutorial mostrando como criar parâmetros obrigatórios e opcionais no Input node",
+  "flow": {
+    "nodes": [
+      {
+        "id": "input_params",
+        "type": "input",
+        "position": {
+          "x": 200,
+          "y": 250
+        },
+        "data": {
+          "label": "Input"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug_nome",
+        "type": "debug-viewer",
+        "position": {
+          "x": 550,
+          "y": 180
+        },
+        "data": {
+          "label": "Debug Viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug_idade",
+        "type": "debug-viewer",
+        "position": {
+          "x": 550,
+          "y": 320
+        },
+        "data": {
+          "label": "Debug Viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge_nome_debug",
+        "source": "input_params",
+        "target": "debug_nome",
+        "sourceHandle": "param-output-0",
+        "targetHandle": "debug_nome-data-input",
+        "edgeType": "data",
+        "dataType": "string",
+        "animated": false,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#10b981"
+        }
+      },
+      {
+        "id": "edge_idade_debug",
+        "source": "input_params",
+        "target": "debug_idade",
+        "sourceHandle": "param-output-1",
+        "targetHandle": "debug_idade-data-input",
+        "edgeType": "data",
+        "dataType": "number",
+        "animated": false,
+        "style": {
+          "stroke": "#f59e0b",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#f59e0b"
+        }
+      }
+    ],
+    "nodeData": {
+      "input_params": {
+        "parameters": [
+          {
+            "name": "nome",
+            "type": "string",
+            "required": true,
+            "defaultValue": ""
+          },
+          {
+            "name": "idade",
+            "type": "number",
+            "required": false,
+            "defaultValue": "18"
+          }
+        ]
+      }
+    },
+    "detectedTypes": {
+      "input_params": {
+        "param-output-0": "string",
+        "param-output-1": "integer"
+      }
+    },
+    "variables": {}
+  },
+  "exportedAt": "2025-11-01T18:00:00.000Z"
+}

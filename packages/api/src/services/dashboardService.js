@@ -83,6 +83,21 @@ class DashboardService {
 
     const profile = sanitizeUser(user);
 
+    // Obter dados de plano e uso
+    const usageTrackingService = require('./usageTrackingService');
+    const PlanSubscription = require('../models/PlanSubscription');
+
+    const [usage, subscription] = await Promise.all([
+      usageTrackingService.getCurrentUsage(userId),
+      PlanSubscription.findByUserId(userId)
+    ]);
+
+    // Calcular percentuais de uso
+    const percentages = usage.getUsagePercentage(user.planLimits);
+
+    // Verificar avisos de limite
+    const { isNear, isOver, warnings } = await usageTrackingService.checkLimitWarnings(userId);
+
     const overview = {
       profile: {
         id: profile._id,
@@ -94,7 +109,7 @@ class DashboardService {
         twoFactorEnabled: profile.twoFactorEnabled,
         lastLoginAt: profile.lastLoginAt,
         accountCreated: profile.createdAt,
-        plan: 'Free',
+        plan: user.currentPlanId.toUpperCase(),
         teamMembers: 1
       },
       stats: {
@@ -105,11 +120,30 @@ class DashboardService {
       },
       storage: {
         used: profile.executionStorageUsed,
-        quota: profile.executionStorageQuota,
-        usedPercentage: profile.executionStorageQuota
-          ? (profile.executionStorageUsed / profile.executionStorageQuota) * 100
+        quota: user.planLimits.dataPerMonth,
+        usedPercentage: user.planLimits.dataPerMonth
+          ? (profile.executionStorageUsed / user.planLimits.dataPerMonth) * 100
           : null
       },
+      subscription: subscription ? {
+        planId: subscription.planId,
+        status: subscription.status,
+        billingInterval: subscription.billingInterval,
+        currentPeriodEnd: subscription.currentPeriodEnd,
+        cancelAtPeriodEnd: subscription.cancelAtPeriodEnd,
+        nextPaymentDate: subscription.nextPaymentDate
+      } : null,
+      usage: {
+        executions: usage.executions,
+        activeFlows: usage.activeFlows,
+        dataUsed: usage.dataUsed,
+        resetAt: usage.resetAt
+      },
+      limits: user.planLimits,
+      usagePercentages: percentages,
+      isNearLimit: isNear,
+      isOverLimit: isOver,
+      warnings,
       recentExecutions,
       activeSchedules
     };

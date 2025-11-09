@@ -1,0 +1,344 @@
+{
+  "id": "condition-branch",
+  "title": "Ramificação Condicional",
+  "description": "Tutorial mostrando como ramificar o fluxo de execução baseado em uma condição (true → caminho A | false → caminho B)",
+  "flow": {
+    "nodes": [
+      {
+        "id": "input_branch",
+        "type": "input",
+        "position": {
+          "x": -78.71340089749795,
+          "y": 193.345777626157
+        },
+        "data": {
+          "label": "Input"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "constant_condition",
+        "type": "constant",
+        "position": {
+          "x": -43.783469685030454,
+          "y": 293.6747392657361
+        },
+        "data": {
+          "label": "Constant",
+          "valueType": "boolean",
+          "numberValue": 0,
+          "stringValue": "",
+          "booleanValue": true,
+          "objectValue": "{}",
+          "arrayValue": "[]"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "branch_node",
+        "type": "conditional-branch",
+        "position": {
+          "x": 237.59507640890263,
+          "y": 200.51562603193386
+        },
+        "data": {
+          "label": "Conditional Branch"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "const_true_value",
+        "type": "constant",
+        "position": {
+          "x": 237.43280590240855,
+          "y": 71.07970444657828
+        },
+        "data": {
+          "label": "Constant",
+          "valueType": "string",
+          "numberValue": 0,
+          "stringValue": "",
+          "booleanValue": false,
+          "objectValue": "{}",
+          "arrayValue": "[]"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "const_false_value",
+        "type": "constant",
+        "position": {
+          "x": 223.5039968896706,
+          "y": 320.92771611256563
+        },
+        "data": {
+          "label": "Constant",
+          "valueType": "string",
+          "numberValue": 0,
+          "stringValue": "",
+          "booleanValue": false,
+          "objectValue": "{}",
+          "arrayValue": "[]"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "variable_set_true",
+        "type": "variable",
+        "position": {
+          "x": 580.0115749652019,
+          "y": 141.2900294610754
+        },
+        "data": {
+          "label": "Variable",
+          "mode": "set",
+          "variableName": ""
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "variable_set_false",
+        "type": "variable",
+        "position": {
+          "x": 578.7675437102772,
+          "y": 237.88165254566948
+        },
+        "data": {
+          "label": "Variable",
+          "mode": "set",
+          "variableName": ""
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "variable_get",
+        "type": "variable",
+        "position": {
+          "x": 566.5009188283431,
+          "y": 394.9245139927359
+        },
+        "data": {
+          "label": "Variable",
+          "mode": "get",
+          "variableName": ""
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug_viewer",
+        "type": "debug-viewer",
+        "position": {
+          "x": 900.8058813897527,
+          "y": 391.33858231936523
+        },
+        "data": {
+          "label": "Debug Viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge_input_branch",
+        "source": "input_branch",
+        "target": "branch_node",
+        "sourceHandle": "exec-out",
+        "targetHandle": "exec-in",
+        "edgeType": "flow",
+        "dataType": "any",
+        "animated": true,
+        "style": {
+          "stroke": "#9ca3af",
+          "strokeWidth": 3
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 10,
+          "height": 10,
+          "color": "#9ca3af"
+        }
+      },
+      {
+        "id": "edge_condition",
+        "source": "constant_condition",
+        "target": "branch_node",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-condition",
+        "edgeType": "data",
+        "dataType": "boolean",
+        "animated": false,
+        "style": {
+          "stroke": "#8b5cf6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#8b5cf6"
+        }
+      },
+      {
+        "id": "edge_branch_true",
+        "source": "branch_node",
+        "target": "variable_set_true",
+        "sourceHandle": "exec-true",
+        "targetHandle": "exec-in",
+        "edgeType": "flow",
+        "dataType": "any",
+        "animated": true,
+        "style": {
+          "stroke": "#10b981",
+          "strokeWidth": 3
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 10,
+          "height": 10,
+          "color": "#10b981"
+        }
+      },
+      {
+        "id": "edge_branch_false",
+        "source": "branch_node",
+        "target": "variable_set_false",
+        "sourceHandle": "exec-false",
+        "targetHandle": "exec-in",
+        "edgeType": "flow",
+        "dataType": "any",
+        "animated": true,
+        "style": {
+          "stroke": "#ef4444",
+          "strokeWidth": 3
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 10,
+          "height": 10,
+          "color": "#ef4444"
+        }
+      },
+      {
+        "id": "edge_const_true_to_var",
+        "source": "const_true_value",
+        "target": "variable_set_true",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-input",
+        "edgeType": "data",
+        "dataType": "string",
+        "animated": false,
+        "style": {
+          "stroke": "#3b82f6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#3b82f6"
+        }
+      },
+      {
+        "id": "edge_const_false_to_var",
+        "source": "const_false_value",
+        "target": "variable_set_false",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-input",
+        "edgeType": "data",
+        "dataType": "string",
+        "animated": false,
+        "style": {
+          "stroke": "#3b82f6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#3b82f6"
+        }
+      },
+      {
+        "id": "edge_var_get_debug",
+        "source": "variable_get",
+        "target": "debug_viewer",
+        "sourceHandle": "data-out",
+        "targetHandle": "debug_viewer-data-input",
+        "edgeType": "data",
+        "dataType": "string",
+        "animated": false,
+        "style": {
+          "stroke": "#3b82f6",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#3b82f6"
+        }
+      }
+    ],
+    "nodeData": {
+      "constant_condition": {
+        "valueType": "boolean",
+        "booleanValue": true
+      },
+      "const_true_value": {
+        "valueType": "string",
+        "stringValue": "Caminho TRUE"
+      },
+      "const_false_value": {
+        "valueType": "string",
+        "stringValue": "Caminho FALSE"
+      },
+      "variable_set_true": {
+        "mode": "set",
+        "variableNameSet": "Resultado",
+        "variableName": "Resultado"
+      },
+      "variable_set_false": {
+        "mode": "set",
+        "variableNameSet": "Resultado",
+        "variableName": "Resultado"
+      },
+      "variable_get": {
+        "mode": "get",
+        "variableName": "Resultado"
+      }
+    },
+    "detectedTypes": {
+      "constant_condition": {
+        "data-out": "boolean"
+      },
+      "const_true_value": {
+        "data-out": "string"
+      },
+      "const_false_value": {
+        "data-out": "string"
+      },
+      "variable_set_true": {
+        "data-out": "string"
+      },
+      "variable_set_false": {
+        "data-out": "string"
+      },
+      "variable_get": {
+        "data-out": "string"
+      }
+    },
+    "variables": {
+      "Resultado": "Caminho TRUE"
+    }
+  },
+  "exportedAt": "2025-11-01T17:30:00.000Z"
+}

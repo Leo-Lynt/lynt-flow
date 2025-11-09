@@ -1,0 +1,291 @@
+{
+  "id": "flow-debugging",
+  "title": "Fluxo: Debugging",
+  "description": "Tutorial demonstrando como usar Debug Viewer para inspecionar dados durante execução",
+  "flow": {
+    "nodes": [
+      {
+        "id": "input_start",
+        "type": "input",
+        "position": {
+          "x": 100,
+          "y": 250
+        },
+        "data": {
+          "label": "Input"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "const_a",
+        "type": "constant",
+        "position": {
+          "x": 100,
+          "y": 150
+        },
+        "data": {
+          "label": "Constant"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "const_b",
+        "type": "constant",
+        "position": {
+          "x": 100,
+          "y": 350
+        },
+        "data": {
+          "label": "Constant"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "add_node",
+        "type": "add",
+        "position": {
+          "x": 400,
+          "y": 200
+        },
+        "data": {
+          "label": "Add"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "debug_intermediate",
+        "type": "debug-viewer",
+        "position": {
+          "x": 650,
+          "y": 200
+        },
+        "data": {
+          "label": "Debug Viewer"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "multiply_node",
+        "type": "multiply",
+        "position": {
+          "x": 400,
+          "y": 300
+        },
+        "data": {
+          "label": "Multiply"
+        },
+        "zIndex": 1,
+        "selected": false
+      },
+      {
+        "id": "output_node",
+        "type": "output",
+        "position": {
+          "x": 650,
+          "y": 300
+        },
+        "data": {
+          "label": "Output"
+        },
+        "zIndex": 1,
+        "selected": false
+      }
+    ],
+    "edges": [
+      {
+        "id": "edge_exec",
+        "source": "input_start",
+        "target": "output_node",
+        "sourceHandle": "exec-out",
+        "targetHandle": "exec-in",
+        "edgeType": "flow",
+        "dataType": "any",
+        "animated": true,
+        "style": {
+          "stroke": "#9ca3af",
+          "strokeWidth": 3
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 10,
+          "height": 10,
+          "color": "#9ca3af"
+        }
+      },
+      {
+        "id": "edge_a_add",
+        "source": "const_a",
+        "target": "add_node",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-a",
+        "edgeType": "data",
+        "dataType": "number",
+        "animated": false,
+        "style": {
+          "stroke": "#f59e0b",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#f59e0b"
+        }
+      },
+      {
+        "id": "edge_b_add",
+        "source": "const_b",
+        "target": "add_node",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-b",
+        "edgeType": "data",
+        "dataType": "number",
+        "animated": false,
+        "style": {
+          "stroke": "#f59e0b",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#f59e0b"
+        }
+      },
+      {
+        "id": "edge_add_debug",
+        "source": "add_node",
+        "target": "debug_intermediate",
+        "sourceHandle": "data-out",
+        "targetHandle": "debug_intermediate-data-input",
+        "edgeType": "data",
+        "dataType": "number",
+        "animated": false,
+        "style": {
+          "stroke": "#f59e0b",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#f59e0b"
+        }
+      },
+      {
+        "id": "edge_add_multiply",
+        "source": "add_node",
+        "target": "multiply_node",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-a",
+        "edgeType": "data",
+        "dataType": "number",
+        "animated": false,
+        "style": {
+          "stroke": "#f59e0b",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#f59e0b"
+        }
+      },
+      {
+        "id": "edge_b_multiply",
+        "source": "const_b",
+        "target": "multiply_node",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-b",
+        "edgeType": "data",
+        "dataType": "number",
+        "animated": false,
+        "style": {
+          "stroke": "#f59e0b",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#f59e0b"
+        }
+      },
+      {
+        "id": "edge_multiply_output",
+        "source": "multiply_node",
+        "target": "output_node",
+        "sourceHandle": "data-out",
+        "targetHandle": "data-resultado",
+        "edgeType": "data",
+        "dataType": "number",
+        "animated": false,
+        "style": {
+          "stroke": "#f59e0b",
+          "strokeWidth": 2.5
+        },
+        "markerEnd": {
+          "type": "arrowclosed",
+          "width": 8,
+          "height": 8,
+          "color": "#f59e0b"
+        }
+      }
+    ],
+    "nodeData": {
+      "const_a": {
+        "valueType": "number",
+        "numberValue": 7
+      },
+      "const_b": {
+        "valueType": "number",
+        "numberValue": 3
+      },
+      "output_node": {
+        "destination": "display",
+        "dynamicInputs": [
+          {
+            "id": "input-resultado",
+            "key": "resultado",
+            "type": "number"
+          }
+        ],
+        "dynamicHandles": {
+          "inputs": [
+            {
+              "id": "data-resultado",
+              "label": "resultado",
+              "type": "number",
+              "position": "left"
+            }
+          ]
+        }
+      }
+    },
+    "detectedTypes": {
+      "const_a": {
+        "data-out": "integer"
+      },
+      "const_b": {
+        "data-out": "integer"
+      },
+      "add_node": {
+        "data-out": "integer"
+      },
+      "multiply_node": {
+        "data-out": "integer"
+      },
+      "output_node": {
+        "data-out": "object"
+      }
+    },
+    "variables": {}
+  },
+  "exportedAt": "2025-11-01T20:30:00.000Z"
+}
