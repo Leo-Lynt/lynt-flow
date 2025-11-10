@@ -20,8 +20,10 @@ const props = defineProps({
   }
 })
 
-// Pegar URL do editor do .env
-const editorUrl = import.meta.env.VITE_EDITOR_URL || 'http://localhost:5178/editor'
+// Pegar URL do editor - em produção usa caminho relativo, em dev usa VITE_EDITOR_URL
+const editorUrl = import.meta.env.PROD
+  ? '/editor'
+  : (import.meta.env.VITE_EDITOR_URL || 'http://localhost:5173')
 
 // Montar URL do playground
 const playgroundUrl = computed(() => {

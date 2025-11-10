@@ -5,12 +5,13 @@
 
 import { IDataSource } from '@leo-lynt/lynt-flow-core/interfaces/IDataSource.js'
 import { mapSourceTypeToApi } from '@leo-lynt/lynt-flow-core/config/mappings.js'
+import { getApiBaseUrl } from '../utils/api.js'
 
 export class HttpDataSource extends IDataSource {
   constructor(apiBaseUrl) {
     super()
-    // Usar VITE_API_URL se disponível, senão fallback para localhost
-    const baseUrl = apiBaseUrl || `${import.meta.env.VITE_API_URL}/api`
+    // Use provided apiBaseUrl or auto-detect based on environment
+    const baseUrl = apiBaseUrl || `${getApiBaseUrl()}/api`
     this.apiBaseUrl = baseUrl
     this.sourceType = null // Will be set by subclasses or constructor
   }

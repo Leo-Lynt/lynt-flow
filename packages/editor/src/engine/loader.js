@@ -14,6 +14,7 @@
  */
 
 import registry, { registerNode, registerCategory } from './registry.js'
+import { getApiBaseUrl } from '../utils/api.js'
 
 let catalogLoaded = false
 let catalogData = null
@@ -69,18 +70,21 @@ function validateCatalog(catalog) {
 
 /**
  * Carrega o catálogo de nodes da API
- * @param {string} apiUrl - URL da API (default: import.meta.env.VITE_API_URL ou http://localhost:3001)
+ * @param {string} apiUrl - URL da API (default: auto-detected based on environment)
  * @returns {Promise<Object>} Catálogo carregado
  */
-export async function loadNodeCatalog(apiUrl = import.meta.env.VITE_API_URL) {
+export async function loadNodeCatalog(apiUrl) {
   if (catalogLoaded) {
     return catalogData
   }
 
   try {
+    // Use provided apiUrl or auto-detect based on environment
+    const baseUrl = apiUrl || getApiBaseUrl()
+
     // Fetch do catálogo via API (com cache bust em desenvolvimento)
     const cacheBuster = import.meta.env.DEV ? `?t=${Date.now()}` : ''
-    const response = await fetch(`${apiUrl}/api/nodes${cacheBuster}`)
+    const response = await fetch(`${baseUrl}/api/nodes${cacheBuster}`)
 
     if (!response.ok) {
       throw new Error(`Erro ao carregar catálogo: ${response.status} ${response.statusText}`)

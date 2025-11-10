@@ -5,6 +5,7 @@
 
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { getApiBaseUrl } from '../utils/api.js'
 
 export const useConnectionStore = defineStore('connection', () => {
   // State
@@ -45,7 +46,7 @@ export const useConnectionStore = defineStore('connection', () => {
     error.value = null
 
     try {
-      const baseUrl = apiConfig?.baseUrl || import.meta.env.VITE_API_URL
+      const baseUrl = apiConfig?.baseUrl || getApiBaseUrl()
       const token = apiConfig?.token
 
       if (!token) {
@@ -111,7 +112,7 @@ export const useConnectionStore = defineStore('connection', () => {
     error.value = null
 
     try {
-      const baseUrl = apiConfig?.baseUrl || import.meta.env.VITE_API_URL
+      const baseUrl = apiConfig?.baseUrl || getApiBaseUrl()
       const token = apiConfig?.token
 
 
@@ -204,7 +205,7 @@ export const useConnectionStore = defineStore('connection', () => {
     error.value = null
 
     try {
-      const baseUrl = apiConfig?.baseUrl || import.meta.env.VITE_API_URL
+      const baseUrl = apiConfig?.baseUrl || getApiBaseUrl()
       const token = apiConfig?.token
 
       if (!token) {

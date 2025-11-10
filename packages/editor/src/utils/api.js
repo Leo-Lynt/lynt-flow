@@ -1,5 +1,16 @@
 import axios from 'axios'
 
+/**
+ * Get base API URL (without /api suffix) based on environment
+ * In production: use current origin (ex: https://flow.lynt.io)
+ * In development: use VITE_API_URL from .env
+ */
+export function getApiBaseUrl() {
+  return import.meta.env.PROD
+    ? window.location.origin
+    : (import.meta.env.VITE_API_URL || 'http://localhost:3001')
+}
+
 // Em produção, usar caminho relativo (Vercel rewrites /api para https://api-flow.lynt.io/api)
 // Em desenvolvimento, usar VITE_API_URL do .env
 const API_BASE_URL = import.meta.env.PROD

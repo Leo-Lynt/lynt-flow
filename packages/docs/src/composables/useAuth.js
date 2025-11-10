@@ -1,8 +1,10 @@
 import { ref, computed } from 'vue'
 import { jwtDecode } from 'jwt-decode'
 
-// URL do CMS
-const CMS_URL = import.meta.env.VITE_CMS_URL || 'http://localhost:5174'
+// URL do CMS - em produção usa caminho relativo, em dev usa VITE_CMS_URL
+const CMS_URL = import.meta.env.PROD
+  ? '/'
+  : (import.meta.env.VITE_CMS_URL || 'http://localhost:5174')
 
 // Global state
 const accessToken = ref(null)
