@@ -6,15 +6,15 @@
       "dest": "https://api-flow.lynt.io/api/$1"
     },
     {
+      "handle": "filesystem"
+    },
+    {
       "src": "/docs/(.*)",
       "dest": "/docs/index.html"
     },
     {
       "src": "/editor/(.*)",
       "dest": "/editor/index.html"
-    },
-    {
-      "handle": "filesystem"
     },
     {
       "src": "/(.*)",
