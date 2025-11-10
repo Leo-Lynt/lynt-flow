@@ -2,6 +2,20 @@ import { computed } from 'vue'
 import { useFlowStore } from '../../stores/flowStore'
 
 /**
+ * Sanitize handle ID to ensure it's valid for VueFlow
+ * Removes/replaces special characters that could break CSS selectors or HTML attributes
+ */
+function sanitizeHandleId(id) {
+  if (!id) return id
+
+  return id
+    .replace(/\s+/g, '_')        // Replace spaces with underscores
+    .replace(/[+\-*/=<>!@#$%^&*()[\]{}|\\;:'",<>?`~]/g, '_')  // Replace special chars with underscores
+    .replace(/_{2,}/g, '_')      // Replace multiple underscores with single
+    .replace(/^_|_$/g, '')       // Remove leading/trailing underscores
+}
+
+/**
  * Composable for dynamic handle generation
  */
 export function useDynamicHandles(nodeId, nodeType) {
@@ -66,7 +80,7 @@ export function useDynamicHandles(nodeId, nodeType) {
 
       // Add individual handles for each selected field (only if enabled)
       selectedFields.forEach(field => {
-        const handleId = `field-${field.replace(/\./g, '-')}`
+        const handleId = `field-${sanitizeHandleId(field)}`
         const isEnabled = fieldOutputsEnabled[field] !== false // Default to true if not set
         const fieldType = fieldTypes[field] || 'any'
 
@@ -102,7 +116,7 @@ export function useDynamicHandles(nodeId, nodeType) {
         dynamicInputs.forEach((input) => {
           if (input.key) { // Only add handles with valid keys
             handles.push({
-              id: `data-${input.key}`,
+              id: `data-${sanitizeHandleId(input.key)}`,
               label: input.key,
               type: input.type || 'any',
               position: 'left'

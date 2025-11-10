@@ -287,6 +287,20 @@ const props = defineProps({
 
 const flowStore = useFlowStore()
 
+/**
+ * Sanitize handle ID to ensure it's valid for VueFlow
+ * Removes/replaces special characters that could break CSS selectors or HTML attributes
+ */
+function sanitizeHandleId(id) {
+  if (!id) return id
+
+  return id
+    .replace(/\s+/g, '_')        // Replace spaces with underscores
+    .replace(/[+\-*/=<>!@#$%^&*()[\]{}|\\;:'",<>?`~]/g, '_')  // Replace special chars with underscores
+    .replace(/_{2,}/g, '_')      // Replace multiple underscores with single
+    .replace(/^_|_$/g, '')       // Remove leading/trailing underscores
+}
+
 // Local state
 const localData = ref({
   destination: 'display',
@@ -332,7 +346,7 @@ function updateInputs() {
   const newHandles = dynamicInputs.value
     .filter(input => input.key) // Só handles com nome
     .map(input => ({
-      id: `data-${input.key}`,
+      id: `data-${sanitizeHandleId(input.key)}`,
       label: input.key,
       type: input.type || 'any',
       position: 'left'
@@ -353,7 +367,7 @@ function updateHandles() {
   const newHandles = dynamicInputs.value
     .filter(input => input.key) // Só handles com nome
     .map(input => ({
-      id: `data-${input.key}`,
+      id: `data-${sanitizeHandleId(input.key)}`,
       label: input.key,
       type: input.type || 'any',
       position: 'left'

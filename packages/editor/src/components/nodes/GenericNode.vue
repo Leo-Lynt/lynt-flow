@@ -148,6 +148,20 @@ import ExecHandleInput from './ExecHandleInput.vue'
 import ExecHandleOutput from './ExecHandleOutput.vue'
 import FlowIcon from '../Icon.vue'
 
+/**
+ * Sanitize handle ID to ensure it's valid for VueFlow
+ * Removes/replaces special characters that could break CSS selectors or HTML attributes
+ */
+function sanitizeHandleId(id) {
+  if (!id) return id
+
+  return id
+    .replace(/\s+/g, '_')        // Replace spaces with underscores
+    .replace(/[+\-*/=<>!@#$%^&*()[\]{}|\\;:'",<>?`~]/g, '_')  // Replace special chars with underscores
+    .replace(/_{2,}/g, '_')      // Replace multiple underscores with single
+    .replace(/^_|_$/g, '')       // Remove leading/trailing underscores
+}
+
 const props = defineProps({
   id: {
     type: String,
@@ -691,7 +705,7 @@ const getOutputPreview = computed(() => {
       // Skip "All Extracted Data"
       if (handle.label === 'All Extracted Data') return null
 
-      const handleId = `field-${handle.label.replace(/\./g, '-')}`
+      const handleId = `field-${sanitizeHandleId(handle.label)}`
       const fieldValue = nodeResults[handleId]
       if (fieldValue === undefined || fieldValue === null) return null
       return formatPreviewValue(fieldValue)
