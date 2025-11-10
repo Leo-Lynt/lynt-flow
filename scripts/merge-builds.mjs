@@ -62,6 +62,19 @@ if (existsSync(editorDistDir)) {
   process.exit(1);
 }
 
+// Copiar Docs para dist/docs
+const docsDistDir = join(rootDir, 'packages', 'docs', 'dist');
+const docsTargetDir = join(distDir, 'docs');
+if (existsSync(docsDistDir)) {
+  console.log('📦 Copying Docs build to /docs');
+  cpSync(docsDistDir, docsTargetDir, { recursive: true });
+  console.log('   ✅ Docs copied successfully');
+} else {
+  console.error('   ❌ Docs dist not found at:', docsDistDir);
+  console.error('   Run: pnpm build:docs');
+  process.exit(1);
+}
+
 console.log('\n✅ Build merge complete!');
 console.log('📂 Output directory:', distDir);
 
@@ -98,6 +111,10 @@ if (existsSync(distDir)) {
   // Verificar se editor/ existe
   const hasEditorFolder = files.includes('editor');
   console.log(hasEditorFolder ? '✅ editor/ folder found' : '❌ editor/ folder NOT found');
+
+  // Verificar se docs/ existe
+  const hasDocsFolder = files.includes('docs');
+  console.log(hasDocsFolder ? '✅ docs/ folder found' : '❌ docs/ folder NOT found');
 } else {
   console.error('\n❌ ERROR: dist/ directory was NOT created!');
   console.error('Expected path:', distDir);
@@ -120,7 +137,10 @@ console.log('\n📋 Expected structure:');
 console.log('   dist/');
 console.log('   ├── index.html (CMS)');
 console.log('   ├── assets/ (CMS assets)');
-console.log('   └── editor/');
+console.log('   ├── editor/');
+console.log('   │   ├── index.html');
+console.log('   │   └── assets/');
+console.log('   └── docs/');
 console.log('       ├── index.html');
 console.log('       └── assets/');
 console.log('\n🚀 Ready for Vercel deployment!');

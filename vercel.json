@@ -8,6 +8,10 @@
       "destination": "https://api-flow.lynt.io/api/:path*"
     },
     {
+      "source": "/docs/:path*",
+      "destination": "/docs/index.html"
+    },
+    {
       "source": "/editor/:path*",
       "destination": "/editor/index.html"
     },
