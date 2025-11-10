@@ -1,6 +1,10 @@
 import axios from 'axios'
 
-const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api`
+// Em produção, usar caminho relativo (Vercel rewrites /api para https://api-flow.lynt.io/api)
+// Em desenvolvimento, usar VITE_API_URL do .env
+const API_BASE_URL = import.meta.env.PROD
+  ? '/api'
+  : `${import.meta.env.VITE_API_URL}/api`
 
 // Create axios instance
 const api = axios.create({
