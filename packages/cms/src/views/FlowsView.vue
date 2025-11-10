@@ -98,7 +98,11 @@ function openFlowEditor(flow) {
   }
 
   // Abre em nova aba
-  const editorUrl = `${import.meta.env.VITE_CMS_URL || 'http://localhost:5174'}/editor/?flowId=${flowId}`
+  // Em produção usa caminho relativo, em dev usa variável de ambiente
+  const editorUrl = import.meta.env.PROD
+    ? `/editor/?flowId=${flowId}`
+    : `${import.meta.env.VITE_EDITOR_URL || 'http://localhost:5173'}/?flowId=${flowId}`
+
   window.open(editorUrl, '_blank')
 }
 

@@ -74,7 +74,10 @@ const menuItems = [
     route: '/docs',
     section: 'others',
     external: true,
-    externalUrl: import.meta.env.VITE_DOCS_URL
+    // Em produção usa caminho relativo, em dev usa variável de ambiente
+    externalUrl: import.meta.env.PROD
+      ? '/docs'
+      : (import.meta.env.VITE_DOCS_URL || 'http://localhost:5175')
   }
 ]
 
